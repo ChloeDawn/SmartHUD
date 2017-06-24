@@ -1,0 +1,80 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT' }
+
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "${mc_version}-${mod_version}"
+if (mod_build != "")
+    version = "${mc_version}-${mod_version}-${mod_build}"
+group = "net.insomniakitten.smarthud"
+archivesBaseName = "smarthud"
+
+sourceCompatibility = compat_version
+targetCompatibility = compat_version
+
+libsDirName = build_dir
+distsDirName = build_dir
+
+compileJava {
+    sourceCompatibility = compat_version
+    targetCompatibility = compat_version
+}
+
+minecraft {
+    version = "${mcf_version}"
+    runDir = run_dir
+    mappings = mcp_mappings
+
+    replace '%mc_version%', "${mc_version}"
+    replace '%mod_version%', "${mod_version}"
+
+    replaceIn 'SmartHUDCorePlugin.java'
+    replaceIn 'SmartHUDTransformer.java'
+    replaceIn 'LibInfo.java'
+
+    clientJvmArgs = ["-Dfml.coreMods.load=${core_plugin}"]
+    serverJvmArgs = ["-Dfml.coreMods.load=${core_plugin}"]
+
+}
+
+jar {
+    manifest {
+        attributes(
+                "FMLCorePluginContainsFMLMod": "true",
+                "FMLCorePlugin": "${core_plugin}"
+        )
+    }
+}
+
+processResources {
+    inputs.property "build_version", "${mod_version}"
+    if (mod_build != "")
+        inputs.property "build_version", project.version
+    inputs.property "mcf_version", "${mc_version}"
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand  'build_version': "${mod_version}",
+                'mcf_version': "${mcf_version}"
+    }
+
+    from(sourceSets.main.resources.srcDirs) {exclude 'mcmod.info'}
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {}
+}
+
+artifacts {
+    archives deobfJar
+}
