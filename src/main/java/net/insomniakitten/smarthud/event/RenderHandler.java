@@ -20,15 +20,11 @@ import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.asm.SmartHUDHooks;
 import net.insomniakitten.smarthud.lib.LibConfig;
 import net.insomniakitten.smarthud.lib.LibInfo;
-import net.insomniakitten.smarthud.lib.LibStore.EnumState;
 import net.insomniakitten.smarthud.util.StackHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -54,26 +50,22 @@ public class RenderHandler {
     private static final ResourceLocation HUD_ELEMENTS = new ResourceLocation(
             LibInfo.MOD_ID + ":textures/hud/elements.png");
 
-    private static int hotbarPadding = 182;
-    private static int itemSize = 16;
-    private static int outerSlotPadding = 3;
-    private static int innerSlotPadding = 2;
-    private static int slotHeight = itemSize + (outerSlotPadding * 2);
-    private static int outerSlotWidth = itemSize + (outerSlotPadding * 2);
-    private static int innerSlotWidth = itemSize + (innerSlotPadding * 2);
-    private static int uvBegin = 0, uvEnd = 11, uvSec1 = 32, uvSec2 = 22;
-    private static int uvRounded = 0, uvSharp = 22;
+    private static int
+            hotbarPadding = 182, itemSize = 16,
+            outerSlotPadding = 3, innerSlotPadding = 2,
+            slotHeight = itemSize + (outerSlotPadding * 2),
+            outerSlotWidth = itemSize + (outerSlotPadding * 2),
+            innerSlotWidth = itemSize + (innerSlotPadding * 2),
+            uvBegin = 0, uvEnd = 11,
+            uvSec1 = 32, uvSec2 = 22,
+            uvRounded = 0, uvSharp = 22;
     // Blame tterrag1098 for hating on my usage "magic numbers"
 
     @SubscribeEvent
     public static void onHUDRender(RenderGameOverlayEvent.Pre event) {
-        NonNullList<ItemStack> items = InventoryHandler.getPlayerItems(EnumState.INVENTORY);
+        NonNullList<ItemStack> items = InventoryHandler.getPlayerItems();
         if (LibConfig.isEnabled && event.getType().equals(ElementType.HOTBAR)) {
             Minecraft mc = Minecraft.getMinecraft();
-            GuiIngame gui = mc.ingameGUI;
-            TextureManager tx = mc.renderEngine;
-            RenderItem re = mc.getRenderItem();
-            FontRenderer fr = mc.fontRenderer;
 
             int w = event.getResolution().getScaledWidth();
             int h = event.getResolution().getScaledHeight();
@@ -89,21 +81,21 @@ public class RenderHandler {
 
                 if (LibConfig.hudStyle != 2) {
 
-                    tx.bindTexture(HUD_ELEMENTS);
+                    mc.renderEngine.bindTexture(HUD_ELEMENTS);
 
-                    gui.drawTexturedModalRect(
+                    mc.ingameGUI.drawTexturedModalRect(
                             x, h - slotHeight, uvBegin, uvY,
                             (outerSlotWidth / 2), slotHeight); // Begin component
 
                     for (int i = 0; i < ((slots - 1) * 2); ++i) {
                         int newX = x + ((outerSlotWidth / 2) + ((innerSlotWidth / 2) * i));
-                        gui.drawTexturedModalRect(
+                        mc.ingameGUI.drawTexturedModalRect(
                                 newX, h - slotHeight,
                                 i % 2 == 0 ? uvSec1 : uvSec2, uvY,
                                 (innerSlotWidth / 2), slotHeight); // Inner components
                     }
 
-                    gui.drawTexturedModalRect(
+                    mc.ingameGUI.drawTexturedModalRect(
                             x + ((innerSlotWidth * slots) - innerSlotWidth / 2)
                                     + ((outerSlotWidth - innerSlotWidth) / 2),
                             h - slotHeight, uvEnd, uvY,
@@ -117,7 +109,7 @@ public class RenderHandler {
 
                 for (int i = 0; i < slots; i++) {
                     ItemStack stack = items.get(i);
-                    int stringWidth = fr.getStringWidth(String.valueOf(stack.getCount()));
+                    int stringWidth = mc.fontRenderer.getStringWidth(String.valueOf(stack.getCount()));
 
                     int stackX = (w / 2) + handleVariableOffset(
                             offsetX + outerSlotPadding
@@ -129,13 +121,13 @@ public class RenderHandler {
                                     + (itemSize - stringWidth), itemSize);
 
                     RenderHelper.enableGUIStandardItemLighting();
-                    re.renderItemAndEffectIntoGUI(stack, stackX, h - itemSize - outerSlotPadding);
+                    mc.getRenderItem().renderItemAndEffectIntoGUI(stack, stackX, h - itemSize - outerSlotPadding);
 
                     boolean renderOverlay = !stack.isStackable() && LibConfig.renderOverlays;
                     boolean showStackSize = (stack.getCount() > 1 && LibConfig.showStackSize);
 
                     if (renderOverlay)
-                        re.renderItemOverlays(fr, stack, stackX, h - itemSize - outerSlotPadding);
+                        mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, stackX, h - itemSize - outerSlotPadding);
                     if (showStackSize)
                         renderTotalCount(stack, overlayX + 1, h - 1);
 
@@ -150,13 +142,13 @@ public class RenderHandler {
 
                 mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
 
-                tx.bindTexture(HUD_ELEMENTS);
+                mc.renderEngine.bindTexture(HUD_ELEMENTS);
 
-                gui.drawTexturedModalRect(
+                mc.ingameGUI.drawTexturedModalRect(
                         x2, h - slotHeight, uvBegin, uvY,
                         (outerSlotWidth / 2), slotHeight);
 
-                gui.drawTexturedModalRect(
+                mc.ingameGUI.drawTexturedModalRect(
                         x2 + ((innerSlotWidth) - innerSlotWidth / 2)
                                 + ((outerSlotWidth - innerSlotWidth) / 2),
                         h - slotHeight, uvEnd, uvY,
@@ -173,7 +165,7 @@ public class RenderHandler {
      * @return An int used to offset the element
      */
     public static int getAttackIndicatorOffset() {
-        NonNullList<ItemStack> items = InventoryHandler.getPlayerItems(EnumState.INVENTORY);
+        NonNullList<ItemStack> items = InventoryHandler.getPlayerItems();
         boolean hasItems = items.size() > 0;
         boolean alwaysShow = LibConfig.alwaysShow;
         int limit = LibConfig.slotLimit;

@@ -19,7 +19,6 @@ package net.insomniakitten.smarthud.lib;
 import net.insomniakitten.smarthud.event.InventoryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class LibStore {
 
@@ -34,12 +33,14 @@ public class LibStore {
      * This stores items found in the players inventory that match the contents of the whitelist.
      * @see InventoryHandler for the event that populates this list.
      */
-    public static NonNullList<Pair<ItemStack, EnumState>> playerItems = NonNullList.create();
+    public static NonNullList<ItemStack> playerItems = NonNullList.create();
+
 
     /**
-     * Used for tracking the location of an ItemStack on the player. Applied to a Pair along with an ItemStack.
-     * @see InventoryHandler for the event that applies these in a Pair.
+     * This stores items the player is currently holding that match the contents of the whitelist.
+     * TODO: Implement special functionality for these.
      */
-    public enum EnumState {INVENTORY, HOTBAR, HELD}
+    public static ItemStack itemMainHand = ItemStack.EMPTY;
+    public static ItemStack itemOffHand = ItemStack.EMPTY;
 
 }

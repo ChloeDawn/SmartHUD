@@ -29,10 +29,7 @@ import org.objectweb.asm.util.TraceMethodVisitor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -61,7 +58,7 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
     public static ClassNameHashMap classMappings;
 
     static {
-        if (MC_VERSION.equals("1.11.2"))
+        if (Objects.equals(MC_VERSION, "1.11.2"))
             classMappings = MAPPINGS_1_11_2;
         else classMappings = MAPPINGS_1_12;
         transformers.put("net.minecraft.client.gui.GuiIngame",
