@@ -67,6 +67,7 @@ public class RenderHandler {
                 LibConfig.hudStyle == 2
                 || !LibConfig.isEnabled
                 || !event.getType().equals(ElementType.HOTBAR)) return;
+        if (event.isCanceled()) return;
 
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
@@ -77,18 +78,19 @@ public class RenderHandler {
         int uvY = LibConfig.hudStyle > 0 ? uvSharp : uvRounded;
         int offsetX = (hotbarPadding / 2) + itemSize - (outerSlotPadding * 3);
         int slots = items.size() < LibConfig.slotLimit ? items.size() : LibConfig.slotLimit;
-        int x = (w / 2) + handleVariableOffset(
+        int xDynamic = (w / 2) + handleVariableOffset(
                 offsetX, outerSlotWidth * 2 + (innerSlotWidth * (items.size() - 2)) - (outerSlotPadding - 1));
+        int xFixed = (w / 2) + handleVariableOffset(offsetX, outerSlotWidth - innerSlotPadding);
 
         if (items.size() > 0) {
             mc.renderEngine.bindTexture(HUD_ELEMENTS);
 
             mc.ingameGUI.drawTexturedModalRect(
-                    x, h - slotHeight, uvBegin, uvY,
+                    xDynamic, h - slotHeight, uvBegin, uvY,
                     (outerSlotWidth / 2), slotHeight); // Begin component
 
             for (int i = 0; i < ((slots - 1) * 2); ++i) {
-                int newX = x + ((outerSlotWidth / 2) + ((innerSlotWidth / 2) * i));
+                int newX = xDynamic + ((outerSlotWidth / 2) + ((innerSlotWidth / 2) * i));
                 mc.ingameGUI.drawTexturedModalRect(
                         newX, h - slotHeight,
                         i % 2 == 0 ? uvSec1 : uvSec2, uvY,
@@ -96,21 +98,21 @@ public class RenderHandler {
             }
 
             mc.ingameGUI.drawTexturedModalRect(
-                    x + ((innerSlotWidth * slots) - innerSlotWidth / 2)
+                    xDynamic + ((innerSlotWidth * slots) - innerSlotWidth / 2)
                             + ((outerSlotWidth - innerSlotWidth) / 2),
                     h - slotHeight, uvEnd, uvY,
                     (outerSlotWidth / 2), slotHeight); // End component
-        } else if (LibConfig.alwaysShow) {
-            int x2 = (w / 2) + handleVariableOffset(offsetX, outerSlotWidth - innerSlotPadding);
+        }
 
+        else if (LibConfig.alwaysShow) {
             mc.renderEngine.bindTexture(HUD_ELEMENTS);
 
             mc.ingameGUI.drawTexturedModalRect(
-                    x2, h - slotHeight, uvBegin, uvY,
+                    xFixed, h - slotHeight, uvBegin, uvY,
                     (outerSlotWidth / 2), slotHeight);
 
             mc.ingameGUI.drawTexturedModalRect(
-                    x2 + ((innerSlotWidth) - innerSlotWidth / 2)
+                    xFixed + ((innerSlotWidth) - innerSlotWidth / 2)
                             + ((outerSlotWidth - innerSlotWidth) / 2),
                     h - slotHeight, uvEnd, uvY,
                     (outerSlotWidth / 2), slotHeight);
@@ -122,6 +124,7 @@ public class RenderHandler {
     @SubscribeEvent
     public static void onItemRender(RenderGameOverlayEvent.Pre event) {
         if (!LibConfig.isEnabled || !event.getType().equals(ElementType.HOTBAR)) return;
+        if (event.isCanceled()) return;
 
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_ITEMS);
