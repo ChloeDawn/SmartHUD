@@ -63,101 +63,106 @@ public class RenderHandler {
 
     @SubscribeEvent
     public static void onHUDRender(RenderGameOverlayEvent.Pre event) {
+        if (!LibConfig.isEnabled || !event.getType().equals(ElementType.HOTBAR)) return;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
+
         NonNullList<ItemStack> items = InventoryHandler.getPlayerItems();
-        if (LibConfig.isEnabled && event.getType().equals(ElementType.HOTBAR)) {
-            Minecraft mc = Minecraft.getMinecraft();
+        int w = event.getResolution().getScaledWidth();
+        int h = event.getResolution().getScaledHeight();
+        int uvY = LibConfig.hudStyle > 0 ? uvSharp : uvRounded;
+        int offsetX = (hotbarPadding / 2) + itemSize - (outerSlotPadding * 3);
+        int slots = items.size() < LibConfig.slotLimit ? items.size() : LibConfig.slotLimit;
+        int x = (w / 2) + handleVariableOffset(
+                offsetX, outerSlotWidth * 2 + (innerSlotWidth * (items.size() - 2)) - (outerSlotPadding - 1));
 
-            int w = event.getResolution().getScaledWidth();
-            int h = event.getResolution().getScaledHeight();
-            int uvY = LibConfig.hudStyle > 0 ? uvSharp : uvRounded;
-            int offsetX = (hotbarPadding / 2) + itemSize - (outerSlotPadding * 3);
-            int slots = items.size() < LibConfig.slotLimit ? items.size() : LibConfig.slotLimit;
-            int x = (w / 2) + handleVariableOffset(offsetX,
-                    outerSlotWidth * 2 + (innerSlotWidth * (items.size() - 2)) - (outerSlotPadding - 1));
+        if (LibConfig.hudStyle == 2) return;
 
-            if (items.size() > 0) {
+        if (items.size() > 0) {
+            mc.renderEngine.bindTexture(HUD_ELEMENTS);
 
-                mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
+            mc.ingameGUI.drawTexturedModalRect(
+                    x, h - slotHeight, uvBegin, uvY,
+                    (outerSlotWidth / 2), slotHeight); // Begin component
 
-                if (LibConfig.hudStyle != 2) {
-
-                    mc.renderEngine.bindTexture(HUD_ELEMENTS);
-
-                    mc.ingameGUI.drawTexturedModalRect(
-                            x, h - slotHeight, uvBegin, uvY,
-                            (outerSlotWidth / 2), slotHeight); // Begin component
-
-                    for (int i = 0; i < ((slots - 1) * 2); ++i) {
-                        int newX = x + ((outerSlotWidth / 2) + ((innerSlotWidth / 2) * i));
-                        mc.ingameGUI.drawTexturedModalRect(
-                                newX, h - slotHeight,
-                                i % 2 == 0 ? uvSec1 : uvSec2, uvY,
-                                (innerSlotWidth / 2), slotHeight); // Inner components
-                    }
-
-                    mc.ingameGUI.drawTexturedModalRect(
-                            x + ((innerSlotWidth * slots) - innerSlotWidth / 2)
-                                    + ((outerSlotWidth - innerSlotWidth) / 2),
-                            h - slotHeight, uvEnd, uvY,
-                            (outerSlotWidth / 2), slotHeight); // End component
-
-                }
-
-                mc.mcProfiler.endStartSection(LibInfo.PROFILE_RENDER_SLOTS);
-
-                mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_ITEMS);
-
-                for (int i = 0; i < slots; i++) {
-                    ItemStack stack = items.get(i);
-                    int stringWidth = mc.fontRenderer.getStringWidth(String.valueOf(stack.getCount()));
-
-                    int stackX = (w / 2) + handleVariableOffset(
-                            offsetX + outerSlotPadding
-                                    + (innerSlotWidth * i), itemSize);
-
-                    int overlayX = (w / 2) + handleVariableOffset(
-                            offsetX + outerSlotPadding
-                                    + (innerSlotWidth * i)
-                                    + (itemSize - stringWidth), itemSize);
-
-                    RenderHelper.enableGUIStandardItemLighting();
-                    mc.getRenderItem().renderItemAndEffectIntoGUI(stack, stackX, h - itemSize - outerSlotPadding);
-
-                    boolean renderOverlay = !stack.isStackable() && LibConfig.renderOverlays;
-                    boolean showStackSize = (stack.getCount() > 1 && LibConfig.showStackSize);
-
-                    if (renderOverlay)
-                        mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, stackX, h - itemSize - outerSlotPadding);
-                    if (showStackSize)
-                        renderTotalCount(stack, overlayX + 1, h - 1);
-
-                    RenderHelper.disableStandardItemLighting();
-                }
-
-                mc.mcProfiler.endStartSection(LibInfo.PROFILE_RENDER_ITEMS);
-
-            } else if (LibConfig.alwaysShow && LibConfig.hudStyle != 2) {
-
-                int x2 = (w / 2) + handleVariableOffset(offsetX, outerSlotWidth - innerSlotPadding);
-
-                mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
-
-                mc.renderEngine.bindTexture(HUD_ELEMENTS);
-
+            for (int i = 0; i < ((slots - 1) * 2); ++i) {
+                int newX = x + ((outerSlotWidth / 2) + ((innerSlotWidth / 2) * i));
                 mc.ingameGUI.drawTexturedModalRect(
-                        x2, h - slotHeight, uvBegin, uvY,
-                        (outerSlotWidth / 2), slotHeight);
-
-                mc.ingameGUI.drawTexturedModalRect(
-                        x2 + ((innerSlotWidth) - innerSlotWidth / 2)
-                                + ((outerSlotWidth - innerSlotWidth) / 2),
-                        h - slotHeight, uvEnd, uvY,
-                        (outerSlotWidth / 2), slotHeight);
-
-                mc.mcProfiler.endStartSection(LibInfo.PROFILE_RENDER_SLOTS);
-
+                        newX, h - slotHeight,
+                        i % 2 == 0 ? uvSec1 : uvSec2, uvY,
+                        (innerSlotWidth / 2), slotHeight); // Inner components
             }
+
+            mc.ingameGUI.drawTexturedModalRect(
+                    x + ((innerSlotWidth * slots) - innerSlotWidth / 2)
+                            + ((outerSlotWidth - innerSlotWidth) / 2),
+                    h - slotHeight, uvEnd, uvY,
+                    (outerSlotWidth / 2), slotHeight); // End component
+        } else if (LibConfig.alwaysShow) {
+            int x2 = (w / 2) + handleVariableOffset(offsetX, outerSlotWidth - innerSlotPadding);
+
+            mc.renderEngine.bindTexture(HUD_ELEMENTS);
+
+            mc.ingameGUI.drawTexturedModalRect(
+                    x2, h - slotHeight, uvBegin, uvY,
+                    (outerSlotWidth / 2), slotHeight);
+
+            mc.ingameGUI.drawTexturedModalRect(
+                    x2 + ((innerSlotWidth) - innerSlotWidth / 2)
+                            + ((outerSlotWidth - innerSlotWidth) / 2),
+                    h - slotHeight, uvEnd, uvY,
+                    (outerSlotWidth / 2), slotHeight);
         }
+
+        mc.mcProfiler.endStartSection(LibInfo.PROFILE_RENDER_SLOTS);
+    }
+
+    @SubscribeEvent
+    public static void onItemRender(RenderGameOverlayEvent.Pre event) {
+        if (!LibConfig.isEnabled || !event.getType().equals(ElementType.HOTBAR)) return;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_ITEMS);
+
+        NonNullList<ItemStack> items = InventoryHandler.getPlayerItems();
+        if (items.size() < 1) return;
+
+        int w = event.getResolution().getScaledWidth();
+        int h = event.getResolution().getScaledHeight();
+        int offsetX = (hotbarPadding / 2) + itemSize - (outerSlotPadding * 3);
+        int slots = items.size() < LibConfig.slotLimit ? items.size() : LibConfig.slotLimit;
+
+        for (int i = 0; i < slots; i++) {
+            ItemStack stack = items.get(i);
+            int stringWidth = mc.fontRenderer.getStringWidth(String.valueOf(stack.getCount()));
+
+            int stackX = (w / 2) + handleVariableOffset(
+                    offsetX + outerSlotPadding
+                            + (innerSlotWidth * i), itemSize);
+
+            int overlayX = (w / 2) + handleVariableOffset(
+                    offsetX + outerSlotPadding
+                            + (innerSlotWidth * i)
+                            + (itemSize - stringWidth), itemSize);
+
+            RenderHelper.enableGUIStandardItemLighting();
+            mc.getRenderItem().renderItemAndEffectIntoGUI(stack, stackX, h - itemSize - outerSlotPadding);
+
+            boolean renderOverlay = !stack.isStackable() && LibConfig.renderOverlays;
+            boolean showStackSize = (stack.getCount() > 1 && LibConfig.showStackSize);
+
+            if (renderOverlay)
+                mc.getRenderItem().renderItemOverlays(
+                        mc.fontRenderer, stack, stackX, h - itemSize - outerSlotPadding);
+            if (showStackSize)
+                renderTotalCount(stack, overlayX + 1, h - 1);
+
+            RenderHelper.disableStandardItemLighting();
+        }
+
+        mc.mcProfiler.endStartSection(LibInfo.PROFILE_RENDER_ITEMS);
+
     }
 
     /** Method used to calculate the required offset of the attack indicator
