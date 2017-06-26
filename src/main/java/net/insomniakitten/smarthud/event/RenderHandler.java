@@ -63,7 +63,10 @@ public class RenderHandler {
 
     @SubscribeEvent
     public static void onHUDRender(RenderGameOverlayEvent.Pre event) {
-        if (!LibConfig.isEnabled || !event.getType().equals(ElementType.HOTBAR)) return;
+        if (
+                LibConfig.hudStyle == 2
+                || !LibConfig.isEnabled
+                || !event.getType().equals(ElementType.HOTBAR)) return;
 
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection(LibInfo.PROFILE_RENDER_SLOTS);
@@ -76,8 +79,6 @@ public class RenderHandler {
         int slots = items.size() < LibConfig.slotLimit ? items.size() : LibConfig.slotLimit;
         int x = (w / 2) + handleVariableOffset(
                 offsetX, outerSlotWidth * 2 + (innerSlotWidth * (items.size() - 2)) - (outerSlotPadding - 1));
-
-        if (LibConfig.hudStyle == 2) return;
 
         if (items.size() > 0) {
             mc.renderEngine.bindTexture(HUD_ELEMENTS);
