@@ -82,11 +82,13 @@ public class LibWhitelist {
         NonNullList<ItemStack> cache = NonNullList.create();
         for (String entry : itemList) {
             String[] data = entry.split(":");
-            String modid = data[0], name = data[1];
-            int meta = data.length > 2 ? Integer.valueOf(data[2]) : -1;
+            if (data.length > 1) {
+                String modid = data[0], name = data[1];
+                int meta = data.length > 2 ? Integer.valueOf(data[2]) : -1;
 
-            ItemStack stack = StackHandler.getStackFromResourceName(modid, name, meta);
-            if (!stack.isEmpty()) cache.add(stack);
+                ItemStack stack = StackHandler.getStackFromResourceName(modid, name, meta);
+                if (!stack.isEmpty()) cache.add(stack);
+            }
         }
         return cache;
     }
