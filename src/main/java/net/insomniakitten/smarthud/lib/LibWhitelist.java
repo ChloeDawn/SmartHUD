@@ -49,18 +49,14 @@ public class LibWhitelist {
                     "Metadata is not required, and not defining it will default the check to any metadata.\n" +
                     "This information can be obtained via Advanced Tooltips (F3+H) in-game."})
     @Config.LangKey("config.smarthud.whitelist.list")
-    public static String[] itemList = generateDefaultEntries();
-
-    private static String[] generateDefaultEntries() {
-        String[] defaults = new String[6];
-        defaults[0] = "minecraft:clock";
-        defaults[1] = "minecraft:compass";
-        defaults[2] = "randomthings:goldencompass";
-        defaults[3] = "endercompass:ender_compass";
-        defaults[4] = "toughasnails:thermometer";
-        defaults[5] = "toughasnails:season_clock";
-        return defaults;
-    }
+    public static String[] itemList = new String[] {
+            "minecraft:clock",
+            "minecraft:compass",
+            "randomthings:goldencompass",
+            "endercompass:ender_compass",
+            "toughasnails:thermometer",
+            "toughasnails:season_clock"
+    };
 
     public static void initializeWhitelist() {
         if (SmartHUD.DEOBF)
