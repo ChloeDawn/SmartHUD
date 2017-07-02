@@ -59,7 +59,6 @@ public class LibWhitelist {
     };
 
     public static void initializeWhitelist() {
-        if (SmartHUD.DEOBF)
             SmartHUD.LOGGER.info("Processing items " + (
                     useWhitelist ?
                             "from the whitelist"
