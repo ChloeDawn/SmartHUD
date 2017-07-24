@@ -55,7 +55,8 @@ public class LibWhitelist {
             "randomthings:goldencompass",
             "endercompass:ender_compass",
             "toughasnails:thermometer",
-            "toughasnails:season_clock"
+            "toughasnails:season_clock",
+            "appliedenergistics2:sky_compass"
     };
 
     public static void initializeWhitelist() {
