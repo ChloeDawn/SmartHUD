@@ -26,17 +26,10 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
 
     private static final Map<String, Transformer> transformers = new HashMap<>();
 
-    private static final ClassNameHashMap MAPPINGS_1_12 = new ClassNameHashMap(
-            "net/minecraft/client/gui/GuiIngame", "bio",
-            "net/minecraft/client/gui/ScaledResolution", "bir",
-            "net/minecraft/util/ResourceLocation", "nd",
-            "net/minecraft/client/renderer/texture/TextureManager", "cdp"
-    );
-
-    public static ClassNameHashMap classMappings;
+    private static final String CLASS_SCALED_RESOLUTION = "net/minecraft/client/gui/ScaledResolution";
+    private static final String CLASS_RESOURCE_LOCATION = "net/minecraft/util/ResourceLocation";
 
     static {
-        classMappings = MAPPINGS_1_12;
         transformers.put("net.minecraft.client.gui.GuiIngame", SmartHUDTransformer::transformGuiIngame);
     }
 
@@ -44,21 +37,20 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
 
         MethodSignature sig0= new MethodSignature(
                 "renderHotbar",
-                "func_180479_a", "a",
-                "(Lnet/minecraft/client/gui/ScaledResolution;F)V");
+                "func_180479_a",
+                "(L" + CLASS_SCALED_RESOLUTION + ";F)V");
 
         MethodSignature sig1 = new MethodSignature(
                 "bindTexture",
-                "func_110577_a", "a",
-                "(Lnet/minecraft/util/ResourceLocation;)V");
+                "func_110577_a",
+                "(L" + CLASS_RESOURCE_LOCATION+ ";)V");
 
         return transform(basicClass, sig0, "attack indicator rendering hook",
                 combine((AbstractInsnNode node) ->
                                 node.getOpcode() == INVOKEVIRTUAL
                                         && sig1.matches((MethodInsnNode) node)
                                         && node.getPrevious().getOpcode() == GETSTATIC
-                                        && (((FieldInsnNode) node.getPrevious()).name.equals("d")
-                                        || ((FieldInsnNode) node.getPrevious()).name.equals("field_110324_m")
+                                        && (((FieldInsnNode) node.getPrevious()).name.equals("field_110324_m")
                                         || ((FieldInsnNode) node.getPrevious()).name.equals("ICONS")),
                         (MethodNode method, AbstractInsnNode node) -> {
                             InsnList newInstructions = new InsnList();
@@ -226,32 +218,21 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
     }
 
     public static class MethodSignature {
-        private final String funcName, srgName, obfName, funcDesc, obfDesc;
+        private final String funcName, srgName, funcDesc;
 
-        public MethodSignature(String funcName, String srgName, String obfName, String funcDesc) {
+        public MethodSignature(String funcName, String srgName, String funcDesc) {
             this.funcName = funcName;
             this.srgName = srgName;
-            this.obfName = obfName;
             this.funcDesc = funcDesc;
-            this.obfDesc = obfuscate(funcDesc);
-        }
-
-        private static String obfuscate(String desc) {
-            for (String s : classMappings.keySet())
-                if (desc.contains(s))
-                    desc = desc.replaceAll(s, classMappings.get(s));
-
-            return desc;
         }
 
         @Override
         public String toString() {
-            return "[" + funcName + ", " + srgName + ", " + obfName + "] | " + funcDesc + " | " + obfDesc;
+            return "[" + funcName + ", " + srgName + "] | " + funcDesc;
         }
 
         public boolean matches(String methodName, String methodDesc) {
-            return (methodName.equals(funcName) || methodName.equals(obfName) || methodName.equals(srgName))
-                    && (methodDesc.equals(funcDesc) || methodDesc.equals(obfDesc));
+            return (methodName.equals(funcName) || methodName.equals(srgName)) && (methodDesc.equals(funcDesc));
         }
 
         public boolean matches(MethodNode method) {
