@@ -21,6 +21,7 @@ import net.insomniakitten.smarthud.SmartHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.NetworkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,25 +42,27 @@ public class PacketListener {
         if (event.getHandler() instanceof NetHandlerPlayClient) {
             SmartHUD.LOGGER.info("Injecting SPacketCollectItem listener into {}",
                     event.getHandler().getClass().getCanonicalName());
-            NetHandlerPlayClient handler = (NetHandlerPlayClient) event.getHandler();
 
+            boolean isLegacyMode = false;
+
+            NetHandlerPlayClient handler = (NetHandlerPlayClient) event.getHandler();
+            Minecraft mc = Minecraft.getMinecraft();
             GuiScreen screen = getValue(handler, "field_147307_j", "guiScreenServer");
+            NetworkManager mgr = event.getManager();
             GameProfile profile = getValue(handler, "field_175107_d", "profile");
 
-            boolean legacy = false;
             try {
                 DefaultArtifactVersion version = new DefaultArtifactVersion(MinecraftForge.MC_VERSION);
-                legacy = VersionRange.createFromVersionSpec("[1.11,1.12)").containsVersion(version);
+                isLegacyMode = VersionRange.createFromVersionSpec("[1.11,1.12)").containsVersion(version);
             } catch (InvalidVersionSpecificationException e) {
                 SmartHUD.LOGGER.warn("Failed to parse current Minecraft version, legacy support will be ignored.");
             }
 
-            ExtendedClientNetHandler extendedHandler = new ExtendedClientNetHandler(
-                    Minecraft.getMinecraft(), screen, event.getManager(), profile);
-            ExtendedLegacyClientNetHandler legacyHandler = new ExtendedLegacyClientNetHandler(
-                    Minecraft.getMinecraft(), screen, event.getManager(), profile);
-
-            event.getManager().setNetHandler(legacy ? legacyHandler : extendedHandler);
+            event.getManager().setNetHandler(
+                    isLegacyMode ?
+                    new ExtendedLegacyClientNetHandler(mc, screen, mgr, profile)
+                  : new ExtendedClientNetHandler(mc, screen, mgr, profile)
+            );
         }
     }
 
