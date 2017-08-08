@@ -35,22 +35,8 @@ minecraft {
     replace '%mc_version%', "${mc_version}"
     replace '%mod_version%', "${mod_version}"
 
-    replaceIn 'SmartHUDCorePlugin.java'
-    replaceIn 'SmartHUDTransformer.java'
     replaceIn 'LibInfo.java'
 
-    clientJvmArgs = ["-Dfml.coreMods.load=${core_plugin}"]
-    serverJvmArgs = ["-Dfml.coreMods.load=${core_plugin}"]
-
-}
-
-jar {
-    manifest {
-        attributes(
-                "FMLCorePluginContainsFMLMod": "true",
-                "FMLCorePlugin": "${core_plugin}"
-        )
-    }
 }
 
 processResources {

@@ -25,19 +25,25 @@ import net.insomniakitten.smarthud.util.Profiler.Section;
 import net.insomniakitten.smarthud.util.StackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
 @SideOnly(Side.CLIENT)
@@ -47,8 +53,11 @@ public class HotbarRenderer {
     private static final ResourceLocation HUD_ELEMENTS
             = new ResourceLocation(SmartHUD.MOD_ID, "textures/hud/elements.png");
 
-    @SubscribeEvent
-    public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
+    private static final int ATTACK_INDICATOR_HOTBAR = 2;
+    private static final int ATTACK_INDICATOR_INVALID = -1304094787;
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (!HotbarManager.canRender(event)) return;
 
         Profiler.start(Section.RENDER_HOTBAR);
@@ -120,6 +129,11 @@ public class HotbarRenderer {
         }
 
         Profiler.end();
+
+        GameSettings settings = Minecraft.getMinecraft().gameSettings;
+        if (settings.attackIndicator == ATTACK_INDICATOR_HOTBAR) {
+            settings.attackIndicator = ATTACK_INDICATOR_INVALID;
+        }
     }
 
     public static void renderHotbarBackground(int x, int y, int slots) {
@@ -134,6 +148,48 @@ public class HotbarRenderer {
         }
         gui.drawTexturedModalRect(x + (20 * slots) - 9, y, 11, textureY, 11, 22);
         GlStateManager.popMatrix();
+    }
+
+    @SubscribeEvent
+    public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
+        if (!HotbarManager.canRender(event)) return;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        GameSettings settings = mc.gameSettings;
+        if (settings.attackIndicator == ATTACK_INDICATOR_INVALID) {
+            settings.attackIndicator = ATTACK_INDICATOR_HOTBAR;
+            renderHotbarAttackIndicator(mc.ingameGUI, event.getResolution());
+        }
+    }
+
+    private static void renderHotbarAttackIndicator(GuiIngame gui, ScaledResolution sr) {
+        Minecraft mc = Minecraft.getMinecraft();
+        Entity entity =  mc.getRenderViewEntity();
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+            EnumHandSide side = player.getPrimaryHand().opposite();
+            float strength = mc.player.getCooledAttackStrength(0);
+            if (strength < 1) {
+                int halfWidth = sr.getScaledWidth() / 2;
+                int y = sr.getScaledHeight() - 20;
+                int offset = 91 + HotbarManager.getAttackIndicatorOffset();
+                int x = halfWidth + (side == EnumHandSide.RIGHT ? -offset - 22 : offset + 6);
+                int strPixel = (int) (strength * 19);
+                GlStateManager.color(1, 1, 1, 1);
+                GlStateManager.enableRescaleNormal();
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(
+                    GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                    GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                RenderHelper.enableGUIStandardItemLighting();
+                mc.getTextureManager().bindTexture(Gui.ICONS);
+                gui.drawTexturedModalRect(x, y, 0, 94, 18, 18);
+                gui.drawTexturedModalRect(x, y + 18 - strPixel, 18, 112 - strPixel, 18, strPixel);
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.disableRescaleNormal();
+                GlStateManager.disableBlend();
+            }
+        }
     }
 
 }
