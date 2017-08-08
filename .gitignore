@@ -1,11 +1,9 @@
 # Gradle
-!gradle-wrapper.jar
 .gradle/
 build/
 
 # IntelliJ
 *.iml
-*.jar
 .idea/
 out/
 classes/
