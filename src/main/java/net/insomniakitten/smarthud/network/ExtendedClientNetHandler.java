@@ -25,6 +25,7 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketThreadUtil;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,17 +39,21 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class ExtendedClientNetHandler extends NetHandlerPlayClient {
 
-    private NetHandlerPlayClient delegate;
+    private final NetHandlerPlayClient delegate;
+    private final Minecraft mc;
 
     public ExtendedClientNetHandler(
             Minecraft minecraft, GuiScreen screen,
             NetworkManager networkManager, GameProfile profile) {
         super(minecraft, screen, networkManager, profile);
-        delegate = (NetHandlerPlayClient) networkManager.getNetHandler();
+        this.delegate = (NetHandlerPlayClient) networkManager.getNetHandler();
+        this.mc = minecraft;
     }
 
     @Override
     public void handleCollectItem(@Nonnull SPacketCollectItem packet) {
+        // This must be called by us otherwise it enqueues the wrapped nethandler
+        PacketThreadUtil.checkThreadAndEnqueue(packet, this, mc);
         PickupManager.handleItemCollectionPacket(packet);
         delegate.handleCollectItem(packet);
     }
