@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud.feature.hotbar;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.asm.SmartHUDHooks;
 import net.insomniakitten.smarthud.config.GeneralConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.inventory.InventoryManager;
@@ -31,13 +30,12 @@ import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 @SideOnly(Side.CLIENT)
 public class HotbarManager {
 
-    protected static boolean canRender(RenderGameOverlayEvent.Pre event) {
+    protected static boolean canRender(RenderGameOverlayEvent event) {
         return !event.isCanceled() && event.getType().equals(ElementType.HOTBAR) && configHotbar.isEnabled;
     }
 
     /**
      * Method used to calculate the required offset of the attack indicator
-     * @see SmartHUDHooks#transformAttackIndicator(int) for the ASM hook
      * @return An int used to offset the element
      */
     public static int getAttackIndicatorOffset() {
