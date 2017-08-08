@@ -16,6 +16,7 @@ package net.insomniakitten.smarthud.inventory;
  *   limitations under the License.
  */
 
+import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.Profiler;
 import net.insomniakitten.smarthud.util.Profiler.Section;
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class InventoryManager {
 
     /**

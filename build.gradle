@@ -12,7 +12,6 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${mc_version}-${mod_version}"
-if (mod_build != "") version = "${mc_version}-${mod_version}-${mod_build}"
 group = "net.insomniakitten.smarthud"
 archivesBaseName = "smarthud"
 
@@ -35,7 +34,7 @@ minecraft {
     replace '%mc_version%', "${mc_version}"
     replace '%mod_version%', "${mod_version}"
 
-    replaceIn 'LibInfo.java'
+    replaceIn 'SmartHUD.java'
 
 }
 

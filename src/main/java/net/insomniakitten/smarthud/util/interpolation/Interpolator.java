@@ -1,13 +1,11 @@
-package net.insomniakitten.smarthud.feature.pickup;
+package net.insomniakitten.smarthud.util.interpolation;
 
 public interface Interpolator {
 
     /**
      * Interpolate a time across a function defined by the implementor.
      * 
-     * @param time
-     *            A time value, must be 0..1
-     * 
+     * @param time A time value, must be 0..1
      * @return The interpolated value. Can be thought of as 'y' where time is 'x'.
      */
     float interpolate(float time);
@@ -16,6 +14,6 @@ public interface Interpolator {
         return interpolate((x - min) / (max - min));
     }
 
-    public static final Interpolator LINEAR = f -> f;
+    Interpolator linear = f -> f;
 
 }

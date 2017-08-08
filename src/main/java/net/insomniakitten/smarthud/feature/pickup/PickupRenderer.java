@@ -18,16 +18,17 @@ package net.insomniakitten.smarthud.feature.pickup;
 
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.util.CachedItem;
+import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.Profiler;
 import net.insomniakitten.smarthud.util.Profiler.Section;
 import net.insomniakitten.smarthud.util.StackHelper;
+import net.insomniakitten.smarthud.util.interpolation.CubicBezierInterpolator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,13 +41,13 @@ import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
 import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
 @SideOnly(Side.CLIENT)
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class PickupRenderer {
 
     // TODO: Smooth movement during list offsets
 
-    private static final CubicBezierInterpolator expiredInterpolator = new CubicBezierInterpolator(.32, -0.5, .41, .62);
-    private static final float                   expiredAnimateTime  = 1000;
+    private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
+    private static final float ANIMATION_DURATION = 400;
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
@@ -66,46 +67,56 @@ public class PickupRenderer {
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
             int y1 = y + (fontRenderer.FONT_HEIGHT * i) + (2 * i);
-            if (renderLabel(fontRenderer, renderItem, x, y1, cachedItem, event.getPartialTicks())) {
+            if (renderLabel(fontRenderer, renderItem, x, y1, cachedItem, event)) {
                 iterator.remove();
             }
         }
         Profiler.end();
     }
 
-    public static boolean renderLabel(FontRenderer fontRenderer, RenderItem renderItem,
-                                   float renderX, float renderY, CachedItem cachedItem, float partialTicks) {
+    public static boolean renderLabel(
+            FontRenderer fontRenderer, RenderItem renderItem,
+            float renderX, float renderY,
+            CachedItem cachedItem, RenderGameOverlayEvent event) {
         boolean hasItemName = configPickup.hudStyle.hasItemName();
         String key = "label.smarthud.pickup." + (hasItemName ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(cachedItem.getCount());
         String label = I18n.format(key, count, cachedItem.getName());
+
+        int labelWidth = fontRenderer.getStringWidth(label);
+        float labelX = HandHelper.handleVariableOffset(renderX, labelWidth);
+        float iconX = HandHelper.handleVariableOffset(renderX - 14, 10.72f);
+
+        if (HandHelper.isLeftHanded()) {
+            labelX += event.getResolution().getScaledWidth();
+            iconX += event.getResolution().getScaledWidth();
+        }
+
         float end = renderX + fontRenderer.getStringWidth(label);
         long remaining = cachedItem.getRemainingTicks();
         if (remaining < 0) {
-            float time = Math.abs(remaining) + partialTicks;
-            if (time > expiredAnimateTime) {
+            float time = Math.abs(remaining) + event.getPartialTicks();
+            if (time > ANIMATION_DURATION) {
                 return true;
             }
-            renderX -= expiredInterpolator.interpolate(0, expiredAnimateTime, time) * end;
+            float interpolation = ANIMATION.interpolate(0, ANIMATION_DURATION, time) * end;
+            labelX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
+            iconX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
         }
-        GlStateManager.pushMatrix();
-        fontRenderer.drawStringWithShadow(label, renderX, renderY, 0xFFFFFFFF);// | (int) alpha << 24);
-        GlStateManager.popMatrix();
+
+        fontRenderer.drawStringWithShadow(label, labelX, renderY, 0xFFFFFFFF);// | (int) alpha << 24);
+
         if (configPickup.hudStyle.hasItemIcon()) {
-            GlStateManager.pushMatrix();
             GlStateManager.enableAlpha();
             RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.translate(renderX - 14, renderY - 1.5, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(iconX, renderY - 1.5, 0);
             GlStateManager.scale(0.67, 0.67, 0.67);
             renderItem.renderItemAndEffectIntoGUI(cachedItem.getStack(), 0, 0);
-            RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
+            RenderHelper.disableStandardItemLighting();
         }
         return false;
-    }
-
-    private static float linearInterpolate(float f1, float f2, float mu) {
-        return (f1 * (1 - mu) + f2 * mu);
     }
 
 }

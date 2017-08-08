@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.feature.pickup;
+package net.insomniakitten.smarthud.util.interpolation;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -8,22 +8,20 @@ import org.lwjgl.util.vector.Vector2f;
  * Creates a cubic bezier curve based on two vectors, and allows simple
  * interpolation of a 0..1 time value.
  */
+
 public class CubicBezierInterpolator implements Interpolator {
 
-    protected Vector2f start;
-    protected Vector2f end;
+    protected Vector2f start, end;
 
     // Calculation storage to avoid unnecessary instantiation
-    protected Vector2f a = new Vector2f();
-    protected Vector2f b = new Vector2f();
-    protected Vector2f c = new Vector2f();
+    protected Vector2f a = new Vector2f(), b = new Vector2f(), c = new Vector2f();
 
     public CubicBezierInterpolator(Vector2f start, Vector2f end) throws IllegalArgumentException {
         if (start.x < 0 || start.x > 1) {
-            throw new IllegalArgumentException("startX value must be in the range [0, 1]");
+            throw new IllegalArgumentException("start X value must be in the range [0, 1]");
         }
         if (end.x < 0 || end.x > 1) {
-            throw new IllegalArgumentException("endX value must be in the range [0, 1]");
+            throw new IllegalArgumentException("end X value must be in the range [0, 1]");
         }
         this.start = start;
         this.end = end;
@@ -57,12 +55,12 @@ public class CubicBezierInterpolator implements Interpolator {
             if (Math.abs(z) < 1e-3) {
                 break;
             }
-            x -= z / getXDerivate(x);
+            x -= z / getSlope(x);
         }
         return x;
     }
 
-    private float getXDerivate(float t) {
+    private float getSlope(float t) {
         return c.x + t * (2 * b.x + 3 * a.x * t);
     }
 

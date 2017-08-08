@@ -28,6 +28,11 @@ public class HandHelper {
         return Minecraft.getMinecraft().gameSettings.mainHand;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static boolean isLeftHanded() {
+        return getMainHand().equals(EnumHandSide.LEFT);
+    }
+
     /**
      * Used to automatically adjust element offset on the screen depending on
      * the current game setting for the player's main hand. This aids in supporting
@@ -38,8 +43,8 @@ public class HandHelper {
      * @return The new offset depending on the current game setting
      */
     @SideOnly(Side.CLIENT)
-    public static int handleVariableOffset(int currentOffset, int objectWidth) {
-        int newOffset = 0;
+    public static float handleVariableOffset(float currentOffset, float objectWidth) {
+        float newOffset = 0;
         if (getMainHand().equals(EnumHandSide.LEFT)) {
             currentOffset = -currentOffset;
             newOffset = -objectWidth;
