@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.asm;
+package net.insomniakitten.smarthud.feature.armor;
 
 /*
  *  Copyright 2017 InsomniaKitten
@@ -16,21 +16,19 @@ package net.insomniakitten.smarthud.asm;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.feature.hotbar.HotbarManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SuppressWarnings("unused")
-public class SmartHUDHooks {
+@SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(Side.CLIENT)
+public class ArmorRenderer {
 
-    @SideOnly(Side.CLIENT)
-    public static int transformAttackIndicator(int original) {
-        EnumHandSide mainHand = Minecraft.getMinecraft().gameSettings.mainHand;
-        int right = original + HotbarManager.getAttackIndicatorOffset();
-        int left = original - HotbarManager.getAttackIndicatorOffset();
-        return mainHand == EnumHandSide.RIGHT ? right : left;
+    @SubscribeEvent
+    public static void onRenderArmorHUD(RenderGameOverlayEvent.Pre event) {
+        // TODO this
     }
 
 }

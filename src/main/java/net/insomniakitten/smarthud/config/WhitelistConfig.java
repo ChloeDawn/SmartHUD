@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.lib;
+package net.insomniakitten.smarthud.config;
 
 /*
  *  Copyright 2017 InsomniaKitten
@@ -17,25 +17,21 @@ package net.insomniakitten.smarthud.lib;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.util.StackHandler;
+import net.insomniakitten.smarthud.inventory.InventoryManager;
+import net.insomniakitten.smarthud.util.CachedItem;
+import net.insomniakitten.smarthud.util.StackHelper;
+import net.insomniakitten.smarthud.util.dimension.AnyDimension;
+import net.insomniakitten.smarthud.util.dimension.DimensionPredicate;
+import net.insomniakitten.smarthud.util.dimension.SingleDimension;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Config(modid = LibInfo.MOD_ID, name = LibInfo.CONFIG_WHITELIST, category = "whitelist")
+@Config(modid = SmartHUD.MOD_ID, name = SmartHUD.CONFIG_WHITELIST, category = "whitelist")
 @Config.LangKey("config.smarthud.whitelist")
-@Mod.EventBusSubscriber(modid = LibInfo.MOD_ID)
-public class LibWhitelist {
-
-    static {
-        if (SmartHUD.DEOBF)
-            SmartHUD.LOGGER.info("Registering LibWhitelist to the Event Bus");
-    }
+public class WhitelistConfig {
 
     @Config.Name("Use Whitelist")
     @Config.Comment({"Should the HUD use the configurable whitelist when checking for valid items?\n" +
@@ -55,34 +51,42 @@ public class LibWhitelist {
             "randomthings:goldencompass",
             "endercompass:ender_compass",
             "toughasnails:thermometer",
-            "toughasnails:season_clock"
+            "toughasnails:season_clock",
+            "appliedenergistics2:sky_compass"
     };
 
     public static void initializeWhitelist() {
             SmartHUD.LOGGER.info("Processing items " + (
-                    useWhitelist ?
-                            "from the whitelist"
+                    useWhitelist ? "from the whitelist"
                             : "from the list of default entries"));
-        LibStore.validItems = LibWhitelist.useWhitelist ?
-                LibWhitelist.processConfigWhitelist()
-                : LibWhitelist.populateDefaultList();
+        InventoryManager.whitelist = WhitelistConfig.useWhitelist ?
+                WhitelistConfig.processConfigWhitelist()
+                : WhitelistConfig.populateDefaultList();
     }
 
     /**
      * Queries the Item registry with a resource location generated from each String in the whitelist String[].
-     *
      * @return A list of ItemStacks that match the list of resource names. Any invalid resource names are ignored.
      */
-    public static NonNullList<ItemStack> processConfigWhitelist() {
-        NonNullList<ItemStack> cache = NonNullList.create();
-        for (String entry : itemList) {
-            String[] data = entry.split(":");
-            if (data.length > 1) {
-                String modid = data[0], name = data[1];
-                int meta = data.length > 2 ? Integer.valueOf(data[2]) : -1;
+    public static NonNullList<CachedItem> processConfigWhitelist() {
+        NonNullList<CachedItem> cache = NonNullList.create();
+        for (String item : itemList) {
+            String entry = item.trim();
+            DimensionPredicate predicate = AnyDimension.INSTANCE;
+            String[] contents = entry.split("@");
 
-                ItemStack stack = StackHandler.getStackFromResourceName(modid, name, meta);
-                if (!stack.isEmpty()) cache.add(stack);
+            if (contents.length > 1) {
+                int dim = Integer.valueOf(contents[1].replaceAll("\\D", ""));
+                predicate = new SingleDimension(DimensionType.getById(dim));
+            }
+
+            String[] regname = contents[0].split(":");
+            String modid = regname[0], name = regname[1];
+            int meta = regname.length > 2 ? Integer.valueOf(regname[2]) : -1;
+            ItemStack stack = StackHelper.getStackFromResourceName(modid, name, meta);
+
+            if (!stack.isEmpty()) {
+                cache.add(new CachedItem(stack).setDimension(predicate));
             }
         }
         return cache;
@@ -91,19 +95,11 @@ public class LibWhitelist {
     /**
      * The default list of items that the mod will fall back to if useWhitelist is false in the config.
      */
-    public static NonNullList<ItemStack> populateDefaultList() {
-        NonNullList<ItemStack> defaults = NonNullList.create();
-        defaults.add(new ItemStack(Items.CLOCK));
-        defaults.add(new ItemStack(Items.COMPASS));
+    public static NonNullList<CachedItem> populateDefaultList() {
+        NonNullList<CachedItem> defaults = NonNullList.create();
+        defaults.add(new CachedItem(new ItemStack(Items.CLOCK)));
+        defaults.add(new CachedItem(new ItemStack(Items.COMPASS)));
         return defaults;
-    }
-
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(LibInfo.MOD_ID)) {
-            ConfigManager.sync(LibInfo.MOD_ID, Config.Type.INSTANCE);
-            initializeWhitelist();
-        }
     }
 
 }

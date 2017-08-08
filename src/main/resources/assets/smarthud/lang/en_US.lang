@@ -1,5 +1,0 @@
-config.smarthud.general=General
-config.smarthud.general.tooltip=Modify the appearance and behaviour of the HUD.
-config.smarthud.whitelist=Whitelist
-config.smarthud.whitelist.tooltip=Configure the items that can be displayed on the HUD.
-config.smarthud.whitelist.list=Item List

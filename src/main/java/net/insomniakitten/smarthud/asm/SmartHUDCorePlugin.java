@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud.asm;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.lib.LibInfo;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import javax.annotation.Nullable;
@@ -27,11 +26,13 @@ import java.util.Map;
 @IFMLLoadingPlugin.TransformerExclusions("net.insomniakitten.smarthud.asm")
 public class SmartHUDCorePlugin implements IFMLLoadingPlugin {
 
+    public static final String CLASS_TRANSFORMER = "net.insomniakitten.smarthud.asm.SmartHUDTransformer";
+
     public static boolean runtimeDeobf = false;
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{LibInfo.CLASS_TRANSFORMER};
+        return new String[]{ CLASS_TRANSFORMER };
     }
 
     @Override

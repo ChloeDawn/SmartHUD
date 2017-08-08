@@ -1,5 +1,5 @@
-package net.insomniakitten.smarthud.asm;
-
+package net.insomniakitten.smarthud.util.dimension;
+ 
 /*
  *  Copyright 2017 InsomniaKitten
  *
@@ -16,19 +16,8 @@ package net.insomniakitten.smarthud.asm;
  *   limitations under the License.
  */
 
-import java.util.HashMap;
+import net.minecraft.world.DimensionType;
 
-public class ClassNameHashMap extends HashMap<String, String> {
+import java.util.function.Predicate;
 
-    public ClassNameHashMap(String... s) {
-        for (int i = 0; i < s.length / 2; i++)
-            put(s[i * 2], s[i * 2 + 1]);
-    }
-
-    @Override
-    public String put(String key, String value) {
-        return super.put("L" + key + ";", "L" + value + ";");
-    }
-
-}
-
+public interface DimensionPredicate extends Predicate<DimensionType> {}

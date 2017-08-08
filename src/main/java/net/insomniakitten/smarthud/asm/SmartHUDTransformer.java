@@ -1,53 +1,31 @@
 package net.insomniakitten.smarthud.asm;
 
 /*
- *  Copyright 2017 InsomniaKitten
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *  Boilerplate code taken with love from Vazkii's Quark mod
+ *  Quark is distributed at https://github.com/Vazkii/Quark
  */
 
-import net.insomniakitten.smarthud.lib.LibInfo;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.common.FMLLog;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-import org.objectweb.asm.util.Printer;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-// Boilerplate code taken with love from Vazkii's Quark mod
-// Quark is distributed at https://github.com/Vazkii/Quark
-
 public class SmartHUDTransformer implements IClassTransformer, Opcodes {
 
-    private static final String MC_VERSION = "%mc_version%";
+    public static final String CLASS_ASM_HOOKS = "net/insomniakitten/smarthud/asm/SmartHUDHooks";
+
     private static final Map<String, Transformer> transformers = new HashMap<>();
 
-    private static final ClassNameHashMap MAPPINGS_1_11_2 = new ClassNameHashMap(
-            "net/minecraft/client/gui/GuiIngame", "bff",
-            "net/minecraft/client/gui/ScaledResolution", "bfi",
-            "net/minecraft/util/ResourceLocation", "kq",
-            "net/minecraft/client/renderer/texture/TextureManager", "byx"
-    );
     private static final ClassNameHashMap MAPPINGS_1_12 = new ClassNameHashMap(
             "net/minecraft/client/gui/GuiIngame", "bio",
             "net/minecraft/client/gui/ScaledResolution", "bir",
@@ -58,20 +36,20 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
     public static ClassNameHashMap classMappings;
 
     static {
-        if (Objects.equals(MC_VERSION, "1.11.2"))
-            classMappings = MAPPINGS_1_11_2;
-        else classMappings = MAPPINGS_1_12;
-        transformers.put("net.minecraft.client.gui.GuiIngame",
-                SmartHUDTransformer::transformGuiIngame);
+        classMappings = MAPPINGS_1_12;
+        transformers.put("net.minecraft.client.gui.GuiIngame", SmartHUDTransformer::transformGuiIngame);
     }
 
     private static byte[] transformGuiIngame(byte[] basicClass) {
 
-        MethodSignature sig0 = new MethodSignature(
-                "renderHotbar", "func_180479_a", "a",
+        MethodSignature sig0= new MethodSignature(
+                "renderHotbar",
+                "func_180479_a", "a",
                 "(Lnet/minecraft/client/gui/ScaledResolution;F)V");
+
         MethodSignature sig1 = new MethodSignature(
-                "bindTexture", "func_110577_a", "a",
+                "bindTexture",
+                "func_110577_a", "a",
                 "(Lnet/minecraft/util/ResourceLocation;)V");
 
         return transform(basicClass, sig0, "attack indicator rendering hook",
@@ -86,7 +64,7 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
                             InsnList newInstructions = new InsnList();
                             newInstructions.add(new VarInsnNode(ILOAD, 12));
                             newInstructions.add(new MethodInsnNode(
-                                    INVOKESTATIC, LibInfo.CLASS_ASM_HOOKS,
+                                    INVOKESTATIC, CLASS_ASM_HOOKS,
                                     "transformAttackIndicator", "(I)I", false));
                             newInstructions.add(new VarInsnNode(ISTORE, 12));
                             method.instructions.insert(node, newInstructions);
@@ -102,7 +80,7 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
         ClassNode node = new ClassNode();
         reader.accept(node, 0);
 
-        log("Applying transformation to method (" + sig + ")");
+        log("Applying transformation to method " + sig);
         log("Attempting to insert " + simpleDesc);
         boolean didAnything = findMethodAndTransform(node, sig, action);
 
@@ -150,175 +128,8 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
         return didAny;
     }
 
-    public static MethodAction combineByLast(NodeFilter filter, NodeAction action) {
-        return (MethodNode node) -> applyOnNodeByLast(node, filter, action);
-    }
-
-    public static boolean applyOnNodeByLast(MethodNode method, NodeFilter filter, NodeAction action) {
-        AbstractInsnNode[] nodes = method.instructions.toArray();
-        ListIterator<AbstractInsnNode> iterator = new InsnArrayIterator(nodes, method.instructions.size());
-
-        boolean didAny = false;
-        while (iterator.hasPrevious()) {
-            AbstractInsnNode anode = iterator.previous();
-            if (filter.test(anode)) {
-                didAny = true;
-                if (action.test(method, anode))
-                    break;
-            }
-        }
-
-        return didAny;
-    }
-
-    public static MethodAction combineFrontPivot(NodeFilter pivot, NodeFilter filter, NodeAction action) {
-        return (MethodNode node) -> applyOnNodeFrontPivot(node, pivot, filter, action);
-    }
-
-    public static boolean applyOnNodeFrontPivot(MethodNode method, NodeFilter pivot, NodeFilter filter, NodeAction action) {
-        AbstractInsnNode[] nodes = method.instructions.toArray();
-        ListIterator<AbstractInsnNode> iterator = new InsnArrayIterator(nodes);
-
-        int pos = 0;
-
-        boolean didAny = false;
-        while (iterator.hasNext()) {
-            pos++;
-            AbstractInsnNode pivotTest = iterator.next();
-            if (pivot.test(pivotTest)) {
-                ListIterator<AbstractInsnNode> internal = new InsnArrayIterator(nodes, pos);
-                while (internal.hasPrevious()) {
-                    AbstractInsnNode anode = internal.previous();
-                    if (filter.test(anode)) {
-                        didAny = true;
-                        if (action.test(method, anode))
-                            break;
-                    }
-                }
-            }
-        }
-
-        return didAny;
-    }
-
-    public static MethodAction combineBackPivot(NodeFilter pivot, NodeFilter filter, NodeAction action) {
-        return (MethodNode node) -> applyOnNodeBackPivot(node, pivot, filter, action);
-    }
-
-    public static boolean applyOnNodeBackPivot(MethodNode method, NodeFilter pivot, NodeFilter filter, NodeAction action) {
-        AbstractInsnNode[] nodes = method.instructions.toArray();
-        ListIterator<AbstractInsnNode> iterator = new InsnArrayIterator(nodes, method.instructions.size());
-
-        int pos = method.instructions.size();
-
-        boolean didAny = false;
-        while (iterator.hasPrevious()) {
-            pos--;
-            AbstractInsnNode pivotTest = iterator.previous();
-            if (pivot.test(pivotTest)) {
-                ListIterator<AbstractInsnNode> internal = new InsnArrayIterator(nodes, pos);
-                while (internal.hasNext()) {
-                    AbstractInsnNode anode = internal.next();
-                    if (filter.test(anode)) {
-                        didAny = true;
-                        if (action.test(method, anode))
-                            break;
-                    }
-                }
-            }
-        }
-
-        return didAny;
-    }
-
-    public static MethodAction combineFrontFocus(NodeFilter focus, NodeFilter filter, NodeAction action) {
-        return (MethodNode node) -> applyOnNodeFrontFocus(node, focus, filter, action);
-    }
-
-    public static boolean applyOnNodeFrontFocus(MethodNode method, NodeFilter focus, NodeFilter filter, NodeAction action) {
-        AbstractInsnNode[] nodes = method.instructions.toArray();
-        ListIterator<AbstractInsnNode> iterator = new InsnArrayIterator(nodes);
-
-        int pos = method.instructions.size();
-
-        boolean didAny = false;
-        while (iterator.hasNext()) {
-            pos++;
-            AbstractInsnNode focusTest = iterator.next();
-            if (focus.test(focusTest)) {
-                ListIterator<AbstractInsnNode> internal = new InsnArrayIterator(nodes, pos);
-                while (internal.hasNext()) {
-                    AbstractInsnNode anode = internal.next();
-                    if (filter.test(anode)) {
-                        didAny = true;
-                        if (action.test(method, anode))
-                            break;
-                    }
-                }
-            }
-        }
-
-        return didAny;
-    }
-
-    public static MethodAction combineBackFocus(NodeFilter focus, NodeFilter filter, NodeAction action) {
-        return (MethodNode node) -> applyOnNodeBackFocus(node, focus, filter, action);
-    }
-
-    public static boolean applyOnNodeBackFocus(MethodNode method, NodeFilter focus, NodeFilter filter, NodeAction action) {
-        AbstractInsnNode[] nodes = method.instructions.toArray();
-        ListIterator<AbstractInsnNode> iterator = new InsnArrayIterator(nodes, method.instructions.size());
-
-        int pos = method.instructions.size();
-
-        boolean didAny = false;
-        while (iterator.hasPrevious()) {
-            pos--;
-            AbstractInsnNode focusTest = iterator.previous();
-            if (focus.test(focusTest)) {
-                ListIterator<AbstractInsnNode> internal = new InsnArrayIterator(nodes, pos);
-                while (internal.hasPrevious()) {
-                    AbstractInsnNode anode = internal.previous();
-                    if (filter.test(anode)) {
-                        didAny = true;
-                        if (action.test(method, anode))
-                            break;
-                    }
-                }
-            }
-        }
-
-        return didAny;
-    }
-
     public static void log(String str) {
-        FMLLog.info("[Smart HUD ASM] %s", str);
-    }
-
-    public static void prettyPrint(MethodNode node) {
-        Printer printer = new Textifier();
-
-        TraceMethodVisitor visitor = new TraceMethodVisitor(printer);
-        node.accept(visitor);
-
-        StringWriter sw = new StringWriter();
-        printer.print(new PrintWriter(sw));
-        printer.getText().clear();
-
-        log(sw.toString());
-    }
-
-    public static void prettyPrint(AbstractInsnNode node) {
-        Printer printer = new Textifier();
-
-        TraceMethodVisitor visitor = new TraceMethodVisitor(printer);
-        node.accept(visitor);
-
-        StringWriter sw = new StringWriter();
-        printer.print(new PrintWriter(sw));
-        printer.getText().clear();
-
-        log(sw.toString());
+        FMLLog.log.info("[Smart HUD ASM] {}", str);
     }
 
     @Override
@@ -435,7 +246,7 @@ public class SmartHUDTransformer implements IClassTransformer, Opcodes {
 
         @Override
         public String toString() {
-            return "Names [" + funcName + ", " + srgName + ", " + obfName + "] Descriptor " + funcDesc + " / " + obfDesc;
+            return "[" + funcName + ", " + srgName + ", " + obfName + "] | " + funcDesc + " | " + obfDesc;
         }
 
         public boolean matches(String methodName, String methodDesc) {

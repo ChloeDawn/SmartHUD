@@ -1,5 +1,5 @@
-package net.insomniakitten.smarthud.asm;
-
+package net.insomniakitten.smarthud.feature.armor; 
+ 
 /*
  *  Copyright 2017 InsomniaKitten
  *
@@ -16,19 +16,13 @@ package net.insomniakitten.smarthud.asm;
  *   limitations under the License.
  */
 
-import java.util.HashMap;
+import net.minecraftforge.common.config.Config;
 
-public class ClassNameHashMap extends HashMap<String, String> {
+public class ArmorConfig {
 
-    public ClassNameHashMap(String... s) {
-        for (int i = 0; i < s.length / 2; i++)
-            put(s[i * 2], s[i * 2 + 1]);
-    }
-
-    @Override
-    public String put(String key, String value) {
-        return super.put("L" + key + ";", "L" + value + ";");
-    }
+    @Config.Name("Is Enabled")
+    @Config.Comment({"Should the HUD be enabled? If false, the HUD won't render."})
+    @Config.LangKey("config.smarthud.armor.enabled")
+    public boolean isEnabled = true;
 
 }
-

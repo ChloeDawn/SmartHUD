@@ -12,8 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${mc_version}-${mod_version}"
-if (mod_build != "")
-    version = "${mc_version}-${mod_version}-${mod_build}"
+if (mod_build != "") version = "${mc_version}-${mod_version}-${mod_build}"
 group = "net.insomniakitten.smarthud"
 archivesBaseName = "smarthud"
 
@@ -55,18 +54,15 @@ jar {
 }
 
 processResources {
-    inputs.property "build_version", "${mod_version}"
-    if (mod_build != "")
-        inputs.property "build_version", project.version
-    inputs.property "mcf_version", "${mc_version}"
-
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand  'build_version': "${mod_version}",
-                'mcf_version': "${mcf_version}"
+        include 'mcmod.info', 'pack.mcmeta'
+        expand 'build_version': version,
+                'mcf_version': mc_version
     }
 
-    from(sourceSets.main.resources.srcDirs) {exclude 'mcmod.info'}
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info', 'pack.mcmeta'
+    }
 }
 
 task deobfJar(type: Jar) {
