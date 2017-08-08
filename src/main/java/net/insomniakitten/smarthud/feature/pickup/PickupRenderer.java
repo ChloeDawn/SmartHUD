@@ -45,6 +45,9 @@ public class PickupRenderer {
 
     // TODO: Smooth movement during list offsets
 
+    private static final CubicBezierInterpolator expiredInterpolator = new CubicBezierInterpolator(.32, -0.5, .41, .62);
+    private static final float                   expiredAnimateTime  = 1000;
+
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (!PickupManager.canRender(event) || items.isEmpty()) return;
@@ -63,37 +66,42 @@ public class PickupRenderer {
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
             int y1 = y + (fontRenderer.FONT_HEIGHT * i) + (2 * i);
-            if (cachedItem.hasExpired()) {
+            if (renderLabel(fontRenderer, renderItem, x, y1, cachedItem, event.getPartialTicks())) {
                 iterator.remove();
-            } else {
-                renderLabel(fontRenderer, renderItem, x, y1, cachedItem);
             }
         }
         Profiler.end();
     }
 
     public static boolean renderLabel(FontRenderer fontRenderer, RenderItem renderItem,
-                                   float renderX, float renderY, CachedItem cachedItem) {
+                                   float renderX, float renderY, CachedItem cachedItem, float partialTicks) {
         boolean hasItemName = configPickup.hudStyle.hasItemName();
         String key = "label.smarthud.pickup." + (hasItemName ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(cachedItem.getCount());
         String label = I18n.format(key, count, cachedItem.getName());
-        float alpha = MathHelper.clamp(cachedItem.getRemainingTicks(), 0, 255);
-        SmartHUD.LOGGER.info("ALPHA: {}", alpha);
+        float end = renderX + fontRenderer.getStringWidth(label);
+        long remaining = cachedItem.getRemainingTicks();
+        if (remaining < 0) {
+            float time = Math.abs(remaining) + partialTicks;
+            if (time > expiredAnimateTime) {
+                return true;
+            }
+            renderX -= expiredInterpolator.interpolate(0, expiredAnimateTime, time) * end;
+        }
         GlStateManager.pushMatrix();
-        fontRenderer.drawStringWithShadow(label, renderX, renderY, 0xFFFFFF | (int) alpha << 24);
+        fontRenderer.drawStringWithShadow(label, renderX, renderY, 0xFFFFFFFF);// | (int) alpha << 24);
         GlStateManager.popMatrix();
         if (configPickup.hudStyle.hasItemIcon()) {
             GlStateManager.pushMatrix();
             GlStateManager.enableAlpha();
             RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.translate(3, renderY - 1.5, 0);
+            GlStateManager.translate(renderX - 14, renderY - 1.5, 0);
             GlStateManager.scale(0.67, 0.67, 0.67);
             renderItem.renderItemAndEffectIntoGUI(cachedItem.getStack(), 0, 0);
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
-        return cachedItem.hasExpired();
+        return false;
     }
 
     private static float linearInterpolate(float f1, float f2, float mu) {
