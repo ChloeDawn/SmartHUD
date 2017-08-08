@@ -24,6 +24,7 @@ import java.util.Map;
 @IFMLLoadingPlugin.Name("Smart HUD Core")
 @IFMLLoadingPlugin.MCVersion("%mc_version%")
 @IFMLLoadingPlugin.TransformerExclusions("net.insomniakitten.smarthud.asm")
+@IFMLLoadingPlugin.SortingIndex(1001) // After runtime deobf
 public class SmartHUDCorePlugin implements IFMLLoadingPlugin {
 
     public static final String CLASS_TRANSFORMER = "net.insomniakitten.smarthud.asm.SmartHUDTransformer";
