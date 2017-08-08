@@ -45,7 +45,7 @@ public class HandHelper {
     @SideOnly(Side.CLIENT)
     public static float handleVariableOffset(float currentOffset, float objectWidth) {
         float newOffset = 0;
-        if (getMainHand().equals(EnumHandSide.LEFT)) {
+        if (isLeftHanded()) {
             currentOffset = -currentOffset;
             newOffset = -objectWidth;
         }
