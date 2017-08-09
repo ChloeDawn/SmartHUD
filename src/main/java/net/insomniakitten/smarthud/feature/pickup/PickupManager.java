@@ -63,6 +63,8 @@ public class PickupManager {
         if (entity == null || living == null) return;
 
         if (entity instanceof EntityItem && living instanceof EntityPlayer) {
+            if (!((EntityPlayer) living).isUser()) return;
+
             Profiler.start(Profiler.Section.HANDLE_NETWORK_PACKET);
 
             ItemStack stack = ((EntityItem) entity).getItem();
