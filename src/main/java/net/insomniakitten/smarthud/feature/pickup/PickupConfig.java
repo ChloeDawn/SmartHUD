@@ -42,6 +42,10 @@ public class PickupConfig {
     @Config.Comment("The amount of time in milliseconds the picked up item should be displayed on the HUD.")
     @Config.LangKey("config.smarthud.pickup.time")
     public int displayTime = 3000;
+    
+    public int getDisplayTimeTicks() {
+        return displayTime / 50; 
+    }
 
     @Config.Name("HUD Style")
     @Config.Comment("Configure how items are displayed on the HUD when picked up")
