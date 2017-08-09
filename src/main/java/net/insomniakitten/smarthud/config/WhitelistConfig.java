@@ -56,12 +56,10 @@ public class WhitelistConfig {
     };
 
     public static void initialize() {
-            SmartHUD.LOGGER.info("Processing items " + (
-                    useWhitelist ? "from the whitelist"
-                            : "from the list of default entries"));
-        InventoryManager.whitelist = WhitelistConfig.useWhitelist ?
-                WhitelistConfig.processConfigWhitelist()
-                : WhitelistConfig.populateDefaultList();
+        if (useWhitelist) {
+            SmartHUD.LOGGER.info("Processing whitelist entries");
+            InventoryManager.whitelist = WhitelistConfig.processConfigWhitelist();
+        } else InventoryManager.whitelist = WhitelistConfig.populateDefaultList();
     }
 
     /**
