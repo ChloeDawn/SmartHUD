@@ -43,7 +43,7 @@ public class PickupRenderer {
     private static final float ANIMATION_DURATION = 10;
     
     public static void onRenderPickupQueue(RenderGameOverlayEvent.Pre event) {
-        if (!items.isEmpty()) return;
+        if (items.isEmpty()) return;
 
         Profiler.start(Section.RENDER_PICKUP);
 

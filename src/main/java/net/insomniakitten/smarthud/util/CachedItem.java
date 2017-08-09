@@ -68,7 +68,7 @@ public class CachedItem {
     }
 
     public void renewTimestamp() {
-        timestamp = System.currentTimeMillis();
+        timestamp = TickHelper.getTicksElapsed();
     }
 
     public DimensionPredicate getDimension() {
