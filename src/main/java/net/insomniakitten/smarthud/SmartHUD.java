@@ -24,20 +24,18 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(
-        modid = SmartHUD.MOD_ID,
+@Mod(   modid = SmartHUD.MOD_ID,
         name = SmartHUD.MOD_NAME,
         version = SmartHUD.MOD_VERSION,
         acceptedMinecraftVersions = SmartHUD.MC_VERSIONS,
-        clientSideOnly = true
-)
+        clientSideOnly = true)
 
 public class SmartHUD {
 
     public static final String MOD_ID = "smarthud";
     public static final String MOD_NAME = "Smart HUD";
     public static final String MOD_VERSION = "%mod_version%";
-    public static final String MC_VERSIONS = "%mc_version%";
+    public static final String MC_VERSIONS = "[1.11,1.13)";
 
     public static final String CONFIG_GENERAL = "smarthud/general";
     public static final String CONFIG_WHITELIST = "smarthud/whitelist";

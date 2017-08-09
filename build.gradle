@@ -30,8 +30,7 @@ minecraft {
     version = "${mcf_version}"
     runDir = run_dir
     mappings = mcp_mappings
-
-    replace '%mc_version%', "${mc_version}"
+    
     replace '%mod_version%', "${mod_version}"
 
     replaceIn 'SmartHUD.java'
