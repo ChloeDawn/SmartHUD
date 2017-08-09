@@ -16,29 +16,13 @@ package net.insomniakitten.smarthud.feature.pickup;
  *   limitations under the License.
  */
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
-import com.google.common.collect.ForwardingQueue;
 import net.insomniakitten.smarthud.config.GeneralConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.Profiler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleItemPickup;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
-import java.util.Queue;
-import javax.annotation.Nullable;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
 
@@ -48,7 +32,7 @@ public class PickupManager {
 
     public static void initialize() {
         regeneratePickupCache();
-        initializeParticleQueue();
+        PickupQueue.initializeParticleQueue();
     }
 
     public static void regeneratePickupCache() {
@@ -65,7 +49,7 @@ public class PickupManager {
         return GeneralConfig.configPickup.displayTime / 50;
     }
 
-    private static void handleItemCollection(ItemStack stack) {
+    protected static void handleItemCollection(ItemStack stack) {
         Profiler.start(Profiler.Section.HANDLE_COLLECTION);
 
         if (!stack.isEmpty()) {
@@ -99,55 +83,6 @@ public class PickupManager {
         }
 
         Profiler.end();
-    }
-
-    private static void initializeParticleQueue() {
-        try {
-            Field queueEntityFXField = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queueEntityFX");
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a", "item");
-            MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax", "target");
-            ParticleManager particleMgr = Minecraft.getMinecraft().effectRenderer;
-            @SuppressWarnings("unchecked")
-            Queue<Particle> queueEntityFX = (Queue<Particle>) queueEntityFXField.get(particleMgr);
-            queueEntityFXField.set(particleMgr, createForwardingParticleQueue(queueEntityFX, itemGetter, targetGetter));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static MethodHandle getParticleItemPickupGetter(MethodHandles.Lookup lookup, String... fieldNames) throws IllegalAccessException {
-        return lookup.unreflectGetter(ReflectionHelper.findField(ParticleItemPickup.class, fieldNames));
-    }
-
-    private static Queue<Particle> createForwardingParticleQueue(Queue<Particle> delegate, MethodHandle itemGetter, MethodHandle targetGetter) {
-        return new ForwardingQueue<Particle>() {
-            @Override
-            protected Queue<Particle> delegate() {
-                return delegate;
-            }
-
-            @Override
-            public boolean add(@Nullable Particle element) {
-                if (super.add(element)) {
-                    if (element != null && element.getClass() == ParticleItemPickup.class) {
-                        Entity item, target;
-                        try {
-                            item = (Entity) itemGetter.invoke(element);
-                            target = (Entity) targetGetter.invoke(element);
-                        } catch (Throwable e) {
-                            Throwables.throwIfUnchecked(e);
-                            throw new RuntimeException(e);
-                        }
-                        if (item instanceof EntityItem && target instanceof EntityPlayerSP) {
-                            handleItemCollection(((EntityItem) item).getItem());
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-        };
     }
 
 }
