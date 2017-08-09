@@ -17,24 +17,19 @@ package net.insomniakitten.smarthud.util;
  */
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Profiler {
 
     private static net.minecraft.profiler.Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
-    @SideOnly(Side.CLIENT)
     public static void start(Section section) {
         profiler.startSection(section.get());
     }
 
-    @SideOnly(Side.CLIENT)
     public static void end() {
         profiler.endSection();
     }
 
-    @SideOnly(Side.CLIENT)
     public static boolean isEnabled() {
         return profiler.profilingEnabled;
     }

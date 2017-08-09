@@ -47,7 +47,7 @@ public class InventoryManager {
     private static NonNullList<CachedItem> hotbar = NonNullList.create();
     private static NonNullList<CachedItem> inventory = NonNullList.create();
 
-    @SubscribeEvent @SideOnly(Side.CLIENT)
+    @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -96,7 +96,6 @@ public class InventoryManager {
         }
     }
 
-    @SideOnly(Side.CLIENT)
     public static boolean isWhitelisted(ItemStack stack, int dimension) {
         for (CachedItem cachedItem : whitelist) {
             if (cachedItem.matches(stack)) {

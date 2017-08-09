@@ -33,14 +33,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Iterator;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
 import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
-@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class PickupRenderer {
 

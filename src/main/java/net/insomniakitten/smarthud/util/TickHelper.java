@@ -14,7 +14,7 @@ public class TickHelper {
     
     private static long ticksElapsed;
     
-    @SubscribeEvent @SideOnly(Side.CLIENT)
+    @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         if (event.phase == Phase.END && !Minecraft.getMinecraft().isGamePaused()) {
             ticksElapsed++;

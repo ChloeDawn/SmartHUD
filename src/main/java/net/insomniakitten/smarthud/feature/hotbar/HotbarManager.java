@@ -17,17 +17,14 @@ package net.insomniakitten.smarthud.feature.hotbar;
  */
 
 import net.insomniakitten.smarthud.config.GeneralConfig;
-import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.inventory.InventoryManager;
+import net.insomniakitten.smarthud.util.CachedItem;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
-@SideOnly(Side.CLIENT)
 public class HotbarManager {
 
     protected static boolean canRender(RenderGameOverlayEvent event) {

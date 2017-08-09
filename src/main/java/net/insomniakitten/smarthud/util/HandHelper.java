@@ -23,12 +23,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HandHelper {
 
-    @SideOnly(Side.CLIENT)
     public static EnumHandSide getMainHand() {
         return Minecraft.getMinecraft().gameSettings.mainHand;
     }
 
-    @SideOnly(Side.CLIENT)
     public static boolean isLeftHanded() {
         return getMainHand().equals(EnumHandSide.LEFT);
     }
@@ -42,7 +40,6 @@ public class HandHelper {
      * @param objectWidth The current width of the element, used when inverting the position to the negative
      * @return The new offset depending on the current game setting
      */
-    @SideOnly(Side.CLIENT)
     public static float handleVariableOffset(float currentOffset, float objectWidth) {
         float newOffset = 0;
         if (isLeftHanded()) {
