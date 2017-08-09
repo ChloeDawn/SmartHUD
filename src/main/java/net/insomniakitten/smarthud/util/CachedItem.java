@@ -16,11 +16,10 @@ package net.insomniakitten.smarthud.util;
  *   limitations under the License.
  */
 
+import net.insomniakitten.smarthud.feature.pickup.PickupManager;
 import net.insomniakitten.smarthud.util.dimension.AnyDimension;
 import net.insomniakitten.smarthud.util.dimension.DimensionPredicate;
 import net.minecraft.item.ItemStack;
-
-import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
 
 public class CachedItem {
 
@@ -35,7 +34,7 @@ public class CachedItem {
         this.actualCount = stack.getCount();
         this.stack.setCount(1);
         this.count = count;
-        this.timestamp = ClientHelper.getTicksElapsed();
+        this.timestamp = TickHelper.getTicksElapsed();
         this.dimension = AnyDimension.INSTANCE;
     }
 
@@ -81,13 +80,13 @@ public class CachedItem {
     }
 
     public boolean hasExpired() {
-        long expiration = timestamp + configPickup.getDisplayTimeTicks();
-        return expiration < ClientHelper.getTicksElapsed();
+        long expiration = timestamp + PickupManager.getDisplayTimeTicks();
+        return expiration < TickHelper.getTicksElapsed();
     }
 
     public long getRemainingTicks() {
-        int cooldown = configPickup.getDisplayTimeTicks();
-        long time = ClientHelper.getTicksElapsed();
+        int cooldown = PickupManager.getDisplayTimeTicks();
+        long time = TickHelper.getTicksElapsed();
         return (timestamp + cooldown) - time;
     }
 

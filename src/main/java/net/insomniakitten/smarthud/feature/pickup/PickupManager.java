@@ -17,6 +17,7 @@ package net.insomniakitten.smarthud.feature.pickup;
  */
 
 import com.google.common.collect.EvictingQueue;
+import net.insomniakitten.smarthud.config.GeneralConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.Profiler;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,10 @@ public class PickupManager {
 
     protected static boolean canRender(RenderGameOverlayEvent.Pre event) {
         return !event.isCanceled() && event.getType().equals(ElementType.CHAT) && configPickup.isEnabled;
+    }
+
+    public static int getDisplayTimeTicks() {
+        return GeneralConfig.configPickup.displayTime / 50;
     }
 
     @SideOnly(Side.CLIENT)
