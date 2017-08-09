@@ -55,7 +55,7 @@ public class WhitelistConfig {
             "appliedenergistics2:sky_compass"
     };
 
-    public static void initializeWhitelist() {
+    public static void initialize() {
             SmartHUD.LOGGER.info("Processing items " + (
                     useWhitelist ? "from the whitelist"
                             : "from the list of default entries"));

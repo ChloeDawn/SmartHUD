@@ -48,7 +48,7 @@ public class SmartHUD {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        WhitelistConfig.initializeWhitelist();
+        WhitelistConfig.initialize();
         PickupManager.initialize();
     }
 

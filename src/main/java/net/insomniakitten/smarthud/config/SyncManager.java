@@ -32,7 +32,7 @@ public class SyncManager {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(SmartHUD.MOD_ID)) {
             ConfigManager.sync(SmartHUD.MOD_ID, Config.Type.INSTANCE);
-            WhitelistConfig.initializeWhitelist();
+            WhitelistConfig.initialize();
             PickupManager.regeneratePickupCache();
         }
     }
