@@ -19,7 +19,6 @@ package net.insomniakitten.smarthud.util;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class StackHelper {
 
@@ -51,7 +50,7 @@ public class StackHelper {
      * @return An ItemStack matching the resource name. If one isn't found, returns an empty stack
      */
     public static ItemStack getStackFromResourceName(String modid, String name, int meta) {
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(modid, name));
+        Item item = Item.REGISTRY.getObject(new ResourceLocation(modid, name));
         if (item != null) {
             return meta >= 0 ? new ItemStack(item, 1, meta) : new ItemStack(item);
         } else {
