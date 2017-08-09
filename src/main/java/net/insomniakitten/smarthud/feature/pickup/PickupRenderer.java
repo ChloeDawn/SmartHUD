@@ -47,7 +47,7 @@ public class PickupRenderer {
     // TODO: Smooth movement during list offsets
 
     private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
-    private static final float ANIMATION_DURATION = 400;
+    private static final float ANIMATION_DURATION = 10;
 
     @SubscribeEvent
     public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {

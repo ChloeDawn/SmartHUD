@@ -35,7 +35,7 @@ public class CachedItem {
         this.actualCount = stack.getCount();
         this.stack.setCount(1);
         this.count = count;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = ClientHelper.getTicksElapsed();
         this.dimension = AnyDimension.INSTANCE;
     }
 
@@ -81,13 +81,13 @@ public class CachedItem {
     }
 
     public boolean hasExpired() {
-        long expiration = timestamp + configPickup.displayTime;
-        return expiration < System.currentTimeMillis();
+        long expiration = timestamp + configPickup.getDisplayTimeTicks();
+        return expiration < ClientHelper.getTicksElapsed();
     }
 
     public long getRemainingTicks() {
-        int cooldown = configPickup.displayTime;
-        long time = System.currentTimeMillis();
+        int cooldown = configPickup.getDisplayTimeTicks();
+        long time = ClientHelper.getTicksElapsed();
         return (timestamp + cooldown) - time;
     }
 
