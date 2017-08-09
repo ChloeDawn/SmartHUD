@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud.feature.pickup;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.Profiler;
@@ -30,34 +29,29 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Iterator;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
 import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class PickupRenderer {
 
     // TODO: Smooth movement during list offsets
 
     private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
     private static final float ANIMATION_DURATION = 10;
-
-    @SubscribeEvent
-    public static void onRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
-        if (!PickupManager.canRender(event) || items.isEmpty()) return;
+    
+    public static void onRenderPickupQueue(RenderGameOverlayEvent.Pre event) {
+        if (!items.isEmpty()) return;
 
         Profiler.start(Section.RENDER_PICKUP);
 
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
-        int x = configPickup.hudStyle.hasItemIcon() ? 17 : 4;
         int h = event.getResolution().getScaledHeight();
+        int x = configPickup.hudStyle.hasItemIcon() ? 17 : 4;
         int y = h - (fontRenderer.FONT_HEIGHT * items.size()) - (2 * items.size());
 
         Iterator<CachedItem> iterator = items.iterator();
@@ -69,6 +63,7 @@ public class PickupRenderer {
                 iterator.remove();
             }
         }
+
         Profiler.end();
     }
 
@@ -76,8 +71,7 @@ public class PickupRenderer {
             FontRenderer fontRenderer, RenderItem renderItem,
             float renderX, float renderY,
             CachedItem cachedItem, RenderGameOverlayEvent event) {
-        boolean hasItemName = configPickup.hudStyle.hasItemName();
-        String key = "label.smarthud.pickup." + (hasItemName ? "long" : "short");
+        String key = "label.smarthud.pickup." + (configPickup.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(cachedItem.getCount());
         String label = I18n.format(key, count, cachedItem.getName());
 
@@ -90,13 +84,12 @@ public class PickupRenderer {
             iconX += event.getResolution().getScaledWidth();
         }
 
-        float end = renderX + fontRenderer.getStringWidth(label);
-        long remaining = cachedItem.getRemainingTicks();
-        if (remaining < 0) {
-            float time = Math.abs(remaining) + event.getPartialTicks();
+        if (cachedItem.getRemainingTicks() < 0) {
+            float time = Math.abs(cachedItem.getRemainingTicks()) + event.getPartialTicks();
             if (time > ANIMATION_DURATION) {
                 return true;
             }
+            float end = renderX + fontRenderer.getStringWidth(label);
             float interpolation = ANIMATION.interpolate(0, ANIMATION_DURATION, time) * end;
             labelX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
             iconX += HandHelper.isLeftHanded() ? interpolation : -interpolation;

@@ -41,14 +41,9 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class HotbarRenderer {
 
     private static final ResourceLocation HUD_ELEMENTS
@@ -56,11 +51,8 @@ public class HotbarRenderer {
 
     private static final int ATTACK_INDICATOR_HOTBAR = 2;
     private static final int ATTACK_INDICATOR_VOID = -1304094787;
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
-        if (!HotbarManager.canRender(event)) return;
-
+    
+    public static void onRenderHotbar(RenderGameOverlayEvent.Pre event) {
         Profiler.start(Section.RENDER_HOTBAR);
 
         NonNullList<CachedItem> cachedItems = InventoryManager.getInventory();
@@ -142,9 +134,8 @@ public class HotbarRenderer {
         }
         gui.drawTexturedModalRect(x + (20 * slots) - 9, y, 11, textureY, 11, 22);
     }
-
-    @SubscribeEvent
-    public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
+    
+    public static void onRenderAttackIndicator(RenderGameOverlayEvent.Post event) {
         if (!HotbarManager.canRender(event)) return;
 
         Minecraft mc = Minecraft.getMinecraft();

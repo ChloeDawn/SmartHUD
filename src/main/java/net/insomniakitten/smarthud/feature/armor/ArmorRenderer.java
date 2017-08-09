@@ -16,16 +16,10 @@ package net.insomniakitten.smarthud.feature.armor;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.SmartHUD;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class ArmorRenderer {
 
-    @SubscribeEvent
     public static void onRenderArmorHUD(RenderGameOverlayEvent.Pre event) {
         // TODO this
     }

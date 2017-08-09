@@ -37,16 +37,14 @@ public class PickupQueue {
 
     protected static void initializeParticleQueue() {
         try {
-            Field queueEntityFXField = ReflectionHelper.findField(
-                    ParticleManager.class, "field_187241_h", "queueEntityFX");
+            Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queueEntityFX");
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a", "item");
             MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax", "target");
-            ParticleManager particleMgr = Minecraft.getMinecraft().effectRenderer;
+            ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
             @SuppressWarnings("unchecked")
-            Queue<Particle> queueEntityFX = (Queue<Particle>) queueEntityFXField.get(particleMgr);
-            queueEntityFXField.set(particleMgr, createForwardingParticleQueue(
-                    queueEntityFX, itemGetter, targetGetter));
+            Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
+            field.set(particleManager, createForwardingParticleQueue(newQueue, itemGetter, targetGetter));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

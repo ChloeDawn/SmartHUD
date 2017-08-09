@@ -31,17 +31,17 @@ public class PickupManager {
     protected static EvictingQueue<CachedItem> items = EvictingQueue.create(configPickup.itemLimit);
 
     public static void initialize() {
-        regeneratePickupCache();
+        PickupManager.reloadQueue();
         PickupQueue.initializeParticleQueue();
     }
 
-    public static void regeneratePickupCache() {
+    public static void reloadQueue() {
         EvictingQueue<CachedItem> newQueue = EvictingQueue.create(configPickup.itemLimit);
         newQueue.addAll(items);
         items = newQueue;
     }
 
-    protected static boolean canRender(RenderGameOverlayEvent.Pre event) {
+    public static boolean canRender(RenderGameOverlayEvent event) {
         return !event.isCanceled() && event.getType().equals(ElementType.CHAT) && configPickup.isEnabled;
     }
 

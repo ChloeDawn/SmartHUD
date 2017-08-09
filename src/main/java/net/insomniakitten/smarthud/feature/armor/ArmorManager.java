@@ -16,5 +16,15 @@ package net.insomniakitten.smarthud.feature.armor;
  *   limitations under the License.
  */
 
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
+import static net.insomniakitten.smarthud.config.GeneralConfig.configArmor;
+
 public class ArmorManager {
+
+    public static boolean canRender(RenderGameOverlayEvent event) {
+        return !event.isCanceled() && event.getType().equals(ElementType.ARMOR) && configArmor.isEnabled;
+    }
+
 }

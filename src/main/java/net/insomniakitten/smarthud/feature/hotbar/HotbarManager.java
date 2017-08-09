@@ -27,7 +27,7 @@ import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
 public class HotbarManager {
 
-    protected static boolean canRender(RenderGameOverlayEvent event) {
+    public static boolean canRender(RenderGameOverlayEvent event) {
         return !event.isCanceled() && event.getType().equals(ElementType.HOTBAR) && configHotbar.isEnabled;
     }
 

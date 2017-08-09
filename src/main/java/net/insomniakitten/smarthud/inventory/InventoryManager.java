@@ -17,6 +17,8 @@ package net.insomniakitten.smarthud.inventory;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
+import net.insomniakitten.smarthud.config.SyncManager;
+import net.insomniakitten.smarthud.config.WhitelistConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.Profiler;
 import net.insomniakitten.smarthud.util.Profiler.Section;
@@ -28,55 +30,69 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class InventoryManager {
 
+    private static boolean shouldSync;
+
+
     /**
-     * This stores any whitelisted inventory that will be rendered on the HUD when present in the players inventory.
-     * Cached from the config String[] during postInit and onConfigChanged.
-     * If the useWhitelist is false, a default list of inventory is used.
+     * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
+     * @see SyncManager#onConfigChanged for the sync event
+     * TODO: if(inventoryHasChanged() || shouldSync) { cacheing }
+     */
+    public static void forceSync() {
+        shouldSync = true;
+    }
+
+    /**
+     * This stores any whitelisted inventory that will be rendered on the HUD when present
+     * in the players inventory. This list is populated when the following method is called:
+     * @see WhitelistConfig#processWhitelist()
+     * If useWhitelist is false, a default list of inventory is used.
+     * @see WhitelistConfig#useWhitelist
      */
     public static NonNullList<CachedItem> whitelist = NonNullList.create();
+
     /**
-     * This stores inventory found in the players inventory that match the whitelist and appropriate configs.
+     * This stores items found in the players hotbar and inventory
+     * that match the whitelist entries and appropriate configs.
      */
-    private static NonNullList<CachedItem> hotbar = NonNullList.create();
-    private static NonNullList<CachedItem> inventory = NonNullList.create();
+    private static NonNullList<CachedItem> hotbar = NonNullList.create(), inventory = NonNullList.create();
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-
         Minecraft mc = Minecraft.getMinecraft();
-        if (!configHotbar.isEnabled || whitelist.size() < 1) return;
         if (mc.player == null || mc.player.world == null) return;
 
         Profiler.start(Section.CACHE_INVENTORY);
 
-        NonNullList<ItemStack> playerInventory = mc.player.inventory.mainInventory;
+        NonNullList<ItemStack> inv = mc.player.inventory.mainInventory;
+        int dim = mc.player.dimension;
 
         NonNullList<CachedItem> hotbarCache = NonNullList.create();
         NonNullList<CachedItem> inventoryCache = NonNullList.create();
 
         for (int i = 0; i < 9; ++i) {
-            ItemStack stack = playerInventory.get(i);
-            if (isWhitelisted(stack, mc.player.dimension)) {
+            ItemStack stack = inv.get(i).copy();
+            if (!stack.isEmpty() && isWhitelisted(stack, dim)) {
                 processItemStack(hotbarCache, stack);
             }
         }
 
         for (int i = 9; i < 36; ++i) {
-            ItemStack stack = playerInventory.get(i);
-            if (isWhitelisted(stack, mc.player.dimension)) {
+            ItemStack stack = inv.get(i).copy();
+            if (!stack.isEmpty() && isWhitelisted(stack, dim)) {
                 processItemStack(inventoryCache, stack);
             }
         }
 
         hotbar = hotbarCache;
         inventory = inventoryCache;
+        shouldSync = false;
 
         Profiler.end();
     }
@@ -97,6 +113,7 @@ public class InventoryManager {
     }
 
     public static boolean isWhitelisted(ItemStack stack, int dimension) {
+        if (whitelist.size() < 1) return false;
         for (CachedItem cachedItem : whitelist) {
             if (cachedItem.matches(stack)) {
                 DimensionType type = DimensionType.getById(dimension);
