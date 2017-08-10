@@ -52,7 +52,8 @@ public class WhitelistConfig {
             "endercompass:ender_compass",
             "toughasnails:thermometer",
             "toughasnails:season_clock",
-            "appliedenergistics2:sky_compass"
+            "appliedenergistics2:sky_compass",
+            "naturescompass:naturescompass"
     };
 
     public static void initialize() {
