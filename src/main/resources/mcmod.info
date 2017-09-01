@@ -3,7 +3,7 @@
     "modid": "smarthud",
     "name": "Smart HUD",
     "description": "A dynamic HUD for displaying inventory items.",
-    "version": "${build_version}",
+    "version": "${mod_version}",
     "mcversion": "${mcf_version}",
     "url": "",
     "updateUrl": "",
@@ -11,7 +11,7 @@
       "InsomniaKitten"
     ],
     "credits": "",
-    "logoFile": "assets/smarthud/logo.png",
+    "logoFile": "",
     "screenshots": [],
     "dependencies": [
     ]

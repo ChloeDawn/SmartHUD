@@ -1,49 +1,36 @@
 buildscript {
-
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
     }
-
-    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT' }
-
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "${mc_version}-${mod_version}"
+version = "$mcVersion-$modVersion"
 group = "net.insomniakitten.smarthud"
 archivesBaseName = "smarthud"
 
-sourceCompatibility = compat_version
-targetCompatibility = compat_version
-
-libsDirName = build_dir
-distsDirName = build_dir
-
-compileJava {
-    sourceCompatibility = compat_version
-    targetCompatibility = compat_version
-}
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 minecraft {
-    version = "${mcf_version}"
-    runDir = run_dir
-    mappings = mcp_mappings
-    
-    replace '%mod_version%', "${mod_version}"
-
+    version = "$mcVersion-$mcfVersion"
+    runDir = "/run"
+    mappings = mcpMappings
+    replace '%VERSION%', modVersion
     replaceIn 'SmartHUD.java'
-
 }
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info', 'pack.mcmeta'
-        expand 'build_version': version,
-                'mcf_version': mc_version
+        expand  'mod_version': modVersion,
+                'mc_version': mcVersion
     }
-
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info', 'pack.mcmeta'
     }
@@ -52,7 +39,6 @@ processResources {
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
-    manifest {}
 }
 
 artifacts {

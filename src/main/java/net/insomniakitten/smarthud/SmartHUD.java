@@ -37,7 +37,7 @@ public class SmartHUD {
 
     public static final String MOD_ID = "smarthud";
     public static final String MOD_NAME = "Smart HUD";
-    public static final String MOD_VERSION = "%mod_version%";
+    public static final String MOD_VERSION = "%VERSION%";
     public static final String MC_VERSIONS = "[1.11,1.13)";
 
     public static final String CONFIG_GENERAL = "smarthud/general";
