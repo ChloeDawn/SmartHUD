@@ -22,9 +22,13 @@ public final class SingleDimension implements DimensionPredicate {
 
     private final DimensionType dimension;
 
-    public SingleDimension(DimensionType dimension) { this.dimension = dimension; }
+    public SingleDimension(DimensionType dimension) {
+        this.dimension = dimension;
+    }
 
     @Override
-    public boolean test(DimensionType dimension) { return dimension == this.dimension; }
+    public boolean test(DimensionType dimension) {
+        return dimension == this.dimension;
+    }
 
 }

@@ -25,6 +25,8 @@ public final class AnyDimension implements DimensionPredicate {
     private AnyDimension() {}
 
     @Override
-    public boolean test(DimensionType dimension) { return true; }
+    public boolean test(DimensionType dimension) {
+        return true;
+    }
 
 }

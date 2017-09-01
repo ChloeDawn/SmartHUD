@@ -32,6 +32,9 @@ import org.apache.logging.log4j.Logger;
 
 public class SmartHUD {
 
+    @Mod.Instance(SmartHUD.MOD_ID)
+    public static SmartHUD instance;
+
     public static final String MOD_ID = "smarthud";
     public static final String MOD_NAME = "Smart HUD";
     public static final String MOD_VERSION = "%mod_version%";
@@ -39,9 +42,6 @@ public class SmartHUD {
 
     public static final String CONFIG_GENERAL = "smarthud/general";
     public static final String CONFIG_WHITELIST = "smarthud/whitelist";
-
-    @Mod.Instance(SmartHUD.MOD_ID)
-    public static SmartHUD instance;
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     public static final boolean DEOBF = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");

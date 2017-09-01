@@ -58,12 +58,16 @@ public class PickupQueue {
     private static Queue<Particle> createForwardingParticleQueue(
             Queue<Particle> delegate, MethodHandle itemGetter, MethodHandle targetGetter) {
         return new ForwardingQueue<Particle>() {
-            @Override protected Queue<Particle> delegate() {
+
+            @Override
+            protected Queue<Particle> delegate() {
                 return delegate;
             }
-            @Override public boolean add(@Nullable Particle element) {
+
+            @Override
+            public boolean add(@Nullable Particle element) {
                 if (super.add(element)) {
-                    if (element != null && element.getClass().equals(ParticleItemPickup.class)) {
+                    if (element != null && ParticleItemPickup.class.equals(element.getClass())) {
                         Entity item, target;
                         try {
                             item = (Entity) itemGetter.invoke(element);
@@ -80,6 +84,7 @@ public class PickupQueue {
                 }
                 return false;
             }
+
         };
     }
 

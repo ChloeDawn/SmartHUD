@@ -35,6 +35,7 @@ public class Profiler {
     }
 
     public enum Section {
+
         RENDER_HOTBAR("smarthud.hotbar.render_overlay"),
         CACHE_INVENTORY("smarthud.hotbar.cache_inventory"),
         RENDER_PICKUP("smarthud.pickup.render_overlay"),
@@ -42,8 +43,15 @@ public class Profiler {
         ;
 
         private final String msg;
-        Section(String msg) { this.msg = msg; }
-        public String get() { return msg; }
+
+        Section(String msg) {
+            this.msg = msg;
+        }
+
+        public String get() {
+            return msg;
+        }
+
     }
 
 }

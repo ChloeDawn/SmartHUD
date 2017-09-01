@@ -28,7 +28,7 @@ public class PickupConfig {
     @Config.Name("Item Limit")
     @Config.Comment("The maximum number of items that can be listed on the HUD at one time.")
     @Config.LangKey("config.smarthid.pickup.limit")
-    public int itemLimit = 5;
+    public int itemLimit = 10;
 
     @Config.Name("Display Priority Mode")
     @Config.Comment({"Configure the order items are sorted on the HUD.",

@@ -18,7 +18,7 @@ package net.insomniakitten.smarthud.config;
 
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
-import net.insomniakitten.smarthud.inventory.InventoryManager;
+import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
@@ -34,7 +34,7 @@ public class SyncManager {
         if (event.getModID().equals(SmartHUD.MOD_ID)) {
             ConfigManager.sync(SmartHUD.MOD_ID, Config.Type.INSTANCE);
             WhitelistConfig.initialize();
-            InventoryManager.forceSync();
+            InventoryCache.forceSync();
             PickupManager.reloadQueue();
         }
     }

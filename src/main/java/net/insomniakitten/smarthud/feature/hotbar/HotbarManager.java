@@ -17,7 +17,6 @@ package net.insomniakitten.smarthud.feature.hotbar;
  */
 
 import net.insomniakitten.smarthud.config.GeneralConfig;
-import net.insomniakitten.smarthud.inventory.InventoryManager;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -36,7 +35,7 @@ public class HotbarManager {
      * @return An int used to offset the element
      */
     public static int getAttackIndicatorOffset() {
-        NonNullList<CachedItem> cachedItems = InventoryManager.getInventory();
+        NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slot = 20, padding = 9;
         if (cachedItems.size() > 0) {
             int limit = GeneralConfig.configHotbar.slotLimit;

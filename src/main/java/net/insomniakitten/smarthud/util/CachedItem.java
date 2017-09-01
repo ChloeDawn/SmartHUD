@@ -99,8 +99,8 @@ public class CachedItem {
     public boolean matches(ItemStack stack, boolean ignoreNBT, boolean ignoreDamage) {
         ItemStack match = stack.copy();
         match.setCount(1);
-        boolean isItemEqual = ignoreDamage ?
-                ItemStack.areItemsEqualIgnoreDurability(this.stack, match)
+        boolean isItemEqual = ignoreDamage
+                ? ItemStack.areItemsEqualIgnoreDurability(this.stack, match)
                 : ItemStack.areItemsEqual(this.stack, match);
         boolean isNBTEqual = ignoreNBT || ItemStack.areItemStackTagsEqual(this.stack, match);
         return isItemEqual && isNBTEqual;

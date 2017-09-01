@@ -17,7 +17,6 @@ package net.insomniakitten.smarthud.feature.hotbar;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.inventory.InventoryManager;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.Profiler;
@@ -55,7 +54,7 @@ public class HotbarRenderer {
     public static void onRenderHotbar(RenderGameOverlayEvent.Pre event) {
         Profiler.start(Section.RENDER_HOTBAR);
 
-        NonNullList<CachedItem> cachedItems = InventoryManager.getInventory();
+        NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slots = cachedItems.size() < configHotbar.slotLimit ? cachedItems.size() : configHotbar.slotLimit;
 
         int baseOffset = 98;
@@ -67,7 +66,6 @@ public class HotbarRenderer {
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         if (cachedItems.size() > 0) {
-
             if (!configHotbar.hudStyle.equals(HotbarConfig.HotbarStyle.INVISIBLE)) {
                 int width = 44 + (20 * (cachedItems.size() - 2)) - 2;
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, width);

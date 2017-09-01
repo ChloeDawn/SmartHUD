@@ -51,10 +51,13 @@ public class StackHelper {
      */
     public static ItemStack getStackFromResourceName(String modid, String name, int meta) {
         Item item = Item.REGISTRY.getObject(new ResourceLocation(modid, name));
-        if (item != null) {
-            return meta >= 0 ? new ItemStack(item, 1, meta) : new ItemStack(item);
-        } else {
+        if (item == null) {
             return ItemStack.EMPTY;
+        } else {
+            if (meta >= 0) {
+                return new ItemStack(item, 1, meta);
+            }
+            return new ItemStack(item);
         }
     }
 

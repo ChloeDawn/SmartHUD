@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.inventory;
+package net.insomniakitten.smarthud.feature.hotbar;
 
 /*
  *  Copyright 2017 InsomniaKitten
@@ -34,10 +34,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
-public class InventoryManager {
+public class InventoryCache {
 
     private static boolean shouldSync;
-
 
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
@@ -51,17 +50,17 @@ public class InventoryManager {
     /**
      * This stores any whitelisted inventory that will be rendered on the HUD when present
      * in the players inventory. This list is populated when the following method is called:
-     * @see WhitelistConfig#processWhitelist()
+     * @see WhitelistConfig#parseWhitelistEntries()
      * If useWhitelist is false, a default list of inventory is used.
      * @see WhitelistConfig#useWhitelist
      */
     public static NonNullList<CachedItem> whitelist = NonNullList.create();
 
     /**
-     * This stores items found in the players hotbar and inventory
-     * that match the whitelist entries and appropriate configs.
+     * This stores items found in the players inventory that
+     * match the whitelist entries and appropriate configs.
      */
-    private static NonNullList<CachedItem> hotbar = NonNullList.create(), inventory = NonNullList.create();
+    private static NonNullList<CachedItem> inventory = NonNullList.create();
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -73,15 +72,7 @@ public class InventoryManager {
         NonNullList<ItemStack> inv = mc.player.inventory.mainInventory;
         int dim = mc.player.dimension;
 
-        NonNullList<CachedItem> hotbarCache = NonNullList.create();
         NonNullList<CachedItem> inventoryCache = NonNullList.create();
-
-        for (int i = 0; i < 9; ++i) {
-            ItemStack stack = inv.get(i).copy();
-            if (!stack.isEmpty() && isWhitelisted(stack, dim)) {
-                processItemStack(hotbarCache, stack);
-            }
-        }
 
         for (int i = 9; i < 36; ++i) {
             ItemStack stack = inv.get(i).copy();
@@ -90,7 +81,6 @@ public class InventoryManager {
             }
         }
 
-        hotbar = hotbarCache;
         inventory = inventoryCache;
         shouldSync = false;
 
@@ -121,15 +111,8 @@ public class InventoryManager {
                     return true;
                 }
             }
-        } return false;
-    }
-
-    /**
-     * Used to retrieve a list of whitelisted items from the player's hotbar
-     * @return A list of inventory that match the whitelist and appropriate configs
-     */
-    public static NonNullList<CachedItem> getHotbar() {
-        return hotbar;
+        }
+        return false;
     }
 
     /**

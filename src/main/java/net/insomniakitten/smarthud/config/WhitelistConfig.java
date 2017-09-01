@@ -17,7 +17,7 @@ package net.insomniakitten.smarthud.config;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.inventory.InventoryManager;
+import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.StackHelper;
 import net.insomniakitten.smarthud.util.dimension.AnyDimension;
@@ -34,15 +34,15 @@ import net.minecraftforge.common.config.Config;
 public class WhitelistConfig {
 
     @Config.Name("Use Whitelist")
-    @Config.Comment({"Should the HUD use the configurable whitelist when checking for valid items?\n" +
+    @Config.Comment({"Should the Hotbar HUD use the configurable whitelist when checking for valid items?",
             "If false, Smart HUD will fall back to only checking for vanilla clocks and compasses."})
     @Config.LangKey("config.smarthud.whitelist.usewhitelist")
     public static boolean useWhitelist = true;
 
     @Config.Name("Item List")
-    @Config.Comment({"Configure items that will be displayed on the HUD when present in the players inventory.\n" +
-                    "Follow the format modid:resourcename:metadata otherwise the item will not be registered.\n" +
-                    "Metadata is not required, and not defining it will default the check to any metadata.\n" +
+    @Config.Comment({"Configure items that will be displayed on the Hotbar HUD when present in the players inventory.",
+                    "Follow the format modid:resourcename:metadata otherwise the item will not be registered.",
+                    "Metadata is not required, and not defining it will default the check to any metadata.",
                     "This information can be obtained via Advanced Tooltips (F3+H) in-game."})
     @Config.LangKey("config.smarthud.whitelist.list")
     public static String[] itemList = new String[] {
@@ -53,21 +53,22 @@ public class WhitelistConfig {
             "toughasnails:thermometer",
             "toughasnails:season_clock",
             "appliedenergistics2:sky_compass",
-            "naturescompass:naturescompass"
+            "naturescompass:naturescompass",
+            "mist:hygrometer"
     };
 
     public static void initialize() {
-        if (useWhitelist) {
-            SmartHUD.LOGGER.info("Processing whitelist entries");
-            InventoryManager.whitelist = WhitelistConfig.processWhitelist();
-        } else InventoryManager.whitelist = WhitelistConfig.populateDefaults();
+        InventoryCache.whitelist = useWhitelist
+           ? WhitelistConfig.parseWhitelistEntries()
+           : WhitelistConfig.getDefaultEntries();
     }
 
     /**
      * Queries the Item registry with a resource location generated from each String in the whitelist String[].
      * @return A list of ItemStacks that match the list of resource names. Any invalid resource names are ignored.
      */
-    public static NonNullList<CachedItem> processWhitelist() {
+    public static NonNullList<CachedItem> parseWhitelistEntries() {
+        SmartHUD.LOGGER.info("Processing whitelist entries");
         NonNullList<CachedItem> cache = NonNullList.create();
         for (String item : itemList) {
             String entry = item.trim();
@@ -94,11 +95,11 @@ public class WhitelistConfig {
     /**
      * The default list of items that the mod will fall back to if useWhitelist is false in the config.
      */
-    public static NonNullList<CachedItem> populateDefaults() {
-        NonNullList<CachedItem> defaults = NonNullList.create();
-        defaults.add(new CachedItem(new ItemStack(Items.CLOCK)));
-        defaults.add(new CachedItem(new ItemStack(Items.COMPASS)));
-        return defaults;
+    public static NonNullList<CachedItem> getDefaultEntries() {
+        return NonNullList.from(
+                new CachedItem(new ItemStack(Items.CLOCK)),
+                new CachedItem(new ItemStack(Items.COMPASS))
+        );
     }
 
 }
