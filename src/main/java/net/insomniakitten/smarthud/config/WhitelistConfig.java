@@ -48,13 +48,16 @@ public class WhitelistConfig {
     public static String[] itemList = new String[] {
             "minecraft:clock",
             "minecraft:compass",
-            "randomthings:goldencompass",
-            "endercompass:ender_compass",
-            "toughasnails:thermometer",
-            "toughasnails:season_clock",
             "appliedenergistics2:sky_compass",
+            "botania:manaring",
+            "botania:manaringgreater",
+            "botania:manatablet",
+            "endercompass:ender_compass",
+            "mist:hygrometer",
             "naturescompass:naturescompass",
-            "mist:hygrometer"
+            "randomthings:goldencompass",
+            "toughasnails:season_clock",
+            "toughasnails:thermometer"
     };
 
     public static void initialize() {
