@@ -41,8 +41,7 @@ public class HotbarConfig {
 
     @Config.Name("Merge Duplicates")
     @Config.Comment({ "Should the HUD only show one of each item when multiple of the same item are found?",
-                      "If false, having two clocks in seperate slots in your inventory would display " +
-                              "two clocks on the HUD, for example." })
+                      "If false, having two clocks in seperate slots in your inventory would display two clocks on the HUD, for example." })
     @Config.LangKey("config.smarthud.hotbar.merge")
     public boolean mergeDuplicates = true;
 
@@ -61,11 +60,9 @@ public class HotbarConfig {
     public boolean checkDamage = false;
 
     @Config.Name("Check NBT")
-    @Config.Comment({ "Should the mod check an item's NBT information to avoid multiple of the same item being" +
-                              " merged when they have unique NBT information?",
-                      "If false, any items with matching names (and metadata if checkMeta is false)" +
-                              " will be \"merged\" regardless of NBT,",
-                      " and only the first of that item from the player's inventory will be displayed on the HUD.",
+    @Config.Comment({ "Should the mod check an item's NBT information to avoid multiple of the same item being merged when they have unique NBT information?",
+                      "If false, any items with matching names (and metadata if checkMeta is false) will be \"merged\" regardless of NBT,",
+                      "and only the first of that item from the player's inventory will be displayed on the HUD.",
                       "This config option will only function when mergeDuplicates is enabled." })
     @Config.LangKey("config.smarthud.hotbar.nbt")
     public boolean checkNBT = false;
