@@ -20,7 +20,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ArmorRenderer {
 
-    public static void onRenderArmorHUD(RenderGameOverlayEvent.Pre event) {
+    public static void renderArmorHUD(RenderGameOverlayEvent.Pre event) {
         // TODO
     }
 

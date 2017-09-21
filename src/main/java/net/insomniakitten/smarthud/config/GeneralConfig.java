@@ -18,12 +18,11 @@ package net.insomniakitten.smarthud.config;
 
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.armor.ArmorConfig;
-import net.insomniakitten.smarthud.feature.held.HeldItemConfig;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupConfig;
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = SmartHUD.MOD_ID, name = SmartHUD.CONFIG_GENERAL, category = "")
+@Config(modid = SmartHUD.MOD_ID, name = "smarthud/general", category = "")
 @Config.LangKey("config.smarthud.general")
 public class GeneralConfig {
 
@@ -38,9 +37,5 @@ public class GeneralConfig {
     @Config.Name("Item Pickup HUD")
     @Config.LangKey("config.smarthud.pickup")
     public static PickupConfig configPickup = new PickupConfig();
-
-    @Config.Name("Held Item HUD")
-    @Config.LangKey("config.smarthud.held")
-    public static HeldItemConfig configHeld = new HeldItemConfig();
 
 }

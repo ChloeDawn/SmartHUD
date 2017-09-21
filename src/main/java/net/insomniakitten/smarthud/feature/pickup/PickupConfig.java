@@ -21,7 +21,7 @@ import net.minecraftforge.common.config.Config;
 public class PickupConfig {
 
     @Config.Name("Is Enabled")
-    @Config.Comment({"Should the HUD be enabled? If false, the HUD won't render."})
+    @Config.Comment({ "Should the HUD be enabled? If false, the HUD won't render." })
     @Config.LangKey("config.smarthud.pickup.enabled")
     public boolean isEnabled = true;
 
@@ -31,9 +31,9 @@ public class PickupConfig {
     public int itemLimit = 10;
 
     @Config.Name("Display Priority Mode")
-    @Config.Comment({"Configure the order items are sorted on the HUD.",
-            "0: The most recently picked up item will be moved to the first slot",
-            "1: The order will remain the same, only item counts will be changed"})
+    @Config.Comment({ "Configure the order items are sorted on the HUD.",
+                      "0: The most recently picked up item will be moved to the first slot",
+                      "1: The order will remain the same, only item counts will be changed" })
     @Config.LangKey("config.smarthud.pickup.priority")
     @Config.RangeInt(min = 0, max = 1)
     public int priorityMode = 0;
@@ -51,8 +51,7 @@ public class PickupConfig {
     public enum PickupStyle {
         BOTH(true, true),
         ICON_ONLY(true, false),
-        NAME_ONLY(false, true)
-        ;
+        NAME_ONLY(false, true);
 
         private final boolean hasIcon, hasLabel;
 

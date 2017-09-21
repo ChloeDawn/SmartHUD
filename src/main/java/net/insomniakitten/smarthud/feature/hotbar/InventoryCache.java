@@ -36,31 +36,31 @@ import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 @Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class InventoryCache {
 
+    /**
+     * This stores any whitelisted inventory that will be rendered on the HUD when present
+     * in the players inventory. This list is populated when the following method is called:
+     *
+     * @see WhitelistConfig#parseWhitelistEntries()
+     * If useWhitelist is false, a default list of inventory is used.
+     * @see WhitelistConfig#useWhitelist
+     */
+    public static NonNullList<CachedItem> whitelist = NonNullList.create();
     private static boolean shouldSync;
+    /**
+     * This stores items found in the players inventory that
+     * match the whitelist entries and appropriate configs.
+     */
+    private static NonNullList<CachedItem> inventory = NonNullList.create();
 
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
+     *
      * @see SyncManager#onConfigChanged for the sync event
      * TODO: if(inventoryHasChanged() || shouldSync) { cacheing }
      */
     public static void forceSync() {
         shouldSync = true;
     }
-
-    /**
-     * This stores any whitelisted inventory that will be rendered on the HUD when present
-     * in the players inventory. This list is populated when the following method is called:
-     * @see WhitelistConfig#parseWhitelistEntries()
-     * If useWhitelist is false, a default list of inventory is used.
-     * @see WhitelistConfig#useWhitelist
-     */
-    public static NonNullList<CachedItem> whitelist = NonNullList.create();
-
-    /**
-     * This stores items found in the players inventory that
-     * match the whitelist entries and appropriate configs.
-     */
-    private static NonNullList<CachedItem> inventory = NonNullList.create();
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -117,6 +117,7 @@ public class InventoryCache {
 
     /**
      * Used to retrieve a list of whitelisted items from the player's inventory
+     *
      * @return A list of inventory that match the whitelist and appropriate configs
      */
     public static NonNullList<CachedItem> getInventory() {

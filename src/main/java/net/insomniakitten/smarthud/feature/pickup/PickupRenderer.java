@@ -41,8 +41,8 @@ public class PickupRenderer {
 
     private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
     private static final float ANIMATION_DURATION = 10;
-    
-    public static void onRenderPickupQueue(RenderGameOverlayEvent.Pre event) {
+
+    public static void renderPickupHUD(RenderGameOverlayEvent.Pre event) {
         if (items.isEmpty()) return;
 
         Profiler.start(Section.RENDER_PICKUP);
@@ -68,9 +68,8 @@ public class PickupRenderer {
     }
 
     public static boolean renderLabel(
-            FontRenderer fontRenderer, RenderItem renderItem,
-            float renderX, float renderY,
-            CachedItem cachedItem, RenderGameOverlayEvent event) {
+            FontRenderer fontRenderer, RenderItem renderItem, float renderX, float renderY, CachedItem cachedItem,
+            RenderGameOverlayEvent event) {
         String key = "label.smarthud.pickup." + (configPickup.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(cachedItem.getCount());
         String label = I18n.format(key, count, cachedItem.getName());

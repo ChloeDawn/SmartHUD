@@ -22,14 +22,10 @@ import org.apache.commons.lang3.Validate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ComparableNonNullList<E> extends NonNullList<E> {
+public class ComparableNonNullList <E> extends NonNullList<E> {
 
     private final NonNullList<E> delegate;
     private final E type;
-
-    public static <E> ComparableNonNullList<E> create() {
-        return new ComparableNonNullList<>();
-    }
 
     protected ComparableNonNullList(NonNullList<E> delegate, @Nullable E type) {
         super(delegate, type);
@@ -40,6 +36,10 @@ public class ComparableNonNullList<E> extends NonNullList<E> {
     @SuppressWarnings("unchecked")
     protected ComparableNonNullList() {
         this(NonNullList.create(), null);
+    }
+
+    public static <E> ComparableNonNullList<E> create() {
+        return new ComparableNonNullList<>();
     }
 
     @Nonnull

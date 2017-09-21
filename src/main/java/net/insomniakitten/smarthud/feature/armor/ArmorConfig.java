@@ -21,7 +21,7 @@ import net.minecraftforge.common.config.Config;
 public class ArmorConfig {
 
     @Config.Name("Is Enabled")
-    @Config.Comment({"Should the HUD be enabled? If false, the HUD won't render."})
+    @Config.Comment({ "Should the HUD be enabled? If false, the HUD won't render." })
     @Config.LangKey("config.smarthud.armor.enabled")
     public boolean isEnabled = true;
 

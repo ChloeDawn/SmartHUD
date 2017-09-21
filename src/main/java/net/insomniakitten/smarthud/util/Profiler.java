@@ -39,8 +39,7 @@ public class Profiler {
         RENDER_HOTBAR("smarthud.hotbar.render_overlay"),
         CACHE_INVENTORY("smarthud.hotbar.cache_inventory"),
         RENDER_PICKUP("smarthud.pickup.render_overlay"),
-        HANDLE_COLLECTION("smarthud.pickup.handle_collection"),
-        ;
+        HANDLE_COLLECTION("smarthud.pickup.handle_collection"),;
 
         private final String msg;
 

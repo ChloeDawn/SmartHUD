@@ -24,8 +24,8 @@ import net.minecraft.item.ItemStack;
 public class CachedItem {
 
     private final ItemStack stack;
-    private int count;
     private final int actualCount;
+    private int count;
     private long timestamp;
     private DimensionPredicate dimension;
 
@@ -40,11 +40,6 @@ public class CachedItem {
 
     public CachedItem(ItemStack stack) {
         this(stack, 1);
-    }
-
-    public CachedItem setDimension(DimensionPredicate dimension) {
-        this.dimension = dimension;
-        return this;
     }
 
     public ItemStack getStack() {
@@ -75,6 +70,11 @@ public class CachedItem {
         return dimension;
     }
 
+    public CachedItem setDimension(DimensionPredicate dimension) {
+        this.dimension = dimension;
+        return this;
+    }
+
     public String getName() {
         return stack.getDisplayName();
     }
@@ -100,8 +100,8 @@ public class CachedItem {
         ItemStack match = stack.copy();
         match.setCount(1);
         boolean isItemEqual = ignoreDamage
-                ? ItemStack.areItemsEqualIgnoreDurability(this.stack, match)
-                : ItemStack.areItemsEqual(this.stack, match);
+                              ? ItemStack.areItemsEqualIgnoreDurability(this.stack, match)
+                              : ItemStack.areItemsEqual(this.stack, match);
         boolean isNBTEqual = ignoreNBT || ItemStack.areItemStackTagsEqual(this.stack, match);
         return isItemEqual && isNBTEqual;
     }

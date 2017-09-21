@@ -18,8 +18,6 @@ package net.insomniakitten.smarthud.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HandHelper {
 
@@ -37,7 +35,7 @@ public class HandHelper {
      * left-handed mode, and avoiding conflicts with the vanilla HUD elements.
      *
      * @param currentOffset The current offset of the HUD element (averaged from the screen center)
-     * @param objectWidth The current width of the element, used when inverting the position to the negative
+     * @param objectWidth   The current width of the element, used when inverting the position to the negative
      * @return The new offset depending on the current game setting
      */
     public static float handleVariableOffset(float currentOffset, float objectWidth) {

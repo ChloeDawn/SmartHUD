@@ -17,8 +17,8 @@ package net.insomniakitten.smarthud.config;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.feature.pickup.PickupManager;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
+import net.insomniakitten.smarthud.feature.pickup.PickupManager;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;

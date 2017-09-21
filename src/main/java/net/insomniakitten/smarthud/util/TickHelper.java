@@ -10,16 +10,16 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class TickHelper {
-    
+
     private static long ticksElapsed;
-    
+
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         if (event.phase == Phase.END && !Minecraft.getMinecraft().isGamePaused()) {
             ticksElapsed++;
         }
     }
-    
+
     public static long getTicksElapsed() {
         return ticksElapsed;
     }

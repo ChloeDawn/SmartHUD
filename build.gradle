@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url 'https://files.minecraftforge.net/maven' }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -11,18 +11,16 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "$mcVersion-$modVersion"
-group = "net.insomniakitten.smarthud"
-archivesBaseName = "smarthud"
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+group = 'net.insomniakitten.smarthud'
+archivesBaseName = 'smarthud'
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
     version = "$mcVersion-$mcfVersion"
-    runDir = "/run"
+    runDir = 'run'
     mappings = mcpMappings
-    replace '%VERSION%', modVersion
     replaceIn 'SmartHUD.java'
+    replace '%VERSION%', modVersion
 }
 
 processResources {

@@ -45,13 +45,13 @@ import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
 
 public class HotbarRenderer {
 
-    private static final ResourceLocation HUD_ELEMENTS
-            = new ResourceLocation(SmartHUD.MOD_ID, "textures/hud/elements.png");
+    private static final ResourceLocation HUD_ELEMENTS = new ResourceLocation(SmartHUD.MOD_ID,
+            "textures/hud/elements.png");
 
     private static final int ATTACK_INDICATOR_HOTBAR = 2;
     private static final int ATTACK_INDICATOR_VOID = -1304094787;
-    
-    public static void onRenderHotbar(RenderGameOverlayEvent.Pre event) {
+
+    public static void renderHotbarHUD(RenderGameOverlayEvent.Pre event) {
         Profiler.start(Section.RENDER_HOTBAR);
 
         NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
@@ -95,7 +95,7 @@ public class HotbarRenderer {
                     int count = configHotbar.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
                     int stringWidth = fontRenderer.getStringWidth(Integer.toString(count));
                     int labelOffset = baseOffset + (20 - stringWidth) + (20 * i);
-                    int labelX =  center + (int) HandHelper.handleVariableOffset(labelOffset, stringWidth);
+                    int labelX = center + (int) HandHelper.handleVariableOffset(labelOffset, stringWidth);
                     int labelY = displayHeight - fontRenderer.FONT_HEIGHT - 1;
 
                     if (labelX < center) labelX += 18 - stringWidth;
@@ -132,7 +132,7 @@ public class HotbarRenderer {
         }
         gui.drawTexturedModalRect(x + (20 * slots) - 9, y, 11, textureY, 11, 22);
     }
-    
+
     public static void onRenderAttackIndicator(RenderGameOverlayEvent.Post event) {
         if (!HotbarManager.canRender(event)) return;
 
@@ -146,7 +146,7 @@ public class HotbarRenderer {
 
     private static void renderHotbarAttackIndicator(GuiIngame gui, ScaledResolution screen) {
         Minecraft mc = Minecraft.getMinecraft();
-        Entity entity =  mc.getRenderViewEntity();
+        Entity entity = mc.getRenderViewEntity();
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
             EnumHandSide side = player.getPrimaryHand().opposite();
@@ -160,9 +160,8 @@ public class HotbarRenderer {
                 GlStateManager.color(1, 1, 1, 1);
                 GlStateManager.enableRescaleNormal();
                 GlStateManager.enableBlend();
-                GlStateManager.tryBlendFuncSeparate(
-                    SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
-                    SourceFactor.ONE, DestFactor.ZERO);
+                GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
+                        SourceFactor.ONE, DestFactor.ZERO);
                 RenderHelper.enableGUIStandardItemLighting();
                 mc.getTextureManager().bindTexture(Gui.ICONS);
                 gui.drawTexturedModalRect(x, y, 0, 94, 18, 18);

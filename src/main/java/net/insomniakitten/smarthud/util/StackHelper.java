@@ -22,7 +22,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class StackHelper {
 
-    /** Abbreviates a number with a suffix after a certain length, e.g. 1500 -> 1.5k
+    /**
+     * Abbreviates a number with a suffix after a certain length, e.g. 1500 -> 1.5k
+     *
      * @param value The number you want to abbreviate
      * @return The abbreviated number
      */
@@ -51,13 +53,13 @@ public class StackHelper {
      */
     public static ItemStack getStackFromResourceName(String modid, String name, int meta) {
         Item item = Item.REGISTRY.getObject(new ResourceLocation(modid, name));
-        if (item == null) {
-            return ItemStack.EMPTY;
-        } else {
+        if (item != null) {
             if (meta >= 0) {
                 return new ItemStack(item, 1, meta);
             }
             return new ItemStack(item);
+        } else {
+            return ItemStack.EMPTY;
         }
     }
 

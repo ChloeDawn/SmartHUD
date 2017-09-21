@@ -37,13 +37,12 @@ public class PickupQueue {
 
     protected static void initializeParticleQueue() {
         try {
-            Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queueEntityFX");
+            Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queue");
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a", "item");
             MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax", "target");
             ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
-            @SuppressWarnings("unchecked")
-            Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
+            @SuppressWarnings("unchecked") Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
             field.set(particleManager, createForwardingParticleQueue(newQueue, itemGetter, targetGetter));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -66,23 +65,23 @@ public class PickupQueue {
 
             @Override
             public boolean add(@Nullable Particle element) {
-                if (super.add(element)) {
-                    if (element != null && ParticleItemPickup.class.equals(element.getClass())) {
-                        Entity item, target;
-                        try {
-                            item = (Entity) itemGetter.invoke(element);
-                            target = (Entity) targetGetter.invoke(element);
-                        } catch (Throwable e) {
-                            Throwables.throwIfUnchecked(e);
-                            throw new RuntimeException(e);
-                        }
-                        if (item instanceof EntityItem && target instanceof EntityPlayerSP) {
-                            PickupManager.handleItemCollection(((EntityItem) item).getItem());
-                        }
-                    }
-                    return true;
+                if (!super.add(element)) {
+                    return false;
                 }
-                return false;
+                if (element != null && ParticleItemPickup.class.equals(element.getClass())) {
+                    Entity item, target;
+                    try {
+                        item = (Entity) itemGetter.invoke(element);
+                        target = (Entity) targetGetter.invoke(element);
+                    } catch (Throwable e) {
+                        Throwables.throwIfUnchecked(e);
+                        throw new RuntimeException(e);
+                    }
+                    if (item instanceof EntityItem && target instanceof EntityPlayerSP) {
+                        PickupManager.handleItemCollection(((EntityItem) item).getItem());
+                    }
+                }
+                return true;
             }
 
         };

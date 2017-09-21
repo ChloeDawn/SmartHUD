@@ -18,33 +18,27 @@ package net.insomniakitten.smarthud;
 
 import net.insomniakitten.smarthud.config.WhitelistConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(   modid = SmartHUD.MOD_ID,
-        name = SmartHUD.MOD_NAME,
-        version = SmartHUD.MOD_VERSION,
-        acceptedMinecraftVersions = SmartHUD.MC_VERSIONS,
-        clientSideOnly = true)
+@Mod(modid = SmartHUD.MOD_ID,
+     name = SmartHUD.MOD_NAME,
+     version = SmartHUD.MOD_VERSION,
+     acceptedMinecraftVersions = SmartHUD.MC_VERSIONS,
+     clientSideOnly = true)
 
 public class SmartHUD {
-
-    @Mod.Instance(SmartHUD.MOD_ID)
-    public static SmartHUD instance;
 
     public static final String MOD_ID = "smarthud";
     public static final String MOD_NAME = "Smart HUD";
     public static final String MOD_VERSION = "%VERSION%";
     public static final String MC_VERSIONS = "[1.11,1.13)";
 
-    public static final String CONFIG_GENERAL = "smarthud/general";
-    public static final String CONFIG_WHITELIST = "smarthud/whitelist";
-
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
-    public static final boolean DEOBF = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+
+    @Mod.Instance(SmartHUD.MOD_ID) public static SmartHUD instance;
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {

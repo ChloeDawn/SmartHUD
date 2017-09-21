@@ -32,6 +32,7 @@ public class HotbarManager {
 
     /**
      * Method used to calculate the required offset of the attack indicator
+     *
      * @return An int used to offset the element
      */
     public static int getAttackIndicatorOffset() {
