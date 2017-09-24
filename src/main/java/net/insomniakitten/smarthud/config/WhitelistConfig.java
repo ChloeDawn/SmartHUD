@@ -45,18 +45,21 @@ public class WhitelistConfig {
                       "Metadata is not required, and not defining it will default the check to any metadata.",
                       "This information can be obtained via Advanced Tooltips (F3+H) in-game." })
     @Config.LangKey("config.smarthud.whitelist.list")
-    public static String[] itemList = new String[] { "minecraft:clock",
-                                                     "minecraft:compass",
-                                                     "appliedenergistics2:sky_compass",
-                                                     "botania:manaring",
-                                                     "botania:manaringgreater",
-                                                     "botania:manatablet",
-                                                     "endercompass:ender_compass",
-                                                     "mist:hygrometer",
-                                                     "naturescompass:naturescompass",
-                                                     "randomthings:goldencompass",
-                                                     "toughasnails:season_clock",
-                                                     "toughasnails:thermometer" };
+    public static String[] itemList = new String[] {
+            "minecraft:clock",
+            "minecraft:compass",
+            "appliedenergistics2:sky_compass",
+            "botania:manaring",
+            "botania:manaringgreater",
+            "botania:manatablet",
+            "endercompass:ender_compass",
+            "inventoryneko:neko",
+            "mist:hygrometer",
+            "naturescompass:naturescompass",
+            "randomthings:goldencompass",
+            "toughasnails:season_clock",
+            "toughasnails:thermometer"
+    };
 
     public static void initialize() {
         InventoryCache.whitelist = useWhitelist
