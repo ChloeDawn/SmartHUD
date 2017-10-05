@@ -56,6 +56,7 @@ public class WhitelistConfig {
             "inventoryneko:neko",
             "mist:hygrometer",
             "naturescompass:naturescompass",
+            "quark:slime_bucket",
             "randomthings:goldencompass",
             "toughasnails:season_clock",
             "toughasnails:thermometer"
