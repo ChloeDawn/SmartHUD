@@ -7,13 +7,10 @@
     "mcversion": "${mcf_version}",
     "url": "",
     "updateUrl": "",
-    "authorList": [
-      "InsomniaKitten"
-    ],
+    "authorList": [ "InsomniaKitten" ],
     "credits": "",
     "logoFile": "",
-    "screenshots": [],
-    "dependencies": [
-    ]
+    "screenshots": [ ],
+    "dependencies": [ ]
   }
 ]
