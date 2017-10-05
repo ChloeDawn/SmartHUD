@@ -32,7 +32,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.Iterator;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
+import static net.insomniakitten.smarthud.config.GeneralConfig.PICKUP;
 import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
 public class PickupRenderer {
@@ -51,7 +51,7 @@ public class PickupRenderer {
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         int h = event.getResolution().getScaledHeight();
-        int x = configPickup.hudStyle.hasItemIcon() ? 17 : 4;
+        int x = PICKUP.hudStyle.hasItemIcon() ? 17 : 4;
         int y = h - (fontRenderer.FONT_HEIGHT * items.size()) - (2 * items.size());
 
         Iterator<CachedItem> iterator = items.iterator();
@@ -70,7 +70,7 @@ public class PickupRenderer {
     public static boolean renderLabel(
             FontRenderer fontRenderer, RenderItem renderItem, float renderX, float renderY, CachedItem cachedItem,
             RenderGameOverlayEvent event) {
-        String key = "label.smarthud.pickup." + (configPickup.hudStyle.hasItemName() ? "long" : "short");
+        String key = "label.smarthud.pickup." + (PICKUP.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(cachedItem.getCount());
         String label = I18n.format(key, count, cachedItem.getName());
 
@@ -96,7 +96,7 @@ public class PickupRenderer {
 
         fontRenderer.drawStringWithShadow(label, labelX, renderY, 0xFFFFFFFF);// | (int) alpha << 24);
 
-        if (configPickup.hudStyle.hasItemIcon()) {
+        if (PICKUP.hudStyle.hasItemIcon()) {
             GlStateManager.enableAlpha();
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.pushMatrix();

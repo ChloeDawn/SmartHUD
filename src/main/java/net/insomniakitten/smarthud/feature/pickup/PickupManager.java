@@ -17,18 +17,17 @@ package net.insomniakitten.smarthud.feature.pickup;
  */
 
 import com.google.common.collect.EvictingQueue;
-import net.insomniakitten.smarthud.config.GeneralConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.Profiler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configPickup;
+import static net.insomniakitten.smarthud.config.GeneralConfig.PICKUP;
 
 public class PickupManager {
 
-    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(configPickup.itemLimit);
+    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(PICKUP.itemLimit);
 
     public static void initialize() {
         PickupManager.reloadQueue();
@@ -36,24 +35,24 @@ public class PickupManager {
     }
 
     public static void reloadQueue() {
-        EvictingQueue<CachedItem> newQueue = EvictingQueue.create(configPickup.itemLimit);
+        EvictingQueue<CachedItem> newQueue = EvictingQueue.create(PICKUP.itemLimit);
         newQueue.addAll(items);
         items = newQueue;
     }
 
     public static boolean canRender(RenderGameOverlayEvent event) {
-        return !event.isCanceled() && event.getType().equals(ElementType.CHAT) && configPickup.isEnabled;
+        return !event.isCanceled() && event.getType().equals(ElementType.CHAT) && PICKUP.isEnabled;
     }
 
     public static int getDisplayTimeTicks() {
-        return GeneralConfig.configPickup.displayTime / 50;
+        return PICKUP.displayTime / 50;
     }
 
     protected static void handleItemCollection(ItemStack stack) {
         Profiler.start(Profiler.Section.HANDLE_COLLECTION);
 
         if (!stack.isEmpty()) {
-            EvictingQueue<CachedItem> internal = EvictingQueue.create(configPickup.itemLimit);
+            EvictingQueue<CachedItem> internal = EvictingQueue.create(PICKUP.itemLimit);
             internal.addAll(items);
 
             if (items.isEmpty()) {
@@ -63,11 +62,11 @@ public class PickupManager {
                 for (CachedItem cachedItem : items) {
                     if (cachedItem.matches(stack)) {
                         int count = cachedItem.getCount() + stack.getCount();
-                        if (configPickup.priorityMode == 0) {
+                        if (PICKUP.priorityMode == 0) {
                             internal.remove(cachedItem);
                             internal.add(new CachedItem(stack, count));
                             shouldCache = false;
-                        } else if (configPickup.priorityMode == 1) {
+                        } else if (PICKUP.priorityMode == 1) {
                             cachedItem.setCount(count);
                             cachedItem.renewTimestamp();
                             shouldCache = false;

@@ -41,7 +41,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
+import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
 public class HotbarRenderer {
 
@@ -55,7 +55,7 @@ public class HotbarRenderer {
         Profiler.start(Section.RENDER_HOTBAR);
 
         NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
-        int slots = cachedItems.size() < configHotbar.slotLimit ? cachedItems.size() : configHotbar.slotLimit;
+        int slots = cachedItems.size() < HOTBAR.slotLimit ? cachedItems.size() : HOTBAR.slotLimit;
 
         int baseOffset = 98;
         int displayWidth = event.getResolution().getScaledWidth();
@@ -66,7 +66,7 @@ public class HotbarRenderer {
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         if (cachedItems.size() > 0) {
-            if (!configHotbar.hudStyle.equals(HotbarConfig.HotbarStyle.INVISIBLE)) {
+            if (!HOTBAR.hudStyle.equals(HotbarConfig.HotbarStyle.INVISIBLE)) {
                 int width = 44 + (20 * (cachedItems.size() - 2)) - 2;
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, width);
                 renderHotbarBackground(center + offset, displayHeight - 22, slots);
@@ -83,8 +83,8 @@ public class HotbarRenderer {
                 renderItem.renderItemAndEffectIntoGUI(stack, stackX, stackY);
                 RenderHelper.disableStandardItemLighting();
 
-                boolean renderOverlay = !stack.isStackable() && configHotbar.renderOverlays;
-                boolean showStackSize = cachedItem.getCount() > 1 && configHotbar.showStackSize;
+                boolean renderOverlay = !stack.isStackable() && HOTBAR.renderOverlays;
+                boolean showStackSize = cachedItem.getCount() > 1 && HOTBAR.showStackSize;
 
                 if (renderOverlay) {
                     GlStateManager.disableDepth();
@@ -92,7 +92,7 @@ public class HotbarRenderer {
                 }
 
                 if (showStackSize) {
-                    int count = configHotbar.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
+                    int count = HOTBAR.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
                     int stringWidth = fontRenderer.getStringWidth(Integer.toString(count));
                     int labelOffset = baseOffset + (20 - stringWidth) + (20 * i);
                     int labelX = center + (int) HandHelper.handleVariableOffset(labelOffset, stringWidth);
@@ -107,7 +107,7 @@ public class HotbarRenderer {
             }
 
         } else {
-            if (configHotbar.alwaysShow) {
+            if (HOTBAR.alwaysShow) {
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20);
                 renderHotbarBackground(center + offset, displayHeight - 22, 1);
             }
@@ -124,7 +124,7 @@ public class HotbarRenderer {
     public static void renderHotbarBackground(int x, int y, int slots) {
         GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
         Minecraft.getMinecraft().renderEngine.bindTexture(HUD_ELEMENTS);
-        int textureY = configHotbar.hudStyle.getTextureY();
+        int textureY = HOTBAR.hudStyle.getTextureY();
         gui.drawTexturedModalRect(x, y, 0, textureY, 11, 22);
         for (int i = 0; i < ((slots - 1) * 2); ++i) {
             int textureX = i % 2 == 0 ? 32 : 22;

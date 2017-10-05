@@ -38,7 +38,8 @@ public class SmartHUD {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-    @Mod.Instance(SmartHUD.MOD_ID) public static SmartHUD instance;
+    @Mod.Instance(SmartHUD.MOD_ID)
+    public static SmartHUD instance;
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {

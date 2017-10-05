@@ -19,12 +19,12 @@ package net.insomniakitten.smarthud.feature.armor;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configArmor;
+import static net.insomniakitten.smarthud.config.GeneralConfig.ARMOR;
 
 public class ArmorManager {
 
     public static boolean canRender(RenderGameOverlayEvent event) {
-        return !event.isCanceled() && event.getType().equals(ElementType.ARMOR) && configArmor.isEnabled;
+        return !event.isCanceled() && event.getType().equals(ElementType.ARMOR) && ARMOR.isEnabled;
     }
 
 }

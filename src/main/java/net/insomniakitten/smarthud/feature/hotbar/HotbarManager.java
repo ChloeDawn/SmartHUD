@@ -16,18 +16,17 @@ package net.insomniakitten.smarthud.feature.hotbar;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.config.GeneralConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
+import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
 public class HotbarManager {
 
     public static boolean canRender(RenderGameOverlayEvent event) {
-        return !event.isCanceled() && event.getType().equals(ElementType.HOTBAR) && configHotbar.isEnabled;
+        return !event.isCanceled() && event.getType().equals(ElementType.HOTBAR) && HOTBAR.isEnabled;
     }
 
     /**
@@ -39,10 +38,11 @@ public class HotbarManager {
         NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slot = 20, padding = 9;
         if (cachedItems.size() > 0) {
-            int limit = GeneralConfig.configHotbar.slotLimit;
-            int slots = cachedItems.size() < limit ? cachedItems.size() : limit;
+            int slots = cachedItems.size() < HOTBAR.slotLimit
+                        ? cachedItems.size()
+                        : HOTBAR.slotLimit;
             return (slot * slots) + padding;
-        } else if (GeneralConfig.configHotbar.alwaysShow) {
+        } else if (HOTBAR.alwaysShow) {
             return slot + padding;
         } else return 0;
     }

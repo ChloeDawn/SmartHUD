@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.configHotbar;
+import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
 public class InventoryCache {
@@ -88,10 +88,10 @@ public class InventoryCache {
     }
 
     private static void processItemStack(NonNullList<CachedItem> cache, ItemStack stack) {
-        boolean dmg = configHotbar.checkDamage, nbt = configHotbar.checkNBT;
+        boolean dmg = HOTBAR.checkDamage, nbt = HOTBAR.checkNBT;
         boolean shouldCache = true;
         for (CachedItem target : cache) {
-            if (target.matches(stack, !nbt, !dmg) && configHotbar.mergeDuplicates) {
+            if (target.matches(stack, !nbt, !dmg) && HOTBAR.mergeDuplicates) {
                 target.setCount(target.getCount() + stack.getCount());
                 shouldCache = false;
                 break;

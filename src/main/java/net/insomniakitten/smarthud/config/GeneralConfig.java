@@ -28,14 +28,14 @@ public class GeneralConfig {
 
     @Config.Name("Hotbar HUD")
     @Config.LangKey("config.smarthud.hotbar")
-    public static HotbarConfig configHotbar = new HotbarConfig();
+    public static final HotbarConfig HOTBAR = new HotbarConfig();
 
     @Config.Name("Armor HUD")
     @Config.LangKey("config.smarthud.armor")
-    public static ArmorConfig configArmor = new ArmorConfig();
+    public static final ArmorConfig ARMOR = new ArmorConfig();
 
     @Config.Name("Item Pickup HUD")
     @Config.LangKey("config.smarthud.pickup")
-    public static PickupConfig configPickup = new PickupConfig();
+    public static final PickupConfig PICKUP = new PickupConfig();
 
 }
