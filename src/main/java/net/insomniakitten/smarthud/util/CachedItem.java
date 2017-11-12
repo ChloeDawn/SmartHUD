@@ -32,7 +32,7 @@ public final class CachedItem {
     private int metaData = OreDictionary.WILDCARD_VALUE;
     private int count;
     private long timestamp;
-    private IDimensionPredicate dimension;
+    private DimensionPredicate dimension;
 
     public CachedItem(ItemStack stack, int count) {
         this.stack = stack.copy();
@@ -44,7 +44,7 @@ public final class CachedItem {
         this.stack.setCount(1);
         this.count = count;
         this.timestamp = TickHelper.getTicksElapsed();
-        this.dimension = IDimensionPredicate.ANY;
+        this.dimension = DimensionPredicate.ANY;
     }
 
     public CachedItem(ItemStack stack) {
@@ -87,11 +87,11 @@ public final class CachedItem {
         timestamp = TickHelper.getTicksElapsed();
     }
 
-    public IDimensionPredicate getDimension() {
+    public DimensionPredicate getDimension() {
         return dimension;
     }
 
-    public CachedItem setDimension(IDimensionPredicate dimension) {
+    public CachedItem setDimension(DimensionPredicate dimension) {
         this.dimension = dimension;
         return this;
     }

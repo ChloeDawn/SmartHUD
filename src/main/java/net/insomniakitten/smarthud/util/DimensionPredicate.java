@@ -20,11 +20,11 @@ import net.minecraft.world.DimensionType;
 
 import java.util.function.Predicate;
 
-public interface IDimensionPredicate extends Predicate<DimensionType> {
+public interface DimensionPredicate extends Predicate<DimensionType> {
 
-    IDimensionPredicate ANY = dim -> true;
+    DimensionPredicate ANY = dim -> true;
 
-    static IDimensionPredicate of(DimensionType dimension) {
+    static DimensionPredicate of(DimensionType dimension) {
         return type -> type == dimension;
     }
 
