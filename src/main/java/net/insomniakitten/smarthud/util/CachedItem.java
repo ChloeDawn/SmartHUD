@@ -44,7 +44,7 @@ public final class CachedItem {
         this.stack.setCount(1);
         this.count = count;
         this.timestamp = TickHelper.getTicksElapsed();
-        this.dimension = DimensionPredicate.ANY_DIMENSION;
+        this.dimension = DimensionPredicate.ANY;
     }
 
     public CachedItem(ItemStack stack) {

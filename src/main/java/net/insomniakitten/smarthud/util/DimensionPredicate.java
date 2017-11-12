@@ -22,18 +22,7 @@ import java.util.function.Predicate;
 
 public interface DimensionPredicate extends Predicate<DimensionType> {
 
-    AnyDimension ANY_DIMENSION = new AnyDimension();
-
-    final class AnyDimension implements DimensionPredicate {
-
-        private AnyDimension() {}
-
-        @Override
-        public boolean test(DimensionType dimension) {
-            return true;
-        }
-
-    }
+    DimensionPredicate ANY = dim -> true;
 
     final class SingleDimension implements DimensionPredicate {
 

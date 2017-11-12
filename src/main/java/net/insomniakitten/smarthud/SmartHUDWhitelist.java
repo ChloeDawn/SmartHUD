@@ -76,7 +76,7 @@ public final class SmartHUDWhitelist {
         NonNullList<CachedItem> cache = NonNullList.create();
         for (String item : itemList) {
             String entry = item.trim();
-            DimensionPredicate predicate = DimensionPredicate.ANY_DIMENSION;
+            DimensionPredicate predicate = DimensionPredicate.ANY;
             String[] contents = entry.split("@");
 
             if (contents.length > 1) {
