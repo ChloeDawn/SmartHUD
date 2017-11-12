@@ -19,7 +19,7 @@ package net.insomniakitten.smarthud;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.StackHelper;
-import net.insomniakitten.smarthud.util.DimensionPredicate;
+import net.insomniakitten.smarthud.util.IDimensionPredicate;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -76,12 +76,12 @@ public final class SmartHUDWhitelist {
         NonNullList<CachedItem> cache = NonNullList.create();
         for (String item : itemList) {
             String entry = item.trim();
-            DimensionPredicate predicate = DimensionPredicate.ANY;
+            IDimensionPredicate predicate = IDimensionPredicate.ANY;
             String[] contents = entry.split("@");
 
             if (contents.length > 1) {
                 int dim = Integer.valueOf(contents[ 1 ].replaceAll("\\D", ""));
-                predicate = new DimensionPredicate.SingleDimension(DimensionType.getById(dim));
+                predicate = IDimensionPredicate.of(DimensionType.getById(dim));
             }
 
             String[] regname = contents[ 0 ].split(":");

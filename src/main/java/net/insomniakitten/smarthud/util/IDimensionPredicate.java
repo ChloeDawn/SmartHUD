@@ -20,23 +20,12 @@ import net.minecraft.world.DimensionType;
 
 import java.util.function.Predicate;
 
-public interface DimensionPredicate extends Predicate<DimensionType> {
+public interface IDimensionPredicate extends Predicate<DimensionType> {
 
-    DimensionPredicate ANY = dim -> true;
+    IDimensionPredicate ANY = dim -> true;
 
-    final class SingleDimension implements DimensionPredicate {
-
-        private final DimensionType dimension;
-
-        public SingleDimension(DimensionType dimension) {
-            this.dimension = dimension;
-        }
-
-        @Override
-        public boolean test(DimensionType dimension) {
-            return dimension == this.dimension;
-        }
-
+    static IDimensionPredicate of(DimensionType dimension) {
+        return type -> type == dimension;
     }
 
 }
