@@ -23,7 +23,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
-public class HotbarManager {
+public final class HotbarManager {
+
+    private HotbarManager() {}
 
     public static boolean canRender(RenderGameOverlayEvent event) {
         return !event.isCanceled() && event.getType().equals(ElementType.HOTBAR) && HOTBAR.isEnabled;
@@ -31,7 +33,6 @@ public class HotbarManager {
 
     /**
      * Method used to calculate the required offset of the attack indicator
-     *
      * @return An int used to offset the element
      */
     public static int getAttackIndicatorOffset() {

@@ -18,7 +18,7 @@ package net.insomniakitten.smarthud.feature.hotbar;
 
 import net.minecraftforge.common.config.Config;
 
-public class HotbarConfig {
+public final class HotbarConfig {
 
     @Config.Name("Is Enabled")
     @Config.Comment({ "Should the HUD be enabled? If false, the HUD won't render." })
@@ -79,6 +79,7 @@ public class HotbarConfig {
     public HotbarStyle hudStyle = HotbarStyle.OFFHAND;
 
     public enum HotbarStyle {
+
         OFFHAND(0),
         HOTBAR(22),
         INVISIBLE(-1);
@@ -92,6 +93,11 @@ public class HotbarConfig {
         public int getTextureY() {
             return textureY;
         }
+
+        public boolean isInvisible() {
+            return equals(INVISIBLE);
+        }
+
     }
 
 }

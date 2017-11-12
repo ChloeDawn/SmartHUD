@@ -17,22 +17,17 @@ package net.insomniakitten.smarthud.config;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.feature.armor.ArmorConfig;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupConfig;
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = SmartHUD.MOD_ID, name = "smarthud/general", category = "")
+@Config(modid = SmartHUD.ID, name = "smarthud/general", category = "")
 @Config.LangKey("config.smarthud.general")
-public class GeneralConfig {
+public final class GeneralConfig {
 
     @Config.Name("Hotbar HUD")
     @Config.LangKey("config.smarthud.hotbar")
     public static final HotbarConfig HOTBAR = new HotbarConfig();
-
-    @Config.Name("Armor HUD")
-    @Config.LangKey("config.smarthud.armor")
-    public static final ArmorConfig ARMOR = new ArmorConfig();
 
     @Config.Name("Item Pickup HUD")
     @Config.LangKey("config.smarthud.pickup")

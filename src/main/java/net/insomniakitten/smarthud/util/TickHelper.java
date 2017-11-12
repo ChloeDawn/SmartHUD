@@ -8,10 +8,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
-public class TickHelper {
+@EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
+public final class TickHelper {
 
     private static long ticksElapsed;
+
+    private TickHelper() {}
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {

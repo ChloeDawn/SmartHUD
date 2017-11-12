@@ -20,8 +20,8 @@ import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.config.SyncManager;
 import net.insomniakitten.smarthud.config.WhitelistConfig;
 import net.insomniakitten.smarthud.util.CachedItem;
-import net.insomniakitten.smarthud.util.Profiler;
-import net.insomniakitten.smarthud.util.Profiler.Section;
+import net.insomniakitten.smarthud.util.ModProfiler;
+import net.insomniakitten.smarthud.util.ModProfiler.Section;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -33,8 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
-public class InventoryCache {
+@Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
+public final class InventoryCache {
 
     /**
      * This stores any whitelisted inventory that will be rendered on the HUD when present
@@ -52,6 +52,8 @@ public class InventoryCache {
      */
     private static NonNullList<CachedItem> inventory = NonNullList.create();
 
+    private InventoryCache() {}
+
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
      *
@@ -67,7 +69,7 @@ public class InventoryCache {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null || mc.player.world == null) return;
 
-        Profiler.start(Section.CACHE_INVENTORY);
+        ModProfiler.start(Section.CACHE_INVENTORY);
 
         NonNullList<ItemStack> inv = mc.player.inventory.mainInventory;
         int dim = mc.player.dimension;
@@ -84,7 +86,7 @@ public class InventoryCache {
         inventory = inventoryCache;
         shouldSync = false;
 
-        Profiler.end();
+        ModProfiler.end();
     }
 
     private static void processItemStack(NonNullList<CachedItem> cache, ItemStack stack) {

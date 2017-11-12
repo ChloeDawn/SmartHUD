@@ -18,28 +18,28 @@ package net.insomniakitten.smarthud.util;
 
 import net.minecraft.client.Minecraft;
 
-public class Profiler {
+public final class ModProfiler {
 
-    private static net.minecraft.profiler.Profiler profiler = Minecraft.getMinecraft().mcProfiler;
+    private ModProfiler() {}
 
     public static void start(Section section) {
-        profiler.startSection(section.get());
+        Minecraft.getMinecraft().mcProfiler.startSection(section.get());
     }
 
     public static void end() {
-        profiler.endSection();
+        Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
     public static boolean isEnabled() {
-        return profiler.profilingEnabled;
+        return Minecraft.getMinecraft().mcProfiler.profilingEnabled;
     }
 
     public enum Section {
 
-        RENDER_HOTBAR("smarthud.hotbar.render_overlay"),
-        CACHE_INVENTORY("smarthud.hotbar.cache_inventory"),
-        RENDER_PICKUP("smarthud.pickup.render_overlay"),
-        HANDLE_COLLECTION("smarthud.pickup.handle_collection"),;
+        RENDER_HOTBAR("smarthud.hotbar.renderOverlay"),
+        CACHE_INVENTORY("smarthud.hotbar.cacheInventory"),
+        RENDER_PICKUP("smarthud.pickup.renderOverlay"),
+        HANDLE_COLLECTION("smarthud.pickup.handleCollection"),;
 
         private final String msg;
 

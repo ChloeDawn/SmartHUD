@@ -1,6 +1,6 @@
 {
   "pack": {
     "pack_format": 3,
-    "description": "smarthud-${mod_version}"
+    "description": "smarthud-${version}"
   }
 }

@@ -20,18 +20,17 @@ import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.StackHelper;
-import net.insomniakitten.smarthud.util.dimension.AnyDimension;
-import net.insomniakitten.smarthud.util.dimension.DimensionPredicate;
-import net.insomniakitten.smarthud.util.dimension.SingleDimension;
+import net.insomniakitten.smarthud.util.DimensionPredicate;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.oredict.OreDictionary;
 
-@Config(modid = SmartHUD.MOD_ID, name = "smarthud/whitelist", category = "whitelist")
+@Config(modid = SmartHUD.ID, name = "smarthud/whitelist", category = "whitelist")
 @Config.LangKey("config.smarthud.whitelist")
-public class WhitelistConfig {
+public final class WhitelistConfig {
 
     @Config.Name("Use Whitelist")
     @Config.Comment({ "Should the Hotbar HUD use the configurable whitelist when checking for valid items?",
@@ -78,21 +77,24 @@ public class WhitelistConfig {
         NonNullList<CachedItem> cache = NonNullList.create();
         for (String item : itemList) {
             String entry = item.trim();
-            DimensionPredicate predicate = AnyDimension.INSTANCE;
+            DimensionPredicate predicate = DimensionPredicate.ANY_DIMENSION;
             String[] contents = entry.split("@");
 
             if (contents.length > 1) {
                 int dim = Integer.valueOf(contents[ 1 ].replaceAll("\\D", ""));
-                predicate = new SingleDimension(DimensionType.getById(dim));
+                predicate = new DimensionPredicate.SingleDimension(DimensionType.getById(dim));
             }
 
             String[] regname = contents[ 0 ].split(":");
             String modid = regname[ 0 ], name = regname[ 1 ];
-            int meta = regname.length > 2 ? Integer.valueOf(regname[ 2 ]) : -1;
+            int meta = regname.length > 2 ? Integer.valueOf(regname[ 2 ]) : OreDictionary.WILDCARD_VALUE;
             ItemStack stack = StackHelper.getStackFromResourceName(modid, name, meta);
 
             if (!stack.isEmpty()) {
-                cache.add(new CachedItem(stack).setDimension(predicate));
+                CachedItem cachedItem = new CachedItem(stack);
+                cachedItem.setDimension(predicate);
+                if (meta >= 0) cachedItem.setMetadata(meta);
+                cache.add(cachedItem);
             }
         }
         return cache;
@@ -102,8 +104,10 @@ public class WhitelistConfig {
      * The default list of items that the mod will fall back to if useWhitelist is false in the config.
      */
     public static NonNullList<CachedItem> getDefaultEntries() {
-        return NonNullList.from(new CachedItem(new ItemStack(Items.CLOCK)),
-                new CachedItem(new ItemStack(Items.COMPASS)));
+        return NonNullList.from(
+                new CachedItem(new ItemStack(Items.CLOCK)),
+                new CachedItem(new ItemStack(Items.COMPASS))
+        );
     }
 
 }

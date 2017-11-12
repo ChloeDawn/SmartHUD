@@ -33,7 +33,9 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Queue;
 
-public class PickupQueue {
+public final class PickupQueue {
+
+    private PickupQueue() {}
 
     protected static void initializeParticleQueue() {
         try {
@@ -42,22 +44,19 @@ public class PickupQueue {
             MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a", "item");
             MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax", "target");
             ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
-            @SuppressWarnings("unchecked") Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
+            Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
             field.set(particleManager, createForwardingParticleQueue(newQueue, itemGetter, targetGetter));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static MethodHandle getParticleItemPickupGetter(
-            MethodHandles.Lookup lookup, String... fieldNames) throws IllegalAccessException {
+    private static MethodHandle getParticleItemPickupGetter(MethodHandles.Lookup lookup, String... fieldNames) throws IllegalAccessException {
         return lookup.unreflectGetter(ReflectionHelper.findField(ParticleItemPickup.class, fieldNames));
     }
 
-    private static Queue<Particle> createForwardingParticleQueue(
-            Queue<Particle> delegate, MethodHandle itemGetter, MethodHandle targetGetter) {
+    private static Queue<Particle> createForwardingParticleQueue(Queue<Particle> delegate, MethodHandle itemGetter, MethodHandle targetGetter) {
         return new ForwardingQueue<Particle>() {
-
             @Override
             protected Queue<Particle> delegate() {
                 return delegate;
@@ -65,9 +64,7 @@ public class PickupQueue {
 
             @Override
             public boolean add(@Nullable Particle element) {
-                if (!super.add(element)) {
-                    return false;
-                }
+                if (!super.add(element)) return false;
                 if (element != null && ParticleItemPickup.class.equals(element.getClass())) {
                     Entity item, target;
                     try {
@@ -83,7 +80,6 @@ public class PickupQueue {
                 }
                 return true;
             }
-
         };
     }
 

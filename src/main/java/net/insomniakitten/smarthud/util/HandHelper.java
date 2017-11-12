@@ -19,7 +19,9 @@ package net.insomniakitten.smarthud.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumHandSide;
 
-public class HandHelper {
+public final class HandHelper {
+
+    private HandHelper() {}
 
     public static EnumHandSide getMainHand() {
         return Minecraft.getMinecraft().gameSettings.mainHand;

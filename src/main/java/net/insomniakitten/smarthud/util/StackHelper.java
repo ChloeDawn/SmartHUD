@@ -20,7 +20,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class StackHelper {
+public final class StackHelper {
+
+    private StackHelper() {}
 
     /**
      * Abbreviates a number with a suffix after a certain length, e.g. 1500 -> 1.5k
@@ -48,19 +50,12 @@ public class StackHelper {
      *
      * @param modid The modid used to create a ResourceLocation from
      * @param name  The resource name to create a ResourceLocation from
-     * @param meta  The metadata of the item to create an ItemStack for. -1 equals none specified
+     * @param meta  The metadata of the item to create an ItemStack for
      * @return An ItemStack matching the resource name. If one isn't found, returns an empty stack
      */
     public static ItemStack getStackFromResourceName(String modid, String name, int meta) {
         Item item = Item.REGISTRY.getObject(new ResourceLocation(modid, name));
-        if (item != null) {
-            if (meta >= 0) {
-                return new ItemStack(item, 1, meta);
-            }
-            return new ItemStack(item);
-        } else {
-            return ItemStack.EMPTY;
-        }
+        return item != null ? new ItemStack(item, 1, meta) : ItemStack.EMPTY;
     }
 
 }

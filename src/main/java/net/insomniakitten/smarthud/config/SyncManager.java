@@ -26,13 +26,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
-public class SyncManager {
+@Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
+public final class SyncManager {
+
+    private SyncManager() {}
 
     @SubscribeEvent
     public static void onConfigChanged(OnConfigChangedEvent event) {
-        if (event.getModID().equals(SmartHUD.MOD_ID)) {
-            ConfigManager.sync(SmartHUD.MOD_ID, Config.Type.INSTANCE);
+        if (event.getModID().equals(SmartHUD.ID)) {
+            ConfigManager.sync(SmartHUD.ID, Config.Type.INSTANCE);
             WhitelistConfig.initialize();
             InventoryCache.forceSync();
             PickupManager.reloadQueue();

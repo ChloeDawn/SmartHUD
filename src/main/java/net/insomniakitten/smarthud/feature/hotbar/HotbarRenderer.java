@@ -19,8 +19,8 @@ package net.insomniakitten.smarthud.feature.hotbar;
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
-import net.insomniakitten.smarthud.util.Profiler;
-import net.insomniakitten.smarthud.util.Profiler.Section;
+import net.insomniakitten.smarthud.util.ModProfiler;
+import net.insomniakitten.smarthud.util.ModProfiler.Section;
 import net.insomniakitten.smarthud.util.StackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -43,16 +43,18 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
 
-public class HotbarRenderer {
+public final class HotbarRenderer {
 
-    private static final ResourceLocation HUD_ELEMENTS = new ResourceLocation(SmartHUD.MOD_ID,
+    private static final ResourceLocation HUD_ELEMENTS = new ResourceLocation(SmartHUD.ID,
             "textures/hud/elements.png");
 
     private static final int ATTACK_INDICATOR_HOTBAR = 2;
     private static final int ATTACK_INDICATOR_VOID = -1304094787;
 
+    private HotbarRenderer() {}
+
     public static void renderHotbarHUD(RenderGameOverlayEvent.Pre event) {
-        Profiler.start(Section.RENDER_HOTBAR);
+        ModProfiler.start(Section.RENDER_HOTBAR);
 
         NonNullList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slots = cachedItems.size() < HOTBAR.slotLimit ? cachedItems.size() : HOTBAR.slotLimit;
@@ -66,7 +68,7 @@ public class HotbarRenderer {
         RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
         if (cachedItems.size() > 0) {
-            if (!HOTBAR.hudStyle.equals(HotbarConfig.HotbarStyle.INVISIBLE)) {
+            if (!HOTBAR.hudStyle.isInvisible()) {
                 int width = 44 + (20 * (cachedItems.size() - 2)) - 2;
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, width);
                 renderHotbarBackground(center + offset, displayHeight - 22, slots);
@@ -87,7 +89,6 @@ public class HotbarRenderer {
                 boolean showStackSize = cachedItem.getCount() > 1 && HOTBAR.showStackSize;
 
                 if (renderOverlay) {
-                    GlStateManager.disableDepth();
                     renderItem.renderItemOverlays(fontRenderer, stack, stackX, stackY);
                 }
 
@@ -106,14 +107,12 @@ public class HotbarRenderer {
                 }
             }
 
-        } else {
-            if (HOTBAR.alwaysShow) {
-                int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20);
-                renderHotbarBackground(center + offset, displayHeight - 22, 1);
-            }
+        } else if (HOTBAR.alwaysShow && !HOTBAR.hudStyle.isInvisible()) {
+            int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20);
+            renderHotbarBackground(center + offset, displayHeight - 22, 1);
         }
 
-        Profiler.end();
+        ModProfiler.end();
 
         GameSettings cfg = Minecraft.getMinecraft().gameSettings;
         if (cfg.attackIndicator == ATTACK_INDICATOR_HOTBAR) {
@@ -134,8 +133,6 @@ public class HotbarRenderer {
     }
 
     public static void onRenderAttackIndicator(RenderGameOverlayEvent.Post event) {
-        if (!HotbarManager.canRender(event)) return;
-
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings cfg = mc.gameSettings;
         if (cfg.attackIndicator == ATTACK_INDICATOR_VOID) {

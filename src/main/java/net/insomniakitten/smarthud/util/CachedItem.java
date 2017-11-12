@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.util; 
+package net.insomniakitten.smarthud.util;
  
 /*
  *  Copyright 2017 InsomniaKitten
@@ -17,25 +17,34 @@ package net.insomniakitten.smarthud.util;
  */
 
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
-import net.insomniakitten.smarthud.util.dimension.AnyDimension;
-import net.insomniakitten.smarthud.util.dimension.DimensionPredicate;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.oredict.OreDictionary;
 
-public class CachedItem {
+public final class CachedItem {
 
     private final ItemStack stack;
+    private final String modId;
+    private final String modName;
     private final int actualCount;
+    private int metaData = OreDictionary.WILDCARD_VALUE;
     private int count;
     private long timestamp;
     private DimensionPredicate dimension;
 
     public CachedItem(ItemStack stack, int count) {
         this.stack = stack.copy();
+        this.modId = stack.getItem().getCreatorModId(stack);
+        this.modName = Loader.instance().getModList().stream()
+                .filter(c -> c.getModId().equals(modId)).findFirst()
+                .map(ModContainer::getName).orElse(modId);
         this.actualCount = stack.getCount();
         this.stack.setCount(1);
         this.count = count;
         this.timestamp = TickHelper.getTicksElapsed();
-        this.dimension = AnyDimension.INSTANCE;
+        this.dimension = DimensionPredicate.ANY_DIMENSION;
     }
 
     public CachedItem(ItemStack stack) {
@@ -44,6 +53,14 @@ public class CachedItem {
 
     public ItemStack getStack() {
         return stack;
+    }
+
+    public String getModId() {
+        return modId;
+    }
+
+    public String getModName() {
+        return modName;
     }
 
     public int getCount() {
@@ -56,6 +73,10 @@ public class CachedItem {
 
     public int getActualCount() {
         return actualCount;
+    }
+
+    public void setMetadata(int metaData) {
+        this.metaData = metaData;
     }
 
     public long getTimestamp() {
@@ -91,9 +112,13 @@ public class CachedItem {
     }
 
     public boolean matches(ItemStack stack) {
+        Item item = this.stack.getItem();
         ItemStack match = stack.copy();
+        Item matchItem = match.getItem();
         match.setCount(1);
-        return ItemStack.areItemsEqualIgnoreDurability(this.stack, match);
+        return this.metaData == OreDictionary.WILDCARD_VALUE
+               ? item == matchItem
+               : ItemStack.areItemsEqualIgnoreDurability(this.stack, match);
     }
 
     public boolean matches(ItemStack stack, boolean ignoreNBT, boolean ignoreDamage) {

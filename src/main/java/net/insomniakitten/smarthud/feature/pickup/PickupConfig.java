@@ -18,7 +18,7 @@ package net.insomniakitten.smarthud.feature.pickup;
 
 import net.minecraftforge.common.config.Config;
 
-public class PickupConfig {
+public final class PickupConfig {
 
     @Config.Name("Is Enabled")
     @Config.Comment({ "Should the HUD be enabled? If false, the HUD won't render." })
@@ -29,6 +29,11 @@ public class PickupConfig {
     @Config.Comment("The maximum number of items that can be listed on the HUD at one time.")
     @Config.LangKey("config.smarthid.pickup.limit")
     public int itemLimit = 10;
+
+    @Config.Name("Show Mod ID")
+    @Config.Comment("Should HUD messages display the mod id of the picked up item?")
+    @Config.LangKey("config.smarthid.pickup.modid")
+    public boolean showModId = true;
 
     @Config.Name("Display Priority Mode")
     @Config.Comment({ "Configure the order items are sorted on the HUD.",

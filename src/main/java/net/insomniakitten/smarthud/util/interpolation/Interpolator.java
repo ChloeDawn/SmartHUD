@@ -2,7 +2,7 @@ package net.insomniakitten.smarthud.util.interpolation;
 
 public interface Interpolator {
 
-    Interpolator linear = f -> f;
+    Interpolator LINEAR = f -> f;
 
     /**
      * Interpolate a time across a function defined by the implementor.

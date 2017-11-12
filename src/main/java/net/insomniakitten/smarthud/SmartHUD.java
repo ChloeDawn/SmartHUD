@@ -23,23 +23,14 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = SmartHUD.MOD_ID,
-     name = SmartHUD.MOD_NAME,
-     version = SmartHUD.MOD_VERSION,
-     acceptedMinecraftVersions = SmartHUD.MC_VERSIONS,
-     clientSideOnly = true)
+@Mod(modid = SmartHUD.ID, name = SmartHUD.NAME, version = SmartHUD.VERSION, clientSideOnly = true)
+public final class SmartHUD {
 
-public class SmartHUD {
+    public static final String ID = "smarthud";
+    public static final String NAME = "Smart HUD";
+    public static final String VERSION = "%VERSION%";
 
-    public static final String MOD_ID = "smarthud";
-    public static final String MOD_NAME = "Smart HUD";
-    public static final String MOD_VERSION = "%VERSION%";
-    public static final String MC_VERSIONS = "[1.11,1.13)";
-
-    public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
-
-    @Mod.Instance(SmartHUD.MOD_ID)
-    public static SmartHUD instance;
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {

@@ -17,8 +17,6 @@ package net.insomniakitten.smarthud.render;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.feature.armor.ArmorManager;
-import net.insomniakitten.smarthud.feature.armor.ArmorRenderer;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarManager;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarRenderer;
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
@@ -28,27 +26,20 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = SmartHUD.MOD_ID, value = Side.CLIENT)
-public class RenderManager {
+@Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
+public final class RenderManager {
+
+    private RenderManager() {}
 
     @SubscribeEvent
     protected static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
-        if (ArmorManager.canRender(event)) {
-            ArmorRenderer.renderArmorHUD(event);
-        }
-        if (HotbarManager.canRender(event)) {
-            HotbarRenderer.renderHotbarHUD(event);
-        }
-        if (PickupManager.canRender(event)) {
-            PickupRenderer.renderPickupHUD(event);
-        }
+        if (HotbarManager.canRender(event)) HotbarRenderer.renderHotbarHUD(event);
+        if (PickupManager.canRender(event)) PickupRenderer.renderPickupHUD(event);
     }
 
     @SubscribeEvent
     protected static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
-        if (HotbarManager.canRender(event)) {
-            HotbarRenderer.onRenderAttackIndicator(event);
-        }
+        if (HotbarManager.canRender(event)) HotbarRenderer.onRenderAttackIndicator(event);
     }
 
 }
