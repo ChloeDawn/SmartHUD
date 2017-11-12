@@ -21,7 +21,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
+import static net.insomniakitten.smarthud.SmartHUDConfig.HOTBAR;
 
 public final class HotbarManager {
 

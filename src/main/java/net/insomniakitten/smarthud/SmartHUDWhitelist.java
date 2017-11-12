@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.config;
+package net.insomniakitten.smarthud;
 
 /*
  *  Copyright 2017 InsomniaKitten
@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud.config;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.StackHelper;
@@ -30,7 +29,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 @Config(modid = SmartHUD.ID, name = "smarthud/whitelist", category = "whitelist")
 @Config.LangKey("config.smarthud.whitelist")
-public final class WhitelistConfig {
+public final class SmartHUDWhitelist {
 
     @Config.Name("Use Whitelist")
     @Config.Comment({ "Should the Hotbar HUD use the configurable whitelist when checking for valid items?",
@@ -63,8 +62,8 @@ public final class WhitelistConfig {
 
     public static void initialize() {
         InventoryCache.whitelist = useWhitelist
-                                   ? WhitelistConfig.parseWhitelistEntries()
-                                   : WhitelistConfig.getDefaultEntries();
+                                   ? SmartHUDWhitelist.parseWhitelistEntries()
+                                   : SmartHUDWhitelist.getDefaultEntries();
     }
 
     /**

@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.config.WhitelistConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -34,7 +33,7 @@ public final class SmartHUD {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        WhitelistConfig.initialize();
+        SmartHUDWhitelist.initialize();
         PickupManager.initialize();
     }
 

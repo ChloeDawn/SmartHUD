@@ -32,7 +32,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.Iterator;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.PICKUP;
+import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
 import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
 public final class PickupRenderer {

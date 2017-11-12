@@ -41,7 +41,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
+import static net.insomniakitten.smarthud.SmartHUDConfig.HOTBAR;
 
 public final class HotbarRenderer {
 

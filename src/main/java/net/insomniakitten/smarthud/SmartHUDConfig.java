@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.config;
+package net.insomniakitten.smarthud;
 
 /*
  *  Copyright 2017 InsomniaKitten
@@ -16,14 +16,13 @@ package net.insomniakitten.smarthud.config;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupConfig;
 import net.minecraftforge.common.config.Config;
 
 @Config(modid = SmartHUD.ID, name = "smarthud/general", category = "")
 @Config.LangKey("config.smarthud.general")
-public final class GeneralConfig {
+public final class SmartHUDConfig {
 
     @Config.Name("Hotbar HUD")
     @Config.LangKey("config.smarthud.hotbar")

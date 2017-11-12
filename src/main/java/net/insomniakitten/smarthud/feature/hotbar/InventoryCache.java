@@ -17,8 +17,8 @@ package net.insomniakitten.smarthud.feature.hotbar;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.config.SyncManager;
-import net.insomniakitten.smarthud.config.WhitelistConfig;
+import net.insomniakitten.smarthud.event.ConfigEventManager;
+import net.insomniakitten.smarthud.SmartHUDWhitelist;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.ModProfiler;
 import net.insomniakitten.smarthud.util.ModProfiler.Section;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.HOTBAR;
+import static net.insomniakitten.smarthud.SmartHUDConfig.HOTBAR;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class InventoryCache {
@@ -40,9 +40,9 @@ public final class InventoryCache {
      * This stores any whitelisted inventory that will be rendered on the HUD when present
      * in the players inventory. This list is populated when the following method is called:
      *
-     * @see WhitelistConfig#parseWhitelistEntries()
+     * @see SmartHUDWhitelist#parseWhitelistEntries()
      * If useWhitelist is false, a default list of inventory is used.
-     * @see WhitelistConfig#useWhitelist
+     * @see SmartHUDWhitelist#useWhitelist
      */
     public static NonNullList<CachedItem> whitelist = NonNullList.create();
     private static boolean shouldSync;
@@ -57,7 +57,7 @@ public final class InventoryCache {
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
      *
-     * @see SyncManager#onConfigChanged for the sync event
+     * @see ConfigEventManager#onConfigChanged for the sync event
      * TODO: if(inventoryHasChanged() || shouldSync) { cacheing }
      */
     public static void forceSync() {

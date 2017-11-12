@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.render; 
+package net.insomniakitten.smarthud.event;
  
 /*
  *  Copyright 2017 InsomniaKitten
@@ -17,29 +17,29 @@ package net.insomniakitten.smarthud.render;
  */
 
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.feature.hotbar.HotbarManager;
-import net.insomniakitten.smarthud.feature.hotbar.HotbarRenderer;
+import net.insomniakitten.smarthud.SmartHUDWhitelist;
+import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.feature.pickup.PickupManager;
-import net.insomniakitten.smarthud.feature.pickup.PickupRenderer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
-public final class RenderManager {
+public final class ConfigEventManager {
 
-    private RenderManager() {}
-
-    @SubscribeEvent
-    protected static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
-        if (HotbarManager.canRender(event)) HotbarRenderer.renderHotbarHUD(event);
-        if (PickupManager.canRender(event)) PickupRenderer.renderPickupHUD(event);
-    }
+    private ConfigEventManager() {}
 
     @SubscribeEvent
-    protected static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
-        if (HotbarManager.canRender(event)) HotbarRenderer.onRenderAttackIndicator(event);
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(SmartHUD.ID)) {
+            ConfigManager.sync(SmartHUD.ID, Config.Type.INSTANCE);
+            SmartHUDWhitelist.initialize();
+            InventoryCache.forceSync();
+            PickupManager.reloadQueue();
+        }
     }
 
 }

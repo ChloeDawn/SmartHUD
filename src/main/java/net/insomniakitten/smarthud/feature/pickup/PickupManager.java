@@ -23,7 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-import static net.insomniakitten.smarthud.config.GeneralConfig.PICKUP;
+import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
 
 public final class PickupManager {
 
