@@ -16,11 +16,7 @@ package net.insomniakitten.smarthud.feature;
  *   limitations under the License.
  */
 
-import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.feature.block.BlockInfoFeature;
-import net.insomniakitten.smarthud.feature.hotbar.HotbarFeature;
-import net.insomniakitten.smarthud.feature.pickup.PickupFeature;
 import net.insomniakitten.smarthud.util.RenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -31,17 +27,13 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class FeatureEventManager {
 
-    private static final ImmutableList<ISmartHUDFeature> HUD_FEATURES = ImmutableList.of(
-            new BlockInfoFeature(), new HotbarFeature(), new PickupFeature()
-    );
-
     private FeatureEventManager() {}
 
     @SubscribeEvent
     public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled()) {
             RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
-            for (ISmartHUDFeature feature : HUD_FEATURES) {
+            for (ISmartHUDFeature feature : SmartHUD.FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPre(ctx);
                 }
@@ -53,7 +45,7 @@ public final class FeatureEventManager {
     public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
         if (!event.isCanceled()) {
             RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
-            for (ISmartHUDFeature feature : HUD_FEATURES) {
+            for (ISmartHUDFeature feature : SmartHUD.FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPost(ctx);
                 }
