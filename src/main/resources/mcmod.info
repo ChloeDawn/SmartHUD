@@ -2,7 +2,7 @@
     {
         "modid": "smarthud",
         "name": "Smart HUD",
-        "description": "A dynamic HUD for displaying inventory items.",
+        "description": "A dynamic HUD for displaying contextual information.",
         "version": "${version}",
         "mcversion": "[1.11,1.13)",
         "authorList": [ "InsomniaKitten" ],
