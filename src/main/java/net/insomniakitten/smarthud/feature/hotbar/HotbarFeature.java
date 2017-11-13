@@ -20,17 +20,16 @@ import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.SmartHUDConfig;
 import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
-import net.insomniakitten.smarthud.util.RenderContext;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.ModProfiler;
+import net.insomniakitten.smarthud.util.RenderContext;
 import net.insomniakitten.smarthud.util.StackHelper;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
@@ -95,7 +94,7 @@ public class HotbarFeature implements ISmartHUDFeature {
 
                 if (showStackSize) {
                     int count = HOTBAR.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
-                    int stringWidth = ctx.getFontRenderer().getStringWidth(Integer.toString(count));
+                    int stringWidth = ctx.getStringWidth(Integer.toString(count));
                     int labelOffset = baseOffset + (20 - stringWidth) + (20 * i);
                     int labelX = center + (int) HandHelper.handleVariableOffset(labelOffset, stringWidth);
                     int labelY = ctx.getScreenHeight() - ctx.getFontHeight() - 1;
@@ -115,17 +114,15 @@ public class HotbarFeature implements ISmartHUDFeature {
 
         ModProfiler.end();
 
-        GameSettings cfg = ctx.getGameSettings();
-        if (cfg.attackIndicator == ATTACK_INDICATOR_HOTBAR) {
-            cfg.attackIndicator = ATTACK_INDICATOR_VOID;
+        if (ctx.getGameSettings().attackIndicator == ATTACK_INDICATOR_HOTBAR) {
+            ctx.getGameSettings().attackIndicator = ATTACK_INDICATOR_VOID;
         }
     }
 
     @Override
     public void onRenderTickPost(RenderContext ctx) {
-        GameSettings cfg = ctx.getGameSettings();
-        if (cfg.attackIndicator == ATTACK_INDICATOR_VOID) {
-            cfg.attackIndicator = ATTACK_INDICATOR_HOTBAR;
+        if (ctx.getGameSettings().attackIndicator == ATTACK_INDICATOR_VOID) {
+            ctx.getGameSettings().attackIndicator = ATTACK_INDICATOR_HOTBAR;
             if (ctx.getRenderViewEntity() instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) ctx.getRenderViewEntity();
                 EnumHandSide side = player.getPrimaryHand().opposite();

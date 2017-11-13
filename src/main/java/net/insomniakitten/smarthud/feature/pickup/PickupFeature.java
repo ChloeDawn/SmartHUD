@@ -63,7 +63,7 @@ public final class PickupFeature implements ISmartHUDFeature {
         Iterator<CachedItem> iterator = items.iterator();
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
-            int y1 = y + ((PICKUP.showModId ? fontHeight * 2 : ctx.getFontRenderer().FONT_HEIGHT) * i) + ((PICKUP.showModId ? 4 : 2) * i);
+            int y1 = y + ((PICKUP.showModId ? fontHeight * 2 : ctx.getFontHeight()) * i) + ((PICKUP.showModId ? 4 : 2) * i);
             if (renderLabel(ctx, x, y1, cachedItem)) {
                 iterator.remove();
             }
@@ -77,7 +77,7 @@ public final class PickupFeature implements ISmartHUDFeature {
         String label = I18n.format(key, count, item.getName());
 
         int fontHeight = ctx.getFontHeight();
-        int labelWidth = ctx.getFontRenderer().getStringWidth(label);
+        int labelWidth = ctx.getStringWidth(label);
         float labelX = HandHelper.handleVariableOffset(renderX, labelWidth);
         float iconX = HandHelper.handleVariableOffset(renderX - 14, 10.72f);
 

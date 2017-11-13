@@ -17,7 +17,6 @@ package net.insomniakitten.smarthud.util;
  */
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,10 +45,6 @@ public final class RenderContext {
         clientTicks = TickHelper.getTicksElapsed();
     }
 
-    public FontRenderer getFontRenderer() {
-        return minecraft.fontRenderer;
-    }
-
     public GameSettings getGameSettings() {
         return minecraft.gameSettings;
     }
@@ -76,6 +71,10 @@ public final class RenderContext {
 
     public float getClientTicks() {
         return clientTicks;
+    }
+
+    public int getStringWidth(String text) {
+        return minecraft.fontRenderer.getStringWidth(text);
     }
 
     public int getFontHeight() {

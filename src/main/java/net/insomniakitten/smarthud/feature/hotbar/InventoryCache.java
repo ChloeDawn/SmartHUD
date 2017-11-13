@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.SmartHUDWhitelist;
 import net.insomniakitten.smarthud.compat.baubles.BaubleSlotCache;
-import net.insomniakitten.smarthud.util.ConfigEventManager;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.ModProfiler;
 import net.insomniakitten.smarthud.util.ModProfiler.Section;
@@ -57,7 +56,7 @@ public final class InventoryCache {
 
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
-     * @see ConfigEventManager#onConfigChanged for the sync event
+     * @see SmartHUD#onConfigChanged for the sync event
      * TODO: if(inventoryHasChanged() || shouldSync) { cacheing }
      */
     public static void forceSync() {
