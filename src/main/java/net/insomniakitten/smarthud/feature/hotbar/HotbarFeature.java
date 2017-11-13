@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.SmartHUDConfig;
 import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
-import net.insomniakitten.smarthud.feature.RenderContext;
+import net.insomniakitten.smarthud.util.RenderContext;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.ModProfiler;

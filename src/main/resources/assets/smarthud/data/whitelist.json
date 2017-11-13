@@ -1,0 +1,16 @@
+[
+    { "item": "appliedenergistics2:sky_compass" },
+    { "item": "botania:manaring" },
+    { "item": "botania:manaringgreater" },
+    { "item": "botania:manatablet" },
+    { "item": "endercompass:ender_compass" },
+    { "item": "inventoryneko:neko" },
+    { "item": "minecraft:clock" },
+    { "item": "minecraft:compass" },
+    { "item": "mist:hygrometer" },
+    { "item": "naturescompass:naturescompass" },
+    { "item": "quark:slime_bucket" },
+    { "item": "randomthings:goldencompass" },
+    { "item": "toughasnails:season_clock" },
+    { "item": "toughasnails:thermometer" }
+]

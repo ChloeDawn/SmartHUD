@@ -21,6 +21,7 @@ import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.block.BlockInfoFeature;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarFeature;
 import net.insomniakitten.smarthud.feature.pickup.PickupFeature;
+import net.insomniakitten.smarthud.util.RenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;

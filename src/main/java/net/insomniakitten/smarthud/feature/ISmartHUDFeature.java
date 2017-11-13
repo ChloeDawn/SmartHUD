@@ -16,6 +16,7 @@ package net.insomniakitten.smarthud.feature;
  *   limitations under the License.
  */
 
+import net.insomniakitten.smarthud.util.RenderContext;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public interface ISmartHUDFeature {

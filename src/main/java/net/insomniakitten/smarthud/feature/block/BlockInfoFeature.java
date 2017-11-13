@@ -17,7 +17,7 @@ package net.insomniakitten.smarthud.feature.block;
  */
 
 import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
-import net.insomniakitten.smarthud.feature.RenderContext;
+import net.insomniakitten.smarthud.util.RenderContext;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public final class BlockInfoFeature implements ISmartHUDFeature {

@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.feature;
+package net.insomniakitten.smarthud.util;
  
 /*
  *  Copyright 2017 InsomniaKitten
@@ -16,7 +16,6 @@ package net.insomniakitten.smarthud.feature;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.util.TickHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.settings.GameSettings;
@@ -39,7 +38,7 @@ public final class RenderContext {
     private final float partialTicks;
     private final float clientTicks;
 
-    protected RenderContext(Minecraft mc, RenderGameOverlayEvent event) {
+    public RenderContext(Minecraft mc, RenderGameOverlayEvent event) {
         minecraft = mc;
         screenWidth = event.getResolution().getScaledWidth();
         screenHeight = event.getResolution().getScaledHeight();
