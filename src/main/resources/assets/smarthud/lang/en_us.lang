@@ -1,14 +1,8 @@
-
-# General --------------------------------------------------------------------------------
-
 config.smarthud.general=General
 config.smarthud.general.tooltip=Configure the behaviour and style of HUD elements
 
-# General -> Hotbar HUD ------------------------------------------------------------------
-
 config.smarthud.hotbar=Hotbar HUD
 config.smarthud.hotbar.tooltip=Modify the appearance and behaviour of the Hotbar HUD.
-
 config.smarthud.hotbar.enabled=Is Enabled
 config.smarthud.hotbar.limit=Slot Limit
 config.smarthud.hotbar.always=Always Show
@@ -19,32 +13,17 @@ config.smarthud.hotbar.nbt=Check NBT
 config.smarthud.hotbar.overlays=Render Overlays
 config.smarthud.hotbar.style=HUD Style
 
-# General -> Armor HUD -------------------------------------------------------------------
-
-config.smarthud.armor=Armor HUD
-config.smarthud.armor.tooltip=Modify the appearance and behaviour of the Armor HUD.
-
-config.smarthud.armor.enabled=Is Enabled
-
-# General -> Item Pickup HUD -------------------------------------------------------------
-
 config.smarthud.pickup=Item Pickup HUD
 config.smarthud.pickup.tooltip=Modify the appearance and behaviour of the Item Pickup HUD.
-
 config.smarthud.pickup.enabled=Is Enabled
 config.smarthid.pickup.limit=Item Limit
 config.smarthud.pickup.priority=Display Priority Mode
 config.smarthud.pickup.time=Pickup Display Time
 config.smarthud.pickup.style=HUD Style
 
-label.smarthud.pickup.long=%s x %d
-label.smarthud.pickup.short=x %d
-
-# Whitelist ------------------------------------------------------------------------------
-
 config.smarthud.whitelist=Whitelist
 config.smarthud.whitelist.tooltip=Configure the items that can be displayed on the Hotbar HUD.
-
-# Whitelist -> List ----------------------------------------------------------------------
-
 config.smarthud.whitelist.list=Item List
+
+label.smarthud.pickup.long=%s x %d
+label.smarthud.pickup.short=x %d
