@@ -25,12 +25,18 @@ import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockSilverfish;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
+import java.awt.Color;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public final class GlanceFeature implements ISmartHUDFeature {
 
@@ -62,6 +68,15 @@ public final class GlanceFeature implements ISmartHUDFeature {
                 float x = (ctx.getScreenWidth() / 2) - (ctx.getStringWidth(name) / 2);
                 float y = (ctx.getScreenHeight() / 2) + (ctx.getFontHeight());
                 ctx.drawString(name, x, y);
+                if (ctx.getPlayerController() != null && ctx.getPlayerController().curBlockDamageMP > 0.0F) {
+                    float blockDmg = ctx.getPlayerController().curBlockDamageMP;
+                    NumberFormat format = DecimalFormat.getPercentInstance(Locale.ROOT);
+                    String perc = I18n.format("msg.smarthud.glance.progress", format.format(blockDmg));
+                    x = (ctx.getScreenWidth() / 2) - (ctx.getStringWidth(perc) / 2);
+                    y += ctx.getFontHeight() + 4;
+                    ctx.drawString(perc, x, y, Color.LIGHT_GRAY);
+                }
+
             }
         }
     }

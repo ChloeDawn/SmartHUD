@@ -17,6 +17,7 @@ package net.insomniakitten.smarthud.util;
  */
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +28,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.Color;
 
 @SideOnly(Side.CLIENT)
 public final class RenderContext {
@@ -91,8 +94,8 @@ public final class RenderContext {
         return minecraft.fontRenderer.FONT_HEIGHT;
     }
 
-    public boolean isGuiOpen() {
-        return minecraft.currentScreen != null;
+    public PlayerControllerMP getPlayerController() {
+        return minecraft.playerController;
     }
 
     public void bindTexture(ResourceLocation texture) {
@@ -105,6 +108,10 @@ public final class RenderContext {
 
     public void drawString(String text, float x, float y, int color) {
         minecraft.fontRenderer.drawString(text, x, y, color, true);
+    }
+
+    public void drawString(String text, float x, float y, Color color) {
+        minecraft.fontRenderer.drawString(text, x, y, color.getRGB(), true);
     }
 
     public void drawString(String text, float x, float y) {
