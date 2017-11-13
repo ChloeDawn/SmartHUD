@@ -17,23 +17,13 @@ package net.insomniakitten.smarthud.feature.glance;
  */
 
 import net.insomniakitten.smarthud.SmartHUDConfig;
-import net.insomniakitten.smarthud.compat.baubles.TOPLookup;
+import net.insomniakitten.smarthud.compat.baubles.TOPCompat;
 import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
 import net.insomniakitten.smarthud.util.RenderContext;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockSilverfish;
-import net.minecraft.block.BlockStem;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -55,45 +45,15 @@ public final class GlanceFeature implements ISmartHUDFeature {
     @Override
     public void onRenderTickPre(RenderContext ctx) {
         if (ctx.getPlayer() != null && checkSneaking(ctx.getPlayer()) && checkProbe(ctx.getPlayer())) {
-            String name = "";
-            if (ctx.getRayTrace().getBlockPos() != null) {
-                BlockPos pos = ctx.getRayTrace().getBlockPos();
-                ItemStack stack = getBlockStack(ctx.getWorld().getBlockState(pos), pos, ctx);
-                if (!stack.isEmpty()) name = stack.getDisplayName();
-            } else if (ctx.getRayTrace().entityHit != null) {
-                Entity entity = ctx.getRayTrace().entityHit;
-                name = entity.getDisplayName().getFormattedText();
-            }
-            if (!name.isEmpty()) {
-                float x = (ctx.getScreenWidth() / 2) - (ctx.getStringWidth(name) / 2);
+            if (ctx.getPlayerController() != null && ctx.getPlayerController().curBlockDamageMP > 0.0F) {
+                float blockDmg = ctx.getPlayerController().curBlockDamageMP;
+                NumberFormat format = DecimalFormat.getPercentInstance(Locale.ROOT);
+                String perc = I18n.format("msg.smarthud.glance.progress", format.format(blockDmg));
+                float x = (ctx.getScreenWidth() / 2) - (ctx.getStringWidth(perc) / 2);
                 float y = (ctx.getScreenHeight() / 2) + (ctx.getFontHeight());
-                ctx.drawString(name, x, y);
-                if (ctx.getPlayerController() != null && ctx.getPlayerController().curBlockDamageMP > 0.0F) {
-                    float blockDmg = ctx.getPlayerController().curBlockDamageMP;
-                    NumberFormat format = DecimalFormat.getPercentInstance(Locale.ROOT);
-                    String perc = I18n.format("msg.smarthud.glance.progress", format.format(blockDmg));
-                    x = (ctx.getScreenWidth() / 2) - (ctx.getStringWidth(perc) / 2);
-                    y += ctx.getFontHeight() + 4;
-                    ctx.drawString(perc, x, y, Color.LIGHT_GRAY);
-                }
-
+                ctx.drawString(perc, x, y);
             }
         }
-    }
-
-    private ItemStack getBlockStack(IBlockState state, BlockPos pos, RenderContext ctx) {
-        Block block = state.getBlock();
-        if (block == Blocks.MONSTER_EGG && SmartHUDConfig.GLANCE.hideSilverfishBlocks) {
-            IBlockState actualState = state.getValue(BlockSilverfish.VARIANT).getModelBlock();
-            block = actualState.getBlock();
-            state = actualState;
-        } else if (block instanceof BlockCrops && SmartHUDConfig.GLANCE.showCropOutput) {
-            IBlockState crop = ((BlockCrops) block).withAge(((BlockCrops) block).getMaxAge());
-            return new ItemStack(block.getItemDropped(crop, ctx.getWorld().rand, 0));
-        } else if (block instanceof BlockStem) {
-            return new ItemStack(((BlockStem) block).crop);
-        }
-        return block.getPickBlock(state, ctx.getRayTrace(), ctx.getWorld(), pos, ctx.getPlayer());
     }
 
     private boolean checkSneaking(EntityPlayer player) {
@@ -101,7 +61,7 @@ public final class GlanceFeature implements ISmartHUDFeature {
     }
 
     private boolean checkProbe(EntityPlayer player) {
-        return !SmartHUDConfig.GLANCE.requireProbe || TOPLookup.hasProbe(player);
+        return !SmartHUDConfig.GLANCE.requireProbe || TOPCompat.hasProbe(player);
     }
 
 }

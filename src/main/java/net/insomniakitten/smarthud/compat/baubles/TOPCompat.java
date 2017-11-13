@@ -30,8 +30,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
-@GameRegistry.ObjectHolder(TOPLookup.MOD_ID)
-public final class TOPLookup {
+@GameRegistry.ObjectHolder(TOPCompat.MOD_ID)
+public final class TOPCompat {
 
     protected static final String MOD_ID = "theoneprobe";
 
@@ -42,7 +42,7 @@ public final class TOPLookup {
     public static final Item GOLD_HElMET_PROBE = Items.AIR;
     public static final Item IRON_HElMET_PROBE = Items.AIR;
 
-    private TOPLookup() {}
+    private TOPCompat() {}
 
     public static boolean hasProbe(EntityPlayer player) {
         ModProfiler.start(ModProfiler.Section.LOOKUP_TOP);

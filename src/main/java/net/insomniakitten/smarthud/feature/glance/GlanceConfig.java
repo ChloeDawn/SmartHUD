@@ -25,16 +25,6 @@ public final class GlanceConfig {
     @Config.LangKey("config.smarthud.glance.enabled")
     public boolean isEnabled = true;
 
-    @Config.Name("Hide Silverfish Blocks")
-    @Config.Comment({ "Should silverfish blocks be hidden, displaying the material name instead?" })
-    @Config.LangKey("config.smarthud.glance.hide_silverfish_blocks")
-    public boolean hideSilverfishBlocks = true;
-
-    @Config.Name("Show Crop Output")
-    @Config.Comment({ "Should the crop's output be shown instead of it's seed?" })
-    @Config.LangKey("config.smarthud.glance.show_crop_output")
-    public boolean showCropOutput = true;
-
     @Config.Name("Require Sneaking")
     @Config.Comment({ "Should the HUD only render when sneaking?" })
     @Config.LangKey("config.smarthud.glance.require_sneaking")
