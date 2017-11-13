@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class FeatureEventManager {
 
-    private static ImmutableList<ISmartHUDFeature> features = ImmutableList.of(
+    private static final ImmutableList<ISmartHUDFeature> HUD_FEATURES = ImmutableList.of(
             new BlockInfoFeature(), new HotbarFeature(), new PickupFeature()
     );
 
@@ -41,7 +41,7 @@ public final class FeatureEventManager {
     public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled()) {
             RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
-            for (ISmartHUDFeature feature : features) {
+            for (ISmartHUDFeature feature : HUD_FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPre(ctx);
                 }
@@ -53,7 +53,7 @@ public final class FeatureEventManager {
     public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
         if (!event.isCanceled()) {
             RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
-            for (ISmartHUDFeature feature : features) {
+            for (ISmartHUDFeature feature : HUD_FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPost(ctx);
                 }
