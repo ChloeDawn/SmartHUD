@@ -16,6 +16,7 @@ package net.insomniakitten.smarthud;
  *   limitations under the License.
  */
 
+import net.insomniakitten.smarthud.feature.glance.GlanceConfig;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarConfig;
 import net.insomniakitten.smarthud.feature.pickup.PickupConfig;
 import net.minecraftforge.common.config.Config;
@@ -23,6 +24,10 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = SmartHUD.ID, name = "smarthud/general", category = "")
 @Config.LangKey("config.smarthud.general")
 public final class SmartHUDConfig {
+
+    @Config.Name("Glance HUD")
+    @Config.LangKey("config.smarthud.glance")
+    public static final GlanceConfig GLANCE = new GlanceConfig();
 
     @Config.Name("Hotbar HUD")
     @Config.LangKey("config.smarthud.hotbar")

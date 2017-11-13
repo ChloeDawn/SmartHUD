@@ -103,7 +103,7 @@ public class HotbarFeature implements ISmartHUDFeature {
                     // Keeps string to right edge of slot in left-handed mode
 
                     GlStateManager.disableDepth();
-                    ctx.drawString(StackHelper.getAbbreviatedValue(count), labelX, labelY, -1);
+                    ctx.drawString(StackHelper.getAbbreviatedValue(count), labelX, labelY);
                 }
             }
 

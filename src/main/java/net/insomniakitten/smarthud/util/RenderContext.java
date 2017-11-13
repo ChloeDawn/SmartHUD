@@ -22,6 +22,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,12 +75,24 @@ public final class RenderContext {
         return clientTicks;
     }
 
+    public World getWorld() {
+        return minecraft.player != null ? minecraft.player.world : minecraft.world;
+    }
+
+    public RayTraceResult getRayTrace() {
+        return minecraft.objectMouseOver;
+    }
+
     public int getStringWidth(String text) {
         return minecraft.fontRenderer.getStringWidth(text);
     }
 
     public int getFontHeight() {
         return minecraft.fontRenderer.FONT_HEIGHT;
+    }
+
+    public boolean isGuiOpen() {
+        return minecraft.currentScreen != null;
     }
 
     public void bindTexture(ResourceLocation texture) {
@@ -91,6 +105,10 @@ public final class RenderContext {
 
     public void drawString(String text, float x, float y, int color) {
         minecraft.fontRenderer.drawString(text, x, y, color, true);
+    }
+
+    public void drawString(String text, float x, float y) {
+        minecraft.fontRenderer.drawString(text, x, y, 0xFFFFFF, true);
     }
 
     public void renderItem(ItemStack stack, int x, int y, boolean includeEffect) {
