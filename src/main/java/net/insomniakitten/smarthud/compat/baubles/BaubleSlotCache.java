@@ -18,6 +18,7 @@ package net.insomniakitten.smarthud.compat.baubles;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
+import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
@@ -26,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,22 +39,26 @@ public final class BaubleSlotCache {
 
     private BaubleSlotCache() {}
 
-    public static NonNullList<CachedItem> getBaubles() {
-        return baubles;
+    public static ImmutableList<CachedItem> getBaubles() {
+        return ImmutableList.copyOf(baubles);
     }
 
     @SubscribeEvent
+    @Optional.Method(modid = "baubles")
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null || mc.player.world == null) return;
         ModProfiler.start(ModProfiler.Section.CACHE_BAUBLES);
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(mc.player);
-        NonNullList<CachedItem> cache = NonNullList.create();
+        int dim = mc.player.dimension;
+        NonNullList<CachedItem> baubleCache = NonNullList.create();
         for (int slot = 0; slot < handler.getSlots(); ++slot) {
-            ItemStack bauble = handler.getStackInSlot(slot);
-            InventoryCache.processItemStack(cache, bauble);
+            ItemStack bauble = handler.getStackInSlot(slot).copy();
+            if (!bauble.isEmpty() && InventoryCache.isWhitelisted(bauble, dim)) {
+                InventoryCache.processItemStack(baubleCache, bauble);
+            }
         }
-        baubles = cache;
+        baubles = baubleCache;
         ModProfiler.end();
     }
 

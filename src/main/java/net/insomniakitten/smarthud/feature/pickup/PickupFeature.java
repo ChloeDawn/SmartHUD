@@ -1,5 +1,5 @@
-package net.insomniakitten.smarthud.feature.pickup;
-
+package net.insomniakitten.smarthud.feature.pickup; 
+ 
 /*
  *  Copyright 2017 InsomniaKitten
  *
@@ -16,94 +16,97 @@ package net.insomniakitten.smarthud.feature.pickup;
  *   limitations under the License.
  */
 
+import com.google.common.collect.EvictingQueue;
+import net.insomniakitten.smarthud.SmartHUDConfig;
+import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
+import net.insomniakitten.smarthud.feature.RenderContext;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.HandHelper;
 import net.insomniakitten.smarthud.util.ModProfiler;
-import net.insomniakitten.smarthud.util.ModProfiler.Section;
 import net.insomniakitten.smarthud.util.StackHelper;
 import net.insomniakitten.smarthud.util.interpolation.CubicBezierInterpolator;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.Iterator;
 
 import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
-import static net.insomniakitten.smarthud.feature.pickup.PickupManager.items;
 
-public final class PickupRenderer {
-
-    // TODO: Smooth movement during list offsets
+public final class PickupFeature implements ISmartHUDFeature {
 
     private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
     private static final float ANIMATION_DURATION = 10;
 
-    private PickupRenderer() {}
+    public PickupFeature() {}
 
-    public static void renderPickupHUD(RenderGameOverlayEvent.Pre event) {
+    @Override
+    public boolean isEnabled() {
+        return SmartHUDConfig.PICKUP.isEnabled;
+    }
+
+    @Override
+    public RenderGameOverlayEvent.ElementType getType() {
+        return RenderGameOverlayEvent.ElementType.CHAT;
+    }
+
+    @Override
+    public void onRenderTickPre(RenderContext ctx) {
+        EvictingQueue<CachedItem> items = PickupQueue.getItems();
         if (items.isEmpty()) return;
-
-        ModProfiler.start(Section.RENDER_PICKUP);
-
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-
-        int h = event.getResolution().getScaledHeight();
+        ModProfiler.start(ModProfiler.Section.RENDER_PICKUP);
+        int h = ctx.getScreenHeight();
         int x = PICKUP.hudStyle.hasItemIcon() ? 17 : 4;
-        int y = h - (fontRenderer.FONT_HEIGHT * items.size()) - ((PICKUP.showModId ? fontRenderer.FONT_HEIGHT + 2 : 2) * items.size());
-
+        int fontHeight = ctx.getFontHeight();
+        int y = h - (fontHeight * items.size()) - ((PICKUP.showModId ? fontHeight + 2 : 2) * items.size());
         Iterator<CachedItem> iterator = items.iterator();
-
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
-            int y1 = y + ((PICKUP.showModId ? fontRenderer.FONT_HEIGHT * 2 : fontRenderer.FONT_HEIGHT) * i) + ((PICKUP.showModId ? 4 : 2) * i);
-            if (renderLabel(fontRenderer, renderItem, x, y1, cachedItem, event)) {
+            int y1 = y + ((PICKUP.showModId ? fontHeight * 2 : ctx.getFontRenderer().FONT_HEIGHT) * i) + ((PICKUP.showModId ? 4 : 2) * i);
+            if (renderLabel(ctx, x, y1, cachedItem)) {
                 iterator.remove();
             }
         }
-
         ModProfiler.end();
     }
 
-    public static boolean renderLabel(FontRenderer fr, RenderItem ri, float renderX, float renderY, CachedItem item, RenderGameOverlayEvent event) {
+    private boolean renderLabel(RenderContext ctx, float renderX, float renderY, CachedItem item) {
         String key = "label.smarthud.pickup." + (PICKUP.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(item.getCount());
         String label = I18n.format(key, count, item.getName());
 
-        int labelWidth = fr.getStringWidth(label);
+        int fontHeight = ctx.getFontHeight();
+        int labelWidth = ctx.getFontRenderer().getStringWidth(label);
         float labelX = HandHelper.handleVariableOffset(renderX, labelWidth);
         float iconX = HandHelper.handleVariableOffset(renderX - 14, 10.72f);
 
         if (HandHelper.isLeftHanded()) {
-            labelX += event.getResolution().getScaledWidth();
-            iconX += event.getResolution().getScaledWidth();
+            labelX += ctx.getScreenWidth();
+            iconX += ctx.getScreenHeight();
         }
 
         if (item.getRemainingTicks() < 0) {
-            float time = Math.abs(item.getRemainingTicks()) + event.getPartialTicks();
+            float time = Math.abs(item.getRemainingTicks()) + ctx.getPartialTicks();
             if (time > ANIMATION_DURATION) {
                 return true;
             }
-            float end = renderX + fr.getStringWidth(label);
+            float end = renderX + labelWidth;
             float interpolation = ANIMATION.interpolate(0, ANIMATION_DURATION, time) * end;
             labelX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
             iconX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
         }
 
-        if (PICKUP.showModId) renderY -= fr.FONT_HEIGHT / 2;
+        if (PICKUP.showModId) renderY -= fontHeight / 2;
 
-        float labelY = renderY - (PICKUP.showModId ? fr.FONT_HEIGHT / 2 : 0);
-        fr.drawStringWithShadow(label, labelX, labelY, 0xFFFFFFFF);// | (int) alpha << 24);
+        float labelY = renderY - (PICKUP.showModId ? fontHeight / 2 : 0);
+        ctx.drawString(label, labelX, labelY, 0xFFFFFFFF); // | (int) alpha << 24);
 
         if (PICKUP.showModId) {
             String modName = item.getModName();
             int blue = 0x4241FC;
-            float modNameY = labelY + fr.FONT_HEIGHT;
-            fr.drawStringWithShadow(modName, labelX, modNameY, blue);
+            float modNameY = labelY + fontHeight;
+            ctx.drawString(modName, labelX, modNameY, blue);
         }
 
         if (PICKUP.hudStyle.hasItemIcon()) {
@@ -112,7 +115,7 @@ public final class PickupRenderer {
             GlStateManager.pushMatrix();
             GlStateManager.translate(iconX, renderY - 1.5, 0);
             GlStateManager.scale(0.67, 0.67, 0.67);
-            ri.renderItemAndEffectIntoGUI(item.getStack(), 0, 0);
+            ctx.renderItem(item.getStack(), 0, 0, true);
             GlStateManager.popMatrix();
             RenderHelper.disableStandardItemLighting();
         }

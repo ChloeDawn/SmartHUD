@@ -16,13 +16,22 @@ package net.insomniakitten.smarthud;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.feature.pickup.PickupManager;
+import net.insomniakitten.smarthud.feature.FeatureRegistryEvent;
+import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
+import net.insomniakitten.smarthud.feature.pickup.PickupQueue;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = SmartHUD.ID, name = SmartHUD.NAME, version = SmartHUD.VERSION, clientSideOnly = true)
+@Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class SmartHUD {
 
     public static final String ID = "smarthud";
@@ -33,8 +42,19 @@ public final class SmartHUD {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.post(new FeatureRegistryEvent());
         SmartHUDWhitelist.initialize();
-        PickupManager.initialize();
+        PickupQueue.initialize();
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(SmartHUD.ID)) {
+            ConfigManager.sync(SmartHUD.ID, Config.Type.INSTANCE);
+            SmartHUDWhitelist.initialize();
+            InventoryCache.forceSync();
+            PickupQueue.reloadQueue();
+        }
     }
 
 }

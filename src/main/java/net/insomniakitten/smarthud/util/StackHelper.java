@@ -29,7 +29,6 @@ public final class StackHelper {
 
     /**
      * Abbreviates a number with a suffix after a certain length, e.g. 1500 -> 1.5k
-     *
      * @param value The number you want to abbreviate
      * @return The abbreviated number
      */
@@ -50,7 +49,6 @@ public final class StackHelper {
 
     /**
      * Used to query the Item registry for a resource name
-     *
      * @param modid The modid used to create a ResourceLocation from
      * @param name  The resource name to create a ResourceLocation from
      * @param meta  The metadata of the item to create an ItemStack for

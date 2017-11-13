@@ -33,10 +33,6 @@ public final class ModProfiler {
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
-    public static boolean isEnabled() {
-        return Minecraft.getMinecraft().mcProfiler.profilingEnabled;
-    }
-
     public enum Section {
 
         RENDER_HOTBAR("smarthud.hotbar.renderOverlay"),

@@ -16,9 +16,11 @@ package net.insomniakitten.smarthud.feature.hotbar;
  *   limitations under the License.
  */
 
+import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.event.ConfigEventManager;
 import net.insomniakitten.smarthud.SmartHUDWhitelist;
+import net.insomniakitten.smarthud.compat.baubles.BaubleSlotCache;
+import net.insomniakitten.smarthud.util.ConfigEventManager;
 import net.insomniakitten.smarthud.util.CachedItem;
 import net.insomniakitten.smarthud.util.ModProfiler;
 import net.insomniakitten.smarthud.util.ModProfiler.Section;
@@ -39,7 +41,6 @@ public final class InventoryCache {
     /**
      * This stores any whitelisted inventory that will be rendered on the HUD when present
      * in the players inventory. This list is populated when the following method is called:
-     *
      * @see SmartHUDWhitelist#parseWhitelistEntries()
      * If useWhitelist is false, a default list of inventory is used.
      * @see SmartHUDWhitelist#useWhitelist
@@ -56,7 +57,6 @@ public final class InventoryCache {
 
     /**
      * Called when configs sync, to re-popular the inventory cache - respecting any changed config values
-     *
      * @see ConfigEventManager#onConfigChanged for the sync event
      * TODO: if(inventoryHasChanged() || shouldSync) { cacheing }
      */
@@ -76,8 +76,8 @@ public final class InventoryCache {
 
         NonNullList<CachedItem> inventoryCache = NonNullList.create();
 
-        for (int i = 9; i < 36; ++i) {
-            ItemStack stack = inv.get(i).copy();
+        for (int slot = 9; slot < 36; ++slot) {
+            ItemStack stack = inv.get(slot).copy();
             if (!stack.isEmpty() && isWhitelisted(stack, dim)) {
                 processItemStack(inventoryCache, stack);
             }
@@ -119,11 +119,13 @@ public final class InventoryCache {
 
     /**
      * Used to retrieve a list of whitelisted items from the player's inventory
-     *
      * @return A list of inventory that match the whitelist and appropriate configs
      */
-    public static NonNullList<CachedItem> getInventory() {
-        return inventory;
+    public static ImmutableList<CachedItem> getInventory() {
+        if (!BaubleSlotCache.getBaubles().isEmpty()) {
+            inventory.addAll(BaubleSlotCache.getBaubles());
+        }
+        return ImmutableList.copyOf(inventory);
     }
 
 }

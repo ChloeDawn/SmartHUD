@@ -16,7 +16,7 @@ package net.insomniakitten.smarthud.util;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.feature.pickup.PickupManager;
+import net.insomniakitten.smarthud.feature.pickup.PickupQueue;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
@@ -101,12 +101,12 @@ public final class CachedItem {
     }
 
     public boolean hasExpired() {
-        long expiration = timestamp + PickupManager.getDisplayTimeTicks();
+        long expiration = timestamp + PickupQueue.getDisplayTimeTicks();
         return expiration < TickHelper.getTicksElapsed();
     }
 
     public long getRemainingTicks() {
-        int cooldown = PickupManager.getDisplayTimeTicks();
+        int cooldown = PickupQueue.getDisplayTimeTicks();
         long time = TickHelper.getTicksElapsed();
         return (timestamp + cooldown) - time;
     }

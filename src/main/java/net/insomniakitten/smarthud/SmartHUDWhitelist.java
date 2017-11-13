@@ -18,8 +18,8 @@ package net.insomniakitten.smarthud;
 
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.util.CachedItem;
-import net.insomniakitten.smarthud.util.StackHelper;
 import net.insomniakitten.smarthud.util.DimensionPredicate;
+import net.insomniakitten.smarthud.util.StackHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -39,8 +39,9 @@ public final class SmartHUDWhitelist {
 
     @Config.Name("Item List")
     @Config.Comment({ "Configure items that will be displayed on the Hotbar HUD when present in the players inventory.",
-                      "Follow the format modid:resourcename:metadata otherwise the item will not be registered.",
+                      "Follow the format modid:resourcename:metadata@dim otherwise the item will not be registered.",
                       "Metadata is not required, and not defining it will default the check to any metadata.",
+                      "Dimension ID is also not required, and not defining it will default allowing any dimension.",
                       "This information can be obtained via Advanced Tooltips (F3+H) in-game." })
     @Config.LangKey("config.smarthud.whitelist.list")
     public static String[] itemList = new String[] {
@@ -61,14 +62,15 @@ public final class SmartHUDWhitelist {
     };
 
     public static void initialize() {
-        InventoryCache.whitelist = useWhitelist
-                                   ? SmartHUDWhitelist.parseWhitelistEntries()
-                                   : SmartHUDWhitelist.getDefaultEntries();
+        if (useWhitelist) {
+            InventoryCache.whitelist = SmartHUDWhitelist.parseWhitelistEntries();
+        } else {
+            InventoryCache.whitelist = SmartHUDWhitelist.getDefaultEntries();
+        }
     }
 
     /**
      * Queries the Item registry with a resource location generated from each String in the whitelist String[].
-     *
      * @return A list of ItemStacks that match the list of resource names. Any invalid resource names are ignored.
      */
     public static NonNullList<CachedItem> parseWhitelistEntries() {
@@ -80,13 +82,13 @@ public final class SmartHUDWhitelist {
             String[] contents = entry.split("@");
 
             if (contents.length > 1) {
-                int dim = Integer.valueOf(contents[ 1 ].replaceAll("\\D", ""));
+                int dim = Integer.valueOf(contents[1].replaceAll("\\D", ""));
                 predicate = DimensionPredicate.of(DimensionType.getById(dim));
             }
 
-            String[] regname = contents[ 0 ].split(":");
-            String modid = regname[ 0 ], name = regname[ 1 ];
-            int meta = regname.length > 2 ? Integer.valueOf(regname[ 2 ]) : OreDictionary.WILDCARD_VALUE;
+            String[] regname = contents[0].split(":");
+            String modid = regname[0], name = regname[1];
+            int meta = regname.length > 2 ? Integer.valueOf(regname[2]) : OreDictionary.WILDCARD_VALUE;
             ItemStack stack = StackHelper.getStackFromResourceName(modid, name, meta);
 
             if (!stack.isEmpty()) {

@@ -5,6 +5,8 @@
         "description": "A dynamic HUD for displaying inventory items.",
         "version": "${version}",
         "mcversion": "[1.11,1.13)",
-        "authorList": [ "InsomniaKitten" ]
+        "authorList": [ "InsomniaKitten" ],
+        "dependencies": [ "baubles@[1.5.1,)" ],
+        "useDependencyInformation": true
     }
 ]

@@ -17,7 +17,10 @@ package net.insomniakitten.smarthud.feature.pickup;
  */
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.ForwardingQueue;
+import net.insomniakitten.smarthud.util.CachedItem;
+import net.insomniakitten.smarthud.util.ModProfiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.Particle;
@@ -25,6 +28,7 @@ import net.minecraft.client.particle.ParticleItemPickup;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
@@ -33,9 +37,32 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Queue;
 
+import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
+
 public final class PickupQueue {
 
+    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(PICKUP.itemLimit);
+
     private PickupQueue() {}
+
+    public static void initialize() {
+        reloadQueue();
+        initializeParticleQueue();
+    }
+
+    public static void reloadQueue() {
+        EvictingQueue<CachedItem> newQueue = EvictingQueue.create(PICKUP.itemLimit);
+        newQueue.addAll(items);
+        items = newQueue;
+    }
+
+    public static EvictingQueue<CachedItem> getItems() {
+        return items;
+    }
+
+    public static int getDisplayTimeTicks() {
+        return PICKUP.displayTime / 50;
+    }
 
     protected static void initializeParticleQueue() {
         try {
@@ -75,12 +102,47 @@ public final class PickupQueue {
                         throw new RuntimeException(e);
                     }
                     if (item instanceof EntityItem && target instanceof EntityPlayerSP) {
-                        PickupManager.handleItemCollection(((EntityItem) item).getItem());
+                        handleItemCollection(((EntityItem) item).getItem());
                     }
                 }
                 return true;
             }
         };
+    }
+
+    protected static void handleItemCollection(ItemStack stack) {
+        ModProfiler.start(ModProfiler.Section.HANDLE_COLLECTION);
+
+        if (!stack.isEmpty()) {
+            EvictingQueue<CachedItem> newItems = EvictingQueue.create(PICKUP.itemLimit);
+            newItems.addAll(items);
+            if (!items.isEmpty()) {
+                boolean shouldCache = true;
+                for (CachedItem cachedItem : items) {
+                    if (cachedItem.matches(stack)) {
+                        int count = cachedItem.getCount() + stack.getCount();
+                        if (PICKUP.priorityMode == 0) {
+                            newItems.remove(cachedItem);
+                            newItems.add(new CachedItem(stack, count));
+                            shouldCache = false;
+                        } else if (PICKUP.priorityMode == 1) {
+                            cachedItem.setCount(count);
+                            cachedItem.renewTimestamp();
+                            shouldCache = false;
+                        }
+                        break;
+                    }
+                }
+                if (shouldCache) {
+                    newItems.add(new CachedItem(stack, stack.getCount()));
+                }
+            } else {
+                newItems.add(new CachedItem(stack, stack.getCount()));
+            }
+            items = newItems;
+        }
+
+        ModProfiler.end();
     }
 
 }

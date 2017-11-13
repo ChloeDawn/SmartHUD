@@ -31,14 +31,13 @@ public final class HandHelper {
     }
 
     public static boolean isLeftHanded() {
-        return getMainHand().equals(EnumHandSide.LEFT);
+        return getMainHand() == EnumHandSide.LEFT;
     }
 
     /**
      * Used to automatically adjust element offset on the screen depending on
      * the current game setting for the player's main hand. This aids in supporting
      * left-handed mode, and avoiding conflicts with the vanilla HUD elements.
-     *
      * @param currentOffset The current offset of the HUD element (averaged from the screen center)
      * @param objectWidth   The current width of the element, used when inverting the position to the negative
      * @return The new offset depending on the current game setting
