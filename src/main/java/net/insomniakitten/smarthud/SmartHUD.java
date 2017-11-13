@@ -16,10 +16,8 @@ package net.insomniakitten.smarthud;
  *   limitations under the License.
  */
 
-import net.insomniakitten.smarthud.feature.FeatureRegistryEvent;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.feature.pickup.PickupQueue;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -42,7 +40,6 @@ public final class SmartHUD {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.post(new FeatureRegistryEvent());
         SmartHUDWhitelist.initialize();
         PickupQueue.initialize();
     }

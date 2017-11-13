@@ -31,17 +31,11 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class FeatureEventManager {
 
-    private static ImmutableList<ISmartHUDFeature> features;
+    private static ImmutableList<ISmartHUDFeature> features = ImmutableList.of(
+            new BlockInfoFeature(), new HotbarFeature(), new PickupFeature()
+    );
 
     private FeatureEventManager() {}
-
-    @SubscribeEvent
-    public static void onFeatureRegistry(FeatureRegistryEvent event) {
-        event.register(new BlockInfoFeature());
-        event.register(new HotbarFeature());
-        event.register(new PickupFeature());
-        features = event.getFeatures();
-    }
 
     @SubscribeEvent
     public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
