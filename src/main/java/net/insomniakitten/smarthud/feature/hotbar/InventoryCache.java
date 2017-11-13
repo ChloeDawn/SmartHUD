@@ -89,7 +89,7 @@ public final class InventoryCache {
         ModProfiler.end();
     }
 
-    private static void processItemStack(NonNullList<CachedItem> cache, ItemStack stack) {
+    public static void processItemStack(NonNullList<CachedItem> cache, ItemStack stack) {
         boolean dmg = HOTBAR.checkDamage, nbt = HOTBAR.checkNBT;
         boolean shouldCache = true;
         for (CachedItem target : cache) {

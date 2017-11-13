@@ -41,8 +41,9 @@ public final class ModProfiler {
 
         RENDER_HOTBAR("smarthud.hotbar.renderOverlay"),
         CACHE_INVENTORY("smarthud.hotbar.cacheInventory"),
+        CACHE_BAUBLES("smarthud.hotbar.cacheBaubles"),
         RENDER_PICKUP("smarthud.pickup.renderOverlay"),
-        HANDLE_COLLECTION("smarthud.pickup.handleCollection"),;
+        HANDLE_COLLECTION("smarthud.pickup.handleCollection");
 
         private final String msg;
 
