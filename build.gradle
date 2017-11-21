@@ -23,6 +23,14 @@ minecraft {
     replace '%VERSION%', modVersion
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile 'com.github.Azanor:Baubles:master'
+}
+
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info', 'pack.mcmeta'
