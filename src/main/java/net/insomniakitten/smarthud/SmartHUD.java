@@ -18,7 +18,6 @@ package net.insomniakitten.smarthud;
 
 import com.google.common.collect.ImmutableList;
 import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
-import net.insomniakitten.smarthud.feature.glance.GlanceFeature;
 import net.insomniakitten.smarthud.feature.hotbar.HotbarFeature;
 import net.insomniakitten.smarthud.feature.hotbar.InventoryCache;
 import net.insomniakitten.smarthud.feature.pickup.PickupFeature;
@@ -44,7 +43,7 @@ public final class SmartHUD {
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     public static final ImmutableList<ISmartHUDFeature> FEATURES = ImmutableList.of(
-            new GlanceFeature(), new HotbarFeature(), new PickupFeature()
+            new HotbarFeature(), new PickupFeature()
     );
 
     @Mod.EventHandler

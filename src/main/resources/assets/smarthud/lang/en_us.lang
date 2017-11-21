@@ -27,5 +27,3 @@ config.smarthud.whitelist.list=Item List
 
 label.smarthud.pickup.long=%s x %d
 label.smarthud.pickup.short=x %d
-
-msg.smarthud.glance.progress=Destroying %d
