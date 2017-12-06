@@ -82,6 +82,9 @@ public final class InventoryCache {
             }
         }
 
+        ImmutableList<CachedItem> baubles = BaubleSlotCache.getBaubles();
+        if (!baubles.isEmpty()) inventoryCache.addAll(baubles);
+
         inventory = inventoryCache;
         shouldSync = false;
 
@@ -121,9 +124,6 @@ public final class InventoryCache {
      * @return A list of inventory that match the whitelist and appropriate configs
      */
     public static ImmutableList<CachedItem> getInventory() {
-        if (!BaubleSlotCache.getBaubles().isEmpty()) {
-            inventory.addAll(BaubleSlotCache.getBaubles());
-        }
         return ImmutableList.copyOf(inventory);
     }
 
