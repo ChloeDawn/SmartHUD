@@ -6,7 +6,7 @@
         "version": "${version}",
         "mcversion": "[1.11,1.13)",
         "authorList": [ "InsomniaKitten" ],
-        "dependencies": [ "baubles@[1.5.1,)" ],
+        "requiredMods": [ "baubles@[1.5.1,)" ],
         "useDependencyInformation": true
     }
 ]
