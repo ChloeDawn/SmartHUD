@@ -41,7 +41,7 @@ public final class HotbarConfig {
 
     @Config.Name("Merge Duplicates")
     @Config.Comment({ "Should the HUD only show one of each item when multiple of the same item are found?",
-                      "If false, having two clocks in seperate slots in your inventory would display two clocks on the HUD, for example." })
+                      "If false, having two clocks in separate slots in your inventory would display two clocks on the HUD, for example." })
     @Config.LangKey("config.smarthud.hotbar.merge")
     public boolean mergeDuplicates = true;
 

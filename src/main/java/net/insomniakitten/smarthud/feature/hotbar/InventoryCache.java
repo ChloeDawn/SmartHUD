@@ -38,19 +38,21 @@ import static net.insomniakitten.smarthud.SmartHUDConfig.HOTBAR;
 public final class InventoryCache {
 
     /**
-     * This stores any whitelisted inventory that will be rendered on the HUD when present
+     * This stores any whitelisted items that will be rendered on the HUD when present
      * in the players inventory. This list is populated when the following method is called:
      * @see SmartHUDWhitelist#parseWhitelistEntries()
-     * If useWhitelist is false, a default list of inventory is used.
+     * If useWhitelist is false, a default list of items is used.
      * @see SmartHUDWhitelist#useWhitelist
      */
     public static NonNullList<CachedItem> whitelist = NonNullList.create();
-    private static boolean shouldSync;
+
     /**
      * This stores items found in the players inventory that
      * match the whitelist entries and appropriate configs.
      */
     private static NonNullList<CachedItem> inventory = NonNullList.create();
+
+    private static boolean shouldSync;
 
     private InventoryCache() {}
 
@@ -121,7 +123,7 @@ public final class InventoryCache {
 
     /**
      * Used to retrieve a list of whitelisted items from the player's inventory
-     * @return A list of inventory that match the whitelist and appropriate configs
+     * @return A list of items that match the whitelist and appropriate configs
      */
     public static ImmutableList<CachedItem> getInventory() {
         return ImmutableList.copyOf(inventory);
