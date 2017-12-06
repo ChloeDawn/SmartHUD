@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.Azanor:Baubles:master'
+    compile 'com.github.Azanor:Baubles:master-SNAPSHOT'
 }
 
 processResources {
