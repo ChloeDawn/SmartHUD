@@ -27,12 +27,12 @@ public final class PickupConfig {
 
     @Config.Name("Item Limit")
     @Config.Comment("The maximum number of items that can be listed on the HUD at one time.")
-    @Config.LangKey("config.smarthid.pickup.limit")
+    @Config.LangKey("config.smarthud.pickup.limit")
     public int itemLimit = 10;
 
     @Config.Name("Show Mod ID")
     @Config.Comment("Should HUD messages display the mod id of the picked up item? This feature is not fully implemented yet.")
-    @Config.LangKey("config.smarthid.pickup.modid")
+    @Config.LangKey("config.smarthud.pickup.modid")
     public boolean showModId = false;
 
     @Config.Name("Display Priority Mode")
