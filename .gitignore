@@ -1,15 +1,6 @@
-# Gradle
-.gradle/
-build/
-
-# IntelliJ
 *.iml
+.gradle/
 .idea/
+build/
 out/
-classes/
 run/
-
-# Project
-compiled/
-docs/
-libs/

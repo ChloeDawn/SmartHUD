@@ -28,7 +28,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.Azanor:Baubles:master-SNAPSHOT'
+    deobfCompile 'com.github.AntiqueAtlasTeam:AntiqueAtlas:master-SNAPSHOT'
+    deobfCompile 'com.github.Azanor:Baubles:master-SNAPSHOT'
 }
 
 processResources {
