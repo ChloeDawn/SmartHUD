@@ -59,11 +59,11 @@ public final class PickupFeature implements ISmartHUDFeature {
         int h = ctx.getScreenHeight();
         int x = PICKUP.hudStyle.hasItemIcon() ? 17 : 4;
         int fontHeight = ctx.getFontHeight();
-        int y = h - (fontHeight * items.size()) - ((PICKUP.showModId ? fontHeight + 2 : 2) * items.size());
+        int y = h - (fontHeight * items.size()) - (2 * items.size());
         Iterator<CachedItem> iterator = items.iterator();
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
-            int y1 = y + ((PICKUP.showModId ? fontHeight * 2 : ctx.getFontHeight()) * i) + ((PICKUP.showModId ? 4 : 2) * i);
+            int y1 = y + (ctx.getFontHeight() * i) + (2 * i);
             if (renderLabel(ctx, x, y1, cachedItem)) {
                 iterator.remove();
             }
@@ -75,8 +75,7 @@ public final class PickupFeature implements ISmartHUDFeature {
         String key = "label.smarthud.pickup." + (PICKUP.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(item.getCount());
         String label = I18n.format(key, count, item.getName());
-
-        int fontHeight = ctx.getFontHeight();
+        
         int labelWidth = ctx.getStringWidth(label);
         float labelX = HandHelper.handleVariableOffset(renderX, labelWidth);
         float iconX = HandHelper.handleVariableOffset(renderX - 14, 10.72f);
@@ -97,17 +96,7 @@ public final class PickupFeature implements ISmartHUDFeature {
             iconX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
         }
 
-        if (PICKUP.showModId) renderY -= fontHeight / 2;
-
-        float labelY = renderY - (PICKUP.showModId ? fontHeight / 2 : 0);
-        ctx.drawString(label, labelX, labelY, 0xFFFFFFFF); // | (int) alpha << 24);
-
-        if (PICKUP.showModId) {
-            String modName = item.getModName();
-            int blue = 0x4241FC;
-            float modNameY = labelY + fontHeight;
-            ctx.drawString(modName, labelX, modNameY, blue);
-        }
+        ctx.drawString(label, labelX, renderY, 0xFFFFFFFF); // | (int) alpha << 24);
 
         if (PICKUP.hudStyle.hasItemIcon()) {
             GlStateManager.enableAlpha();
@@ -119,6 +108,7 @@ public final class PickupFeature implements ISmartHUDFeature {
             GlStateManager.popMatrix();
             RenderHelper.disableStandardItemLighting();
         }
+
         return false;
     }
 
