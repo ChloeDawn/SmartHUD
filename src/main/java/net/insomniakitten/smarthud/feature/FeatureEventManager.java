@@ -18,8 +18,8 @@ package net.insomniakitten.smarthud.feature;
 
 import net.insomniakitten.smarthud.SmartHUD;
 import net.insomniakitten.smarthud.util.RenderContext;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +32,7 @@ public final class FeatureEventManager {
     @SubscribeEvent
     public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled()) {
-            RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
+            RenderContext ctx = new RenderContext(FMLClientHandler.instance().getClient(), event);
             for (ISmartHUDFeature feature : SmartHUD.FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPre(ctx);
@@ -44,7 +44,7 @@ public final class FeatureEventManager {
     @SubscribeEvent
     public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post event) {
         if (!event.isCanceled()) {
-            RenderContext ctx = new RenderContext(Minecraft.getMinecraft(), event);
+            RenderContext ctx = new RenderContext(FMLClientHandler.instance().getClient(), event);
             for (ISmartHUDFeature feature : SmartHUD.FEATURES) {
                 if (isFeatureEnabled(feature, event)) {
                     feature.onRenderTickPost(ctx);
