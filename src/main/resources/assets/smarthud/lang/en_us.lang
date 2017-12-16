@@ -23,6 +23,7 @@ config.smarthud.pickup.style=HUD Style
 
 config.smarthud.whitelist=Whitelist
 config.smarthud.whitelist.tooltip=Configure the items that can be displayed on the Hotbar HUD.
+config.smarthud.whitelist.use_whitelist=Use Whitelist
 config.smarthud.whitelist.list=Item List
 
 label.smarthud.pickup.long=%s x %d

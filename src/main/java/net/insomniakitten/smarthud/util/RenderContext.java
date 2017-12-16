@@ -17,19 +17,14 @@ package net.insomniakitten.smarthud.util;
  */
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.awt.Color;
 
 @SideOnly(Side.CLIENT)
 public final class RenderContext {
@@ -74,28 +69,12 @@ public final class RenderContext {
         return partialTicks;
     }
 
-    public float getClientTicks() {
-        return clientTicks;
-    }
-
-    public World getWorld() {
-        return minecraft.player != null ? minecraft.player.world : minecraft.world;
-    }
-
-    public RayTraceResult getRayTrace() {
-        return minecraft.objectMouseOver;
-    }
-
     public int getStringWidth(String text) {
         return minecraft.fontRenderer.getStringWidth(text);
     }
 
     public int getFontHeight() {
         return minecraft.fontRenderer.FONT_HEIGHT;
-    }
-
-    public PlayerControllerMP getPlayerController() {
-        return minecraft.playerController;
     }
 
     public void bindTexture(ResourceLocation texture) {
@@ -110,12 +89,8 @@ public final class RenderContext {
         minecraft.fontRenderer.drawString(text, x, y, color, true);
     }
 
-    public void drawString(String text, float x, float y, Color color) {
-        minecraft.fontRenderer.drawString(text, x, y, color.getRGB(), true);
-    }
-
     public void drawString(String text, float x, float y) {
-        minecraft.fontRenderer.drawString(text, x, y, 0xFFFFFF, true);
+        minecraft.fontRenderer.drawString(text, x, y, 0xFFFFFFFF, true);
     }
 
     public void renderItem(ItemStack stack, int x, int y, boolean includeEffect) {

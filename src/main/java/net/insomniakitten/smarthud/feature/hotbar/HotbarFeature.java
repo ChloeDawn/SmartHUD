@@ -63,9 +63,8 @@ public class HotbarFeature implements ISmartHUDFeature {
 
         ImmutableList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slots = cachedItems.size() < HOTBAR.slotLimit ? cachedItems.size() : HOTBAR.slotLimit;
-
-        int baseOffset = 98;
         int center = ctx.getScreenWidth() / 2;
+        int baseOffset = 98;
 
         if (cachedItems.size() > 0) {
             if (!HOTBAR.hudStyle.isInvisible()) {
@@ -78,7 +77,7 @@ public class HotbarFeature implements ISmartHUDFeature {
                 CachedItem cachedItem = cachedItems.get(i);
                 ItemStack stack = cachedItem.getStack();
                 int stackOffset = baseOffset + 3 + (20 * i);
-                int stackX = center + (int) HandHelper.handleVariableOffset(stackOffset, 16);
+                int stackX = center + (int) HandHelper.handleVariableOffset(stackOffset, 16.0F);
                 int stackY = ctx.getScreenHeight() - (16 + 3);
 
                 RenderHelper.enableGUIStandardItemLighting();
@@ -106,17 +105,16 @@ public class HotbarFeature implements ISmartHUDFeature {
                     ctx.drawString(StackHelper.getAbbreviatedValue(count), labelX, labelY);
                 }
             }
-
         } else if (HOTBAR.alwaysShow && !HOTBAR.hudStyle.isInvisible()) {
-            int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20);
+            int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20.0F);
             renderHotbarBackground(ctx, center + offset, ctx.getScreenHeight() - 22, 1);
         }
-
-        ModProfiler.end();
 
         if (ctx.getGameSettings().attackIndicator == ATTACK_INDICATOR_HOTBAR) {
             ctx.getGameSettings().attackIndicator = ATTACK_INDICATOR_VOID;
         }
+
+        ModProfiler.end();
     }
 
     @Override
@@ -166,8 +164,8 @@ public class HotbarFeature implements ISmartHUDFeature {
     }
 
     private void renderHotbarBackground(RenderContext ctx, int x, int y, int slots) {
-        ctx.bindTexture(HUD_ELEMENTS);
         int textureY = HOTBAR.hudStyle.getTextureY();
+        ctx.bindTexture(HUD_ELEMENTS);
         ctx.drawTexturedModalRect(x, y, 0, textureY, 11, 22);
         for (int i = 0; i < ((slots - 1) * 2); ++i) {
             int textureX = i % 2 == 0 ? 32 : 22;

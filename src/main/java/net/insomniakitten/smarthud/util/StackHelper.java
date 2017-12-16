@@ -34,9 +34,10 @@ public final class StackHelper {
      */
     public static String getAbbreviatedValue(int value) {
         StringBuilder abbr = new StringBuilder();
-        int magnitude = (int) Math.floor(Math.log(value) / Math.log(1000));
-        int num = (int) (value / Math.pow(1000, magnitude) * 10);
-        int integer = num / 10, fractional = num % 10;
+        int magnitude = (int) Math.floor(Math.log(value) / Math.log(1000.0D));
+        int num = (int) (value / Math.pow(1000.0D, magnitude) * 10.0D);
+        int integer = num / 10;
+        int fractional = num % 10;
         abbr.append(integer);
         if (integer < 10 && fractional > 0) {
             abbr.append('.').append(fractional);

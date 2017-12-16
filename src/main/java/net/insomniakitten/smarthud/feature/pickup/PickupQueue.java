@@ -60,10 +60,6 @@ public final class PickupQueue {
         return items;
     }
 
-    public static int getDisplayTimeTicks() {
-        return PICKUP.displayTime / 50;
-    }
-
     protected static void initializeParticleQueue() {
         try {
             Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queue");

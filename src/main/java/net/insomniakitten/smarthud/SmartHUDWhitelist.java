@@ -34,7 +34,7 @@ public final class SmartHUDWhitelist {
     @Config.Name("Use Whitelist")
     @Config.Comment({ "Should the Hotbar HUD use the configurable whitelist when checking for valid items?",
                       "If false, Smart HUD will fall back to only checking for vanilla clocks and compasses." })
-    @Config.LangKey("config.smarthud.whitelist.usewhitelist")
+    @Config.LangKey("config.smarthud.whitelist.use_whitelist")
     public static boolean useWhitelist = true;
 
     @Config.Name("Item List")

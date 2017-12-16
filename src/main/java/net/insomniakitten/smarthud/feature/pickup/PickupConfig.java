@@ -18,6 +18,8 @@ package net.insomniakitten.smarthud.feature.pickup;
 
 import net.minecraftforge.common.config.Config;
 
+import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
+
 public final class PickupConfig {
 
     @Config.Name("Is Enabled")
@@ -47,6 +49,10 @@ public final class PickupConfig {
     @Config.Comment("Configure how items are displayed on the HUD when picked up")
     @Config.LangKey("config.smarthud.pickup.style")
     public PickupStyle hudStyle = PickupStyle.BOTH;
+
+    public static int getDisplayTimeTicks() {
+        return PICKUP.displayTime / 50;
+    }
 
     public enum PickupStyle {
         BOTH(true, true),

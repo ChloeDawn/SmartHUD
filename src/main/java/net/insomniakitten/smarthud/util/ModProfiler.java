@@ -39,8 +39,7 @@ public final class ModProfiler {
         CACHE_INVENTORY("smarthud.hotbar.cacheInventory"),
         CACHE_BAUBLES("smarthud.hotbar.cacheBaubles"),
         RENDER_PICKUP("smarthud.pickup.renderOverlay"),
-        HANDLE_COLLECTION("smarthud.pickup.handleCollection"),
-        LOOKUP_TOP("smarthud.glance.lookupTheOneProbe");
+        HANDLE_COLLECTION("smarthud.pickup.handleCollection");
 
         private final String msg;
 

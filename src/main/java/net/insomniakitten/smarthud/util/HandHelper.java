@@ -43,7 +43,7 @@ public final class HandHelper {
      * @return The new offset depending on the current game setting
      */
     public static float handleVariableOffset(float currentOffset, float objectWidth) {
-        float newOffset = 0;
+        float newOffset = 0.0F;
         if (isLeftHanded()) {
             currentOffset = -currentOffset;
             newOffset = -objectWidth;

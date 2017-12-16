@@ -36,8 +36,8 @@ import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
 
 public final class PickupFeature implements ISmartHUDFeature {
 
-    private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42, 0, 0.58, 1);
-    private static final float ANIMATION_DURATION = 10;
+    private static final CubicBezierInterpolator ANIMATION = new CubicBezierInterpolator(0.42D, 0.0D, 0.58D, 1.0D);
+    private static final float ANIMATION_DURATION = 10.0F;
 
     public PickupFeature() {}
 
@@ -56,10 +56,8 @@ public final class PickupFeature implements ISmartHUDFeature {
         EvictingQueue<CachedItem> items = PickupQueue.getItems();
         if (items.isEmpty()) return;
         ModProfiler.start(ModProfiler.Section.RENDER_PICKUP);
-        int h = ctx.getScreenHeight();
         int x = PICKUP.hudStyle.hasItemIcon() ? 17 : 4;
-        int fontHeight = ctx.getFontHeight();
-        int y = h - (fontHeight * items.size()) - (2 * items.size());
+        int y = ctx.getScreenHeight() - (ctx.getFontHeight() * items.size()) - (2 * items.size());
         Iterator<CachedItem> iterator = items.iterator();
         for (int i = 0; iterator.hasNext(); ++i) {
             CachedItem cachedItem = iterator.next();
@@ -75,10 +73,10 @@ public final class PickupFeature implements ISmartHUDFeature {
         String key = "label.smarthud.pickup." + (PICKUP.hudStyle.hasItemName() ? "long" : "short");
         String count = StackHelper.getAbbreviatedValue(item.getCount());
         String label = I18n.format(key, count, item.getName());
-        
+
         int labelWidth = ctx.getStringWidth(label);
         float labelX = HandHelper.handleVariableOffset(renderX, labelWidth);
-        float iconX = HandHelper.handleVariableOffset(renderX - 14, 10.72f);
+        float iconX = HandHelper.handleVariableOffset(renderX - 14.0F, 10.72F);
 
         if (HandHelper.isLeftHanded()) {
             labelX += ctx.getScreenWidth();
@@ -102,8 +100,8 @@ public final class PickupFeature implements ISmartHUDFeature {
             GlStateManager.enableAlpha();
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.pushMatrix();
-            GlStateManager.translate(iconX, renderY - 1.5, 0);
-            GlStateManager.scale(0.67, 0.67, 0.67);
+            GlStateManager.translate(iconX, renderY - 1.5D, 0.0D);
+            GlStateManager.scale(0.67D, 0.67D, 0.67D);
             ctx.renderItem(item.getStack(), 0, 0, true);
             GlStateManager.popMatrix();
             RenderHelper.disableStandardItemLighting();
