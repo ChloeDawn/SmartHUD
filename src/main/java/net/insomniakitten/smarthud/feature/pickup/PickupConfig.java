@@ -23,7 +23,7 @@ import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
 public final class PickupConfig {
 
     @Config.Name("Is Enabled")
-    @Config.Comment({ "Should the HUD be enabled? If false, the HUD won't render." })
+    @Config.Comment("Should the HUD be enabled? If false, the HUD won't render.")
     @Config.LangKey("config.smarthud.pickup.enabled")
     public boolean isEnabled = true;
 
@@ -31,6 +31,11 @@ public final class PickupConfig {
     @Config.Comment("The maximum number of items that can be listed on the HUD at one time.")
     @Config.LangKey("config.smarthud.pickup.limit")
     public int itemLimit = 10;
+
+    @Config.Name("Animation Style")
+    @Config.Comment("")
+    @Config.LangKey("config.smarthud.pickup.animation_style")
+    public AnimationStyle animationStyle = AnimationStyle.GLIDE;
 
     @Config.Name("Display Priority Mode")
     @Config.Comment({ "Configure the order items are sorted on the HUD.",
@@ -47,7 +52,7 @@ public final class PickupConfig {
 
     @Config.Name("HUD Style")
     @Config.Comment("Configure how items are displayed on the HUD when picked up")
-    @Config.LangKey("config.smarthud.pickup.style")
+    @Config.LangKey("config.smarthud.pickup.pickup_style")
     public PickupStyle hudStyle = PickupStyle.BOTH;
 
     public static int getDisplayTimeTicks() {
@@ -75,5 +80,8 @@ public final class PickupConfig {
         }
     }
 
+    public enum AnimationStyle {
+        GLIDE, FADE
+    }
 
 }

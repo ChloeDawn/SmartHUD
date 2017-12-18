@@ -17,9 +17,10 @@ config.smarthud.pickup=Item Pickup HUD
 config.smarthud.pickup.tooltip=Modify the appearance and behaviour of the Item Pickup HUD.
 config.smarthud.pickup.enabled=Is Enabled
 config.smarthud.pickup.limit=Item Limit
+config.smarthid.pickup.animation_style=Animation Style
 config.smarthud.pickup.priority=Display Priority Mode
 config.smarthud.pickup.time=Pickup Display Time
-config.smarthud.pickup.style=HUD Style
+config.smarthud.pickup.pickup_style=HUD Style
 
 config.smarthud.whitelist=Whitelist
 config.smarthud.whitelist.tooltip=Configure the items that can be displayed on the Hotbar HUD.
