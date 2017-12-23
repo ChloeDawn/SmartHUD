@@ -25,7 +25,7 @@ public final class CachedItem {
 
     private final ItemStack stack;
     private final int actualCount;
-    private int metaData = OreDictionary.WILDCARD_VALUE;
+    private int meta = OreDictionary.WILDCARD_VALUE;
     private int count;
     private long timestamp;
     private DimensionPredicate dimension;
@@ -59,8 +59,8 @@ public final class CachedItem {
         return actualCount;
     }
 
-    public void setMetadata(int metaData) {
-        this.metaData = metaData;
+    public void setMetadata(int meta) {
+        this.meta = meta;
     }
 
     public long getTimestamp() {
@@ -100,7 +100,7 @@ public final class CachedItem {
         ItemStack match = stack.copy();
         Item matchItem = match.getItem();
         match.setCount(1);
-        return this.metaData == OreDictionary.WILDCARD_VALUE
+        return this.meta == OreDictionary.WILDCARD_VALUE
                ? item == matchItem
                : ItemStack.areItemsEqualIgnoreDurability(this.stack, match);
     }
