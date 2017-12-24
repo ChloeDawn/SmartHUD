@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.sleeplessdev.smarthud.SmartHUD;
 import net.sleeplessdev.smarthud.util.CachedItem;
-import net.sleeplessdev.smarthud.util.DimensionPredicate;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -138,14 +137,7 @@ public final class WhitelistParser {
                             .collect(Collectors.toList());
                 }
 
-                cachedItem.setDimension(new DimensionPredicate() {
-                    private final List<DimensionType> dimensionTypes = types;
-
-                    @Override
-                    public boolean test(DimensionType type) {
-                        return dimensionTypes.contains(type);
-                    }
-                });
+                cachedItem.setDimension(types::contains);
             }
 
             if (!WHITELIST.contains(cachedItem)) {
