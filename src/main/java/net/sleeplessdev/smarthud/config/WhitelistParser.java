@@ -110,7 +110,7 @@ public final class WhitelistParser {
                 if (meta < 0 || meta > Short.MAX_VALUE) {
                     String msg = "Invalid metadata <{}> found in whitelist entry at index {}";
                     SmartHUD.LOGGER.warn(msg, meta, i);
-                } else cachedItem.setMetadata(Math.min(0, meta));
+                } else cachedItem.setMetadata(meta);
             }
 
             if (json.has("ignore_nbt")) {
