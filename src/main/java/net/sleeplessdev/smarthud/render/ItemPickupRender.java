@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.sleeplessdev.smarthud.SmartHUD;
 import net.sleeplessdev.smarthud.event.ItemPickupQueue;
 import net.sleeplessdev.smarthud.util.CachedItem;
 import net.sleeplessdev.smarthud.util.HandHelper;
@@ -53,7 +54,7 @@ public final class ItemPickupRender implements IRenderEvent {
 
     private boolean renderLabel(RenderContext ctx, float renderX, float renderY, CachedItem item) {
         boolean name = ITEM_PICKUP_HUD.hudStyle.hasItemName();
-        String key = StringHelper.getLangKey("label", "pickup." + (name ? "long" : "short"));
+        String key = "label." + SmartHUD.ID + ".pickup." + (name ? "long" : "short");
         String count = StringHelper.getAbbreviatedValue(item.getCount());
         String label = I18n.format(key, count, item.getName());
 

@@ -1,7 +1,5 @@
 package net.sleeplessdev.smarthud.util;
 
-import net.sleeplessdev.smarthud.SmartHUD;
-
 public final class StringHelper {
 
     private StringHelper() {}
@@ -25,10 +23,6 @@ public final class StringHelper {
             abbr.append("kmbtpe".charAt(magnitude - 1));
         }
         return abbr.toString();
-    }
-
-    public static String getLangKey(String prefix, String suffix) {
-        return prefix + "." + SmartHUD.ID + "." + suffix;
     }
 
 }
