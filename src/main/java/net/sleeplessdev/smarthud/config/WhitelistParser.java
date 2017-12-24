@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -125,28 +126,26 @@ public final class WhitelistParser {
 
             if (json.has("dimensions")) {
                 JsonArray dimArray = json.get("dimensions").getAsJsonArray();
+                List<DimensionType> types;
+
                 if (dimArray.size() == 1) {
-                    cachedItem.setDimension(new DimensionPredicate() {
-                        private final DimensionType type = DimensionType.getById(dimArray.get(0).getAsInt());
-
-                        @Override
-                        public boolean test(DimensionType type) {
-                            return this.type == type;
-                        }
-                    });
-                } else if (dimArray.size() > 1) {
-                    cachedItem.setDimension(new DimensionPredicate() {
-                        private final List<DimensionType> dimensions =
-                                Stream.of(json.get("dimensions").getAsJsonArray())
-                                        .map(dim -> DimensionType.getById(dim.getAsInt()))
-                                        .collect(Collectors.toList());
-
-                        @Override
-                        public boolean test(DimensionType type) {
-                            return dimensions.contains(type);
-                        }
-                    });
+                    int dimId = dimArray.get(0).getAsInt();
+                    DimensionType type = DimensionType.getById(dimId);
+                    types = Collections.singletonList(type);
+                } else {
+                    types = Stream.of(json.get("dimensions").getAsJsonArray())
+                            .map(e -> DimensionType.getById(e.getAsInt()))
+                            .collect(Collectors.toList());
                 }
+
+                cachedItem.setDimension(new DimensionPredicate() {
+                    private final List<DimensionType> dimensionTypes = types;
+
+                    @Override
+                    public boolean test(DimensionType type) {
+                        return dimensionTypes.contains(type);
+                    }
+                });
             }
 
             if (!WHITELIST.contains(cachedItem)) {
