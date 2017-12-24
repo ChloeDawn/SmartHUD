@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -65,8 +66,15 @@ public final class WhitelistParser {
     }
 
     private static void reloadWhitelistEntries() {
+        if (!GeneralConfig.WHITELIST.isEnabled) {
+            WHITELIST.clear();
+            WHITELIST.add(new CachedItem(new ItemStack(Items.CLOCK)));
+            WHITELIST.add(new CachedItem(new ItemStack(Items.COMPASS)));
+            return;
+        }
+
         Stopwatch stopwatch = Stopwatch.createStarted();
-        List<String> missingDependencies = new ArrayList<>();
+        List<String> missingEntries = new ArrayList<>();
         JsonElement file;
 
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(getOrGenerateJson()))) {
@@ -77,7 +85,7 @@ public final class WhitelistParser {
             return;
         }
 
-        if (!WHITELIST.isEmpty()) WHITELIST.clear();
+        WHITELIST.clear();
 
         JsonArray entries = file.getAsJsonArray();
 
@@ -97,8 +105,8 @@ public final class WhitelistParser {
                 if (Loader.isModLoaded(id.getResourceDomain())) {
                     String msg = "Unable to find item for whitelist entry at index {} by name <{}>";
                     SmartHUD.LOGGER.warn(msg, i, id);
-                } else if (!missingDependencies.contains(id.getResourceDomain())) {
-                    missingDependencies.add(id.getResourceDomain());
+                } else if (!missingEntries.contains(id.getResourceDomain())) {
+                    missingEntries.add(id.toString());
                 }
                 continue;
             }
@@ -145,13 +153,16 @@ public final class WhitelistParser {
             }
         }
 
-        String msg = "Processed whitelist config in {}ms";
+        String msg = "Finished processing whitelist config in {}ms";
         long time = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        SmartHUD.LOGGER.info(msg, time);
 
-        if (!missingDependencies.isEmpty()) {
-            msg += ". Entries were skipped as the following item dependencies were not met: {}";
-            SmartHUD.LOGGER.info(msg, time, String.join(", ", missingDependencies));
-        } else SmartHUD.LOGGER.info(msg, time);
+        if (!missingEntries.isEmpty() && GeneralConfig.WHITELIST.logMissingEntries) {
+            SmartHUD.LOGGER.warn("Entries were skipped as the following items could not be found:");
+            for (String entry : missingEntries) {
+                SmartHUD.LOGGER.warn("-> " + entry);
+            }
+        }
     }
 
     private static File getOrGenerateJson() {
