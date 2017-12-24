@@ -25,11 +25,11 @@ public final class SmartHUD {
     public void onPreInit(FMLPreInitializationEvent event) {
         configPath = new File(event.getModConfigurationDirectory(), ID);
         if (!configPath.exists()) configPath.mkdirs();
-        WhitelistParser.registerReloadListener();
     }
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
+        WhitelistParser.reloadWhitelistEntries();
         ItemPickupQueue.initialize();
     }
 

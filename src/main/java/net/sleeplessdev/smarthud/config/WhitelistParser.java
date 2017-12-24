@@ -6,14 +6,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -49,15 +46,6 @@ public final class WhitelistParser {
         return ImmutableList.copyOf(WHITELIST);
     }
 
-    public static void registerReloadListener() {
-        IResourceManager rm = FMLClientHandler.instance().getClient().getResourceManager();
-        if (!hasRegistered && rm instanceof IReloadableResourceManager) {
-            IReloadableResourceManager rrm = (IReloadableResourceManager) rm;
-            rrm.registerReloadListener(i -> reloadWhitelistEntries());
-            hasRegistered = true;
-        }
-    }
-
     @SubscribeEvent
     protected static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (SmartHUD.ID.equals(event.getModID())) {
@@ -65,7 +53,7 @@ public final class WhitelistParser {
         }
     }
 
-    private static void reloadWhitelistEntries() {
+    public static void reloadWhitelistEntries() {
         if (!GeneralConfig.WHITELIST.isEnabled) {
             WHITELIST.clear();
             WHITELIST.add(new CachedItem(new ItemStack(Items.CLOCK)));
