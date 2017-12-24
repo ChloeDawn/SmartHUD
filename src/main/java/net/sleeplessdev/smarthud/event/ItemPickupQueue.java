@@ -30,12 +30,17 @@ import static net.sleeplessdev.smarthud.config.ModulesConfig.ITEM_PICKUP_HUD;
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class ItemPickupQueue {
 
-    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
+    private static EvictingQueue<CachedItem> items = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
+
+    private static boolean init = false;
 
     private ItemPickupQueue() {}
 
     public static void initialize() {
-        initializeParticleQueue();
+        if (!init) {
+            initializeParticleQueue();
+            init = true;
+        }
         reloadQueue();
     }
 
@@ -102,7 +107,7 @@ public final class ItemPickupQueue {
         };
     }
 
-    protected static void handleItemCollection(ItemStack stack) {
+    private static void handleItemCollection(ItemStack stack) {
         if (!stack.isEmpty()) {
             EvictingQueue<CachedItem> newItems = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
             newItems.addAll(items);
