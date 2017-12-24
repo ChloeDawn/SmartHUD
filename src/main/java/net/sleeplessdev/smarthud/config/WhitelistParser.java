@@ -38,8 +38,6 @@ public final class WhitelistParser {
 
     private static final List<CachedItem> WHITELIST = new ArrayList<>();
 
-    private static boolean hasRegistered = false;
-
     private WhitelistParser() {}
 
     public static ImmutableList<CachedItem> getWhitelist() {
