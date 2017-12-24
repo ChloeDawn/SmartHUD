@@ -45,18 +45,6 @@ public final class CachedItem {
         return actualCount;
     }
 
-    public boolean shouldIgnoreDmg() {
-        return ignoreDmg;
-    }
-
-    public boolean shouldIgnoreNBT() {
-        return ignoreNBT;
-    }
-
-    public int getMetadata() {
-        return meta;
-    }
-
     public void setMetadata(int meta) {
         this.stack.setItemDamage(meta);
         this.meta = meta;
@@ -68,10 +56,6 @@ public final class CachedItem {
 
     public void setIgnoreDmg(boolean ignoreDmg) {
         this.ignoreDmg = ignoreDmg;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
     }
 
     public void renewTimestamp() {
@@ -88,11 +72,6 @@ public final class CachedItem {
 
     public String getName() {
         return stack.getDisplayName();
-    }
-
-    public boolean hasExpired(int cooldown) {
-        long expiration = timestamp + (cooldown / 50);
-        return expiration < TickHelper.getTicksElapsed();
     }
 
     public long getRemainingTicks(int cooldown) {

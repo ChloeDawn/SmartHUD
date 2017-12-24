@@ -19,14 +19,12 @@ public final class RenderContext {
     private final int screenHeight;
 
     private final float partialTicks;
-    private final float clientTicks;
 
     public RenderContext(Minecraft mc, RenderGameOverlayEvent event) {
         minecraft = mc;
         screenWidth = event.getResolution().getScaledWidth();
         screenHeight = event.getResolution().getScaledHeight();
         partialTicks = event.getPartialTicks();
-        clientTicks = TickHelper.getTicksElapsed();
     }
 
     public GameSettings getGameSettings() {
