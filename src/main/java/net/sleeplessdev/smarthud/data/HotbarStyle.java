@@ -1,6 +1,7 @@
 package net.sleeplessdev.smarthud.data;
 
 public enum HotbarStyle {
+
     OFFHAND(0),
     HOTBAR(22),
     INVISIBLE(-1);
@@ -15,7 +16,4 @@ public enum HotbarStyle {
         return textureY;
     }
 
-    public boolean isInvisible() {
-        return equals(INVISIBLE);
-    }
 }

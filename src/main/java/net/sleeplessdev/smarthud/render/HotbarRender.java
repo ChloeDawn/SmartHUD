@@ -12,6 +12,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.sleeplessdev.smarthud.SmartHUD;
+import net.sleeplessdev.smarthud.data.HotbarStyle;
 import net.sleeplessdev.smarthud.event.InventoryCache;
 import net.sleeplessdev.smarthud.util.CachedItem;
 import net.sleeplessdev.smarthud.util.HandHelper;
@@ -45,7 +46,7 @@ public final class HotbarRender implements IRenderEvent {
         int baseOffset = 98;
 
         if (cachedItems.size() > 0) {
-            if (!HOTBAR_HUD.hudStyle.isInvisible()) {
+            if (HOTBAR_HUD.hudStyle != HotbarStyle.INVISIBLE) {
                 int width = 44 + (20 * (cachedItems.size() - 2)) - 2;
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, width);
                 renderHotbarBackground(ctx, center + offset, ctx.getScreenHeight() - 22, slots);
@@ -83,7 +84,7 @@ public final class HotbarRender implements IRenderEvent {
                     ctx.drawString(StringHelper.getAbbreviatedValue(count), labelX, labelY);
                 }
             }
-        } else if (HOTBAR_HUD.alwaysShow && !HOTBAR_HUD.hudStyle.isInvisible()) {
+        } else if (HOTBAR_HUD.alwaysShow && HOTBAR_HUD.hudStyle != HotbarStyle.INVISIBLE) {
             int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20.0F);
             renderHotbarBackground(ctx, center + offset, ctx.getScreenHeight() - 22, 1);
         }
