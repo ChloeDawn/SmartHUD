@@ -1,30 +1,6 @@
-package net.insomniakitten.smarthud.feature.hotbar; 
- 
-/*
- *  Copyright 2017 InsomniaKitten
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
+package net.sleeplessdev.smarthud.render;
 
 import com.google.common.collect.ImmutableList;
-import net.insomniakitten.smarthud.SmartHUD;
-import net.insomniakitten.smarthud.SmartHUDConfig;
-import net.insomniakitten.smarthud.feature.ISmartHUDFeature;
-import net.insomniakitten.smarthud.util.CachedItem;
-import net.insomniakitten.smarthud.util.HandHelper;
-import net.insomniakitten.smarthud.util.ModProfiler;
-import net.insomniakitten.smarthud.util.RenderContext;
-import net.insomniakitten.smarthud.util.StackHelper;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -35,21 +11,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.sleeplessdev.smarthud.SmartHUD;
+import net.sleeplessdev.smarthud.event.InventoryCache;
+import net.sleeplessdev.smarthud.util.CachedItem;
+import net.sleeplessdev.smarthud.util.HandHelper;
+import net.sleeplessdev.smarthud.util.IRenderEvent;
+import net.sleeplessdev.smarthud.util.RenderContext;
+import net.sleeplessdev.smarthud.util.StringHelper;
 
-import static net.insomniakitten.smarthud.SmartHUDConfig.HOTBAR;
+import static net.sleeplessdev.smarthud.config.ModulesConfig.HOTBAR_HUD;
 
-public class HotbarFeature implements ISmartHUDFeature {
+public final class HotbarRender implements IRenderEvent {
 
     private static final ResourceLocation HUD_ELEMENTS = new ResourceLocation(SmartHUD.ID, "textures/hud/elements.png");
 
-    private static final int ATTACK_INDICATOR_HOTBAR = 2;
-    private static final int ATTACK_INDICATOR_VOID = -1304094787;
-
-    public HotbarFeature() {}
+    public HotbarRender() {}
 
     @Override
-    public boolean isEnabled() {
-        return SmartHUDConfig.HOTBAR.isEnabled;
+    public boolean canRender() {
+        return HOTBAR_HUD.isEnabled;
     }
 
     @Override
@@ -59,15 +39,13 @@ public class HotbarFeature implements ISmartHUDFeature {
 
     @Override
     public void onRenderTickPre(RenderContext ctx) {
-        ModProfiler.start(ModProfiler.Section.RENDER_HOTBAR);
-
         ImmutableList<CachedItem> cachedItems = InventoryCache.getInventory();
-        int slots = cachedItems.size() < HOTBAR.slotLimit ? cachedItems.size() : HOTBAR.slotLimit;
+        int slots = cachedItems.size() < HOTBAR_HUD.slotLimit ? cachedItems.size() : HOTBAR_HUD.slotLimit;
         int center = ctx.getScreenWidth() / 2;
         int baseOffset = 98;
 
         if (cachedItems.size() > 0) {
-            if (!HOTBAR.hudStyle.isInvisible()) {
+            if (!HOTBAR_HUD.hudStyle.isInvisible()) {
                 int width = 44 + (20 * (cachedItems.size() - 2)) - 2;
                 int offset = (int) HandHelper.handleVariableOffset(baseOffset, width);
                 renderHotbarBackground(ctx, center + offset, ctx.getScreenHeight() - 22, slots);
@@ -84,43 +62,40 @@ public class HotbarFeature implements ISmartHUDFeature {
                 ctx.renderItem(stack, stackX, stackY, true);
                 RenderHelper.disableStandardItemLighting();
 
-                boolean renderOverlay = !stack.isStackable() && HOTBAR.renderOverlays;
-                boolean showStackSize = cachedItem.getCount() > 1 && HOTBAR.showStackSize;
+                boolean renderOverlay = !stack.isStackable() && HOTBAR_HUD.renderOverlays;
+                boolean showStackSize = cachedItem.getCount() > 1 && HOTBAR_HUD.showStackSize;
 
                 if (renderOverlay) {
                     ctx.renderItemOverlays(stack, stackX, stackY);
                 }
 
                 if (showStackSize) {
-                    int count = HOTBAR.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
+                    int count = HOTBAR_HUD.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
                     int stringWidth = ctx.getStringWidth(Integer.toString(count));
                     int labelOffset = baseOffset + (20 - stringWidth) + (20 * i);
-                    int labelX = center + (int) HandHelper.handleVariableOffset(labelOffset, stringWidth);
+                    int labelX = (int) (center + HandHelper.handleVariableOffset(labelOffset, stringWidth));
                     int labelY = ctx.getScreenHeight() - ctx.getFontHeight() - 1;
 
                     if (labelX < center) labelX += 18 - stringWidth;
                     // Keeps string to right edge of slot in left-handed mode
 
                     GlStateManager.disableDepth();
-                    ctx.drawString(StackHelper.getAbbreviatedValue(count), labelX, labelY);
+                    ctx.drawString(StringHelper.getAbbreviatedValue(count), labelX, labelY);
                 }
             }
-        } else if (HOTBAR.alwaysShow && !HOTBAR.hudStyle.isInvisible()) {
+        } else if (HOTBAR_HUD.alwaysShow && !HOTBAR_HUD.hudStyle.isInvisible()) {
             int offset = (int) HandHelper.handleVariableOffset(baseOffset, 20.0F);
             renderHotbarBackground(ctx, center + offset, ctx.getScreenHeight() - 22, 1);
         }
 
-        if (ctx.getGameSettings().attackIndicator == ATTACK_INDICATOR_HOTBAR) {
-            ctx.getGameSettings().attackIndicator = ATTACK_INDICATOR_VOID;
+        if (ctx.getGameSettings().attackIndicator == 2) {
+            ctx.getGameSettings().attackIndicator = Integer.MIN_VALUE;
         }
-
-        ModProfiler.end();
     }
 
     @Override
     public void onRenderTickPost(RenderContext ctx) {
-        if (ctx.getGameSettings().attackIndicator == ATTACK_INDICATOR_VOID) {
-            ctx.getGameSettings().attackIndicator = ATTACK_INDICATOR_HOTBAR;
+        if (ctx.getGameSettings().attackIndicator == Integer.MIN_VALUE) {
             if (ctx.getRenderViewEntity() instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) ctx.getRenderViewEntity();
                 EnumHandSide side = player.getPrimaryHand().opposite();
@@ -147,24 +122,25 @@ public class HotbarFeature implements ISmartHUDFeature {
                     GlStateManager.disableBlend();
                 }
             }
+            ctx.getGameSettings().attackIndicator = 2;
         }
     }
 
-    public static int getAttackIndicatorOffset() {
+    private int getAttackIndicatorOffset() {
         ImmutableList<CachedItem> cachedItems = InventoryCache.getInventory();
         int slot = 20, padding = 9;
         if (cachedItems.size() > 0) {
-            int slots = cachedItems.size() < HOTBAR.slotLimit
+            int slots = cachedItems.size() < HOTBAR_HUD.slotLimit
                         ? cachedItems.size()
-                        : HOTBAR.slotLimit;
+                        : HOTBAR_HUD.slotLimit;
             return (slot * slots) + padding;
-        } else if (HOTBAR.alwaysShow) {
+        } else if (HOTBAR_HUD.alwaysShow) {
             return slot + padding;
         } else return 0;
     }
 
     private void renderHotbarBackground(RenderContext ctx, int x, int y, int slots) {
-        int textureY = HOTBAR.hudStyle.getTextureY();
+        int textureY = HOTBAR_HUD.hudStyle.getTextureY();
         ctx.bindTexture(HUD_ELEMENTS);
         ctx.drawTexturedModalRect(x, y, 0, textureY, 11, 22);
         for (int i = 0; i < ((slots - 1) * 2); ++i) {

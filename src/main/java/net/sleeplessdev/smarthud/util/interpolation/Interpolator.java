@@ -1,4 +1,4 @@
-package net.insomniakitten.smarthud.util.interpolation;
+package net.sleeplessdev.smarthud.util.interpolation;
 
 public interface Interpolator {
 

@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "$mcVersion-$modVersion"
-group = 'net.insomniakitten.smarthud'
+group = 'net.sleeplessdev.smarthud'
 archivesBaseName = 'smarthud'
 sourceCompatibility = 1.8
 

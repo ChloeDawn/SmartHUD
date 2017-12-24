@@ -1,26 +1,8 @@
-package net.insomniakitten.smarthud.feature.pickup; 
- 
-/*
- *  Copyright 2017 InsomniaKitten
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
+package net.sleeplessdev.smarthud.event;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.ForwardingQueue;
-import net.insomniakitten.smarthud.util.CachedItem;
-import net.insomniakitten.smarthud.util.ModProfiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.Particle;
@@ -29,7 +11,13 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.sleeplessdev.smarthud.SmartHUD;
+import net.sleeplessdev.smarthud.util.CachedItem;
 
 import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
@@ -37,30 +25,38 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Queue;
 
-import static net.insomniakitten.smarthud.SmartHUDConfig.PICKUP;
+import static net.sleeplessdev.smarthud.config.ModulesConfig.ITEM_PICKUP_HUD;
 
-public final class PickupQueue {
+@Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
+public final class ItemPickupQueue {
 
-    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(PICKUP.itemLimit);
+    protected static EvictingQueue<CachedItem> items = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
 
-    private PickupQueue() {}
+    private ItemPickupQueue() {}
 
     public static void initialize() {
-        reloadQueue();
         initializeParticleQueue();
+        reloadQueue();
     }
 
-    public static void reloadQueue() {
-        EvictingQueue<CachedItem> newQueue = EvictingQueue.create(PICKUP.itemLimit);
+    private static void reloadQueue() {
+        EvictingQueue<CachedItem> newQueue = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
         newQueue.addAll(items);
         items = newQueue;
+    }
+
+    @SubscribeEvent
+    protected static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (SmartHUD.ID.equals(event.getModID())) {
+            reloadQueue();
+        }
     }
 
     public static EvictingQueue<CachedItem> getItems() {
         return items;
     }
 
-    protected static void initializeParticleQueue() {
+    private static void initializeParticleQueue() {
         try {
             Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queue");
             MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -107,21 +103,19 @@ public final class PickupQueue {
     }
 
     protected static void handleItemCollection(ItemStack stack) {
-        ModProfiler.start(ModProfiler.Section.HANDLE_COLLECTION);
-
         if (!stack.isEmpty()) {
-            EvictingQueue<CachedItem> newItems = EvictingQueue.create(PICKUP.itemLimit);
+            EvictingQueue<CachedItem> newItems = EvictingQueue.create(ITEM_PICKUP_HUD.itemLimit);
             newItems.addAll(items);
             if (!items.isEmpty()) {
                 boolean shouldCache = true;
                 for (CachedItem cachedItem : items) {
-                    if (cachedItem.matches(stack)) {
+                    if (cachedItem.matches(stack, true)) {
                         int count = cachedItem.getCount() + stack.getCount();
-                        if (PICKUP.priorityMode == 0) {
+                        if (ITEM_PICKUP_HUD.priorityMode == 0) {
                             newItems.remove(cachedItem);
                             newItems.add(new CachedItem(stack, count));
                             shouldCache = false;
-                        } else if (PICKUP.priorityMode == 1) {
+                        } else if (ITEM_PICKUP_HUD.priorityMode == 1) {
                             cachedItem.setCount(count);
                             cachedItem.renewTimestamp();
                             shouldCache = false;
@@ -137,8 +131,6 @@ public final class PickupQueue {
             }
             items = newItems;
         }
-
-        ModProfiler.end();
     }
 
 }
