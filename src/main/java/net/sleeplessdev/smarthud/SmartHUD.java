@@ -1,7 +1,7 @@
 package net.sleeplessdev.smarthud;
 
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.sleeplessdev.smarthud.config.WhitelistParser;
 import net.sleeplessdev.smarthud.event.ItemPickupQueue;
@@ -10,7 +10,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(modid = SmartHUD.ID, name = SmartHUD.NAME, version = SmartHUD.VERSION, clientSideOnly = true)
+@Mod(modid = SmartHUD.ID,
+     name = SmartHUD.NAME,
+     version = SmartHUD.VERSION,
+     dependencies = "after:*",
+     clientSideOnly = true)
 public final class SmartHUD {
 
     public static final String ID = "smarthud";
@@ -28,7 +32,7 @@ public final class SmartHUD {
     }
 
     @Mod.EventHandler
-    public void onInit(FMLInitializationEvent event) {
+    public void onPostInit(FMLPostInitializationEvent event) {
         WhitelistParser.reloadWhitelistEntries();
         ItemPickupQueue.initialize();
     }

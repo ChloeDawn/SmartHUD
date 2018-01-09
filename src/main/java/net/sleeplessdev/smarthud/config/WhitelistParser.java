@@ -73,7 +73,14 @@ public final class WhitelistParser {
 
         WHITELIST.clear();
 
-        JsonArray entries = file.getAsJsonArray();
+        JsonArray entries;
+
+        try {
+            entries = file.getAsJsonArray();
+        } catch (IllegalStateException e) {
+            SmartHUD.LOGGER.warn("Received invalid data from the whitelist, please check your formatting!");
+            entries = new JsonArray();
+        }
 
         for (int i = 0; i < entries.size(); ++i) {
             JsonObject json = entries.get(i).getAsJsonObject();
@@ -123,15 +130,18 @@ public final class WhitelistParser {
 
                 if (dimArray.size() == 1) {
                     int dimId = dimArray.get(0).getAsInt();
-                    DimensionType type = DimensionType.getById(dimId);
-                    types = Collections.singletonList(type);
+                    try {
+                        types = Collections.singletonList(DimensionType.getById(dimId));
+                        cachedItem.setDimension(types::contains);
+                    } catch (IllegalArgumentException e) {
+                        SmartHUD.LOGGER.warn("Failed to find a registered dimension for ID {}!", dimId);
+                    }
                 } else {
                     types = Stream.of(json.get("dimensions").getAsJsonArray())
                             .map(e -> DimensionType.getById(e.getAsInt()))
                             .collect(Collectors.toList());
+                    cachedItem.setDimension(types::contains);
                 }
-
-                cachedItem.setDimension(types::contains);
             }
 
             if (!WHITELIST.contains(cachedItem)) {
@@ -155,13 +165,21 @@ public final class WhitelistParser {
         String path = "/assets/" + SmartHUD.ID + "/data/whitelist.json";
         File defaultWhitelist = new File(SmartHUD.getConfigPath(), "defaults.json");
         File userWhitelist = new File(SmartHUD.getConfigPath(), "whitelist.json");
+        writeToFile(path, defaultWhitelist, true);
+        if (!userWhitelist.exists()) {
+            writeToFile(path, userWhitelist, false);
+        }
+        return userWhitelist;
+    }
+
+    private static void writeToFile(String path, File file, boolean overwrite) {
         try (InputStream stream = SmartHUD.class.getResourceAsStream(path)) {
-            Files.copy(stream, defaultWhitelist.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            if (!userWhitelist.exists()) Files.copy(stream, userWhitelist.toPath());
+            if (overwrite) {
+                Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } else Files.copy(stream, file.toPath());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return userWhitelist;
     }
 
 }
