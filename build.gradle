@@ -10,13 +10,17 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "$mcVersion-$modVersion"
+def modVersion = '2.0.0'
+def mcfVersion = '1.12.2-14.23.1.2586'
+def mcpMappings = 'snapshot_20180109'
+
+version = "1.12-$modVersion"
 group = 'net.sleeplessdev.smarthud'
 archivesBaseName = 'smarthud'
 sourceCompatibility = 1.8
 
 minecraft {
-    version = "$mcVersion-$mcfVersion"
+    version = mcfVersion
     mappings = mcpMappings
     runDir = 'run'
     replaceIn 'SmartHUD.java'
