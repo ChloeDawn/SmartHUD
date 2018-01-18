@@ -59,16 +59,15 @@ public final class HotbarRender implements IRenderEvent {
                 int stackX = center + (int) HandHelper.handleVariableOffset(stackOffset, 16.0F);
                 int stackY = ctx.getScreenHeight() - (16 + 3);
 
-                RenderHelper.enableGUIStandardItemLighting();
-                ctx.renderItem(stack, stackX, stackY, true);
-                RenderHelper.disableStandardItemLighting();
-
                 boolean renderOverlay = !stack.isStackable() && HOTBAR_HUD.renderOverlays;
                 boolean showStackSize = cachedItem.getCount() > 1 && HOTBAR_HUD.showStackSize;
 
+                RenderHelper.enableGUIStandardItemLighting();
+                ctx.renderItem(stack, stackX, stackY, true);
                 if (renderOverlay) {
                     ctx.renderItemOverlays(stack, stackX, stackY);
                 }
+                RenderHelper.disableStandardItemLighting();
 
                 if (showStackSize) {
                     int count = HOTBAR_HUD.mergeDuplicates ? cachedItem.getCount() : cachedItem.getActualCount();
