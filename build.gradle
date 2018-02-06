@@ -11,8 +11,8 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 def modVersion = '2.0.0'
-def mcfVersion = '1.12.2-14.23.1.2586'
-def mcpMappings = 'snapshot_20180109'
+def mcfVersion = '1.12.2-14.23.2.2612'
+def mcpMappings = 'snapshot_20180206'
 
 version = "1.12-$modVersion"
 group = 'net.sleeplessdev.smarthud'
