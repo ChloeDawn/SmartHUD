@@ -4,7 +4,6 @@ import com.google.common.collect.EvictingQueue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.sleeplessdev.smarthud.SmartHUD;
 import net.sleeplessdev.smarthud.event.ItemPickupQueue;
@@ -73,18 +72,18 @@ public final class ItemPickupRender implements IRenderEvent {
         if (remaining < 0) {
             float time = Math.abs(remaining) + ctx.getPartialTicks();
             if (time > ANIMATION_DURATION) return true;
-            switch (ITEM_PICKUP_HUD.animationStyle) {
-                case FADE:
-                    float alpha = MathHelper.clamp(remaining, 0, 255);
-                    color |= (int) alpha << 24; // FIXME
-                    break;
-                case GLIDE:
+//            switch (ITEM_PICKUP_HUD.animationStyle) {
+//                case FADE:
+//                    float alpha = (float) (1.0F * Math.sin(time));
+//                    color |= (int) alpha << 24; // FIXME
+//                    break;
+//                case GLIDE:
                     float end = renderX + labelWidth;
                     float interpolation = ANIMATION.interpolate(0, ANIMATION_DURATION, time) * end;
                     labelX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
                     iconX += HandHelper.isLeftHanded() ? interpolation : -interpolation;
-                    break;
-            }
+//                    break;
+//            }
 
         }
 

@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.sleeplessdev.smarthud.SmartHUD;
 import net.sleeplessdev.smarthud.data.HotbarStyle;
-import net.sleeplessdev.smarthud.data.PickupAnimation;
 import net.sleeplessdev.smarthud.data.PickupStyle;
 
 @Config(modid = SmartHUD.ID, name = SmartHUD.ID + "/modules", category = "")
@@ -48,7 +47,7 @@ public final class ModulesConfig {
     }
 
     public static final class ItemPickup {
-        public PickupAnimation animationStyle = PickupAnimation.GLIDE;
+        //public PickupAnimation animationStyle = PickupAnimation.GLIDE;
 
         public int displayTime = 3000;
 
