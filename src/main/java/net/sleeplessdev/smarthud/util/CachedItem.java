@@ -21,7 +21,7 @@ public final class CachedItem {
         this.actualCount = stack.getCount();
         this.stack.setCount(1);
         this.count = count;
-        this.timestamp = TickHelper.getTicksElapsed();
+        this.timestamp = TickListener.getTicksElapsed();
         this.dimension = DimensionPredicate.ANY;
     }
 
@@ -59,7 +59,7 @@ public final class CachedItem {
     }
 
     public void renewTimestamp() {
-        timestamp = TickHelper.getTicksElapsed();
+        timestamp = TickListener.getTicksElapsed();
     }
 
     public DimensionPredicate getDimension() {
@@ -75,7 +75,7 @@ public final class CachedItem {
     }
 
     public long getRemainingTicks(int cooldown) {
-        long time = TickHelper.getTicksElapsed();
+        long time = TickListener.getTicksElapsed();
         return (timestamp + cooldown / 50) - time;
     }
 

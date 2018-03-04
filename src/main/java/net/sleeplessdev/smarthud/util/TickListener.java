@@ -10,11 +10,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.sleeplessdev.smarthud.SmartHUD;
 
 @EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
-public final class TickHelper {
+public final class TickListener {
 
     private static long ticksElapsed;
 
-    private TickHelper() {}
+    private TickListener() {}
 
     @SubscribeEvent
     protected static void onClientTick(ClientTickEvent event) {
