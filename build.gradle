@@ -14,7 +14,7 @@ def modVersion = '2.0.0'
 def mcfVersion = '1.12.2-14.23.2.2612'
 def mcpMappings = 'snapshot_20180206'
 
-version = "1.12-$modVersion"
+version = modVersion
 group = 'net.sleeplessdev.smarthud'
 archivesBaseName = 'smarthud'
 sourceCompatibility = 1.8
