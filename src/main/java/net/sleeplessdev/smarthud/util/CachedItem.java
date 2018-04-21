@@ -1,6 +1,7 @@
 package net.sleeplessdev.smarthud.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.oredict.OreDictionary;
 
 public final class CachedItem {
@@ -14,7 +15,7 @@ public final class CachedItem {
     private boolean ignoreNBT = true;
     private boolean ignoreDmg = true;
 
-    private DimensionPredicate dimension;
+    private DimensionPredicate dimensionPredicate;
 
     public CachedItem(ItemStack stack, int count) {
         this.stack = stack.copy();
@@ -22,7 +23,7 @@ public final class CachedItem {
         this.stack.setCount(1);
         this.count = count;
         this.timestamp = TickListener.getTicksElapsed();
-        this.dimension = DimensionPredicate.ANY;
+        this.dimensionPredicate = DimensionPredicate.ANY;
     }
 
     public CachedItem(ItemStack stack) {
@@ -58,16 +59,12 @@ public final class CachedItem {
         this.ignoreDmg = ignoreDmg;
     }
 
+    public void setDimensionPredicate(DimensionPredicate dimension) {
+        this.dimensionPredicate = dimension;
+    }
+
     public void renewTimestamp() {
         timestamp = TickListener.getTicksElapsed();
-    }
-
-    public DimensionPredicate getDimension() {
-        return dimension;
-    }
-
-    public void setDimension(DimensionPredicate dimension) {
-        this.dimension = dimension;
     }
 
     public String getName() {
@@ -79,7 +76,11 @@ public final class CachedItem {
         return (timestamp + cooldown / 50) - time;
     }
 
-    public boolean matches(ItemStack stack, boolean fuzzy) {
+    public boolean matchesDimension(DimensionType type) {
+        return dimensionPredicate.test(type);
+    }
+
+    public boolean matchesStack(ItemStack stack, boolean fuzzy) {
         ItemStack match = stack.copy();
         match.setCount(1);
         if (fuzzy) {

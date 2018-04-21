@@ -114,7 +114,7 @@ public final class ItemPickupQueue {
             if (!items.isEmpty()) {
                 boolean shouldCache = true;
                 for (CachedItem cachedItem : items) {
-                    if (cachedItem.matches(stack, true)) {
+                    if (cachedItem.matchesStack(stack, true)) {
                         int count = cachedItem.getCount() + stack.getCount();
                         if (ITEM_PICKUP_HUD.priorityMode == 0) {
                             newItems.remove(cachedItem);

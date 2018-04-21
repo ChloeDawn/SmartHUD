@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DimensionType;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -131,16 +132,16 @@ public final class WhitelistParser {
                 if (dimArray.size() == 1) {
                     int dimId = dimArray.get(0).getAsInt();
                     try {
-                        types = Collections.singletonList(DimensionType.getById(dimId));
-                        cachedItem.setDimension(types::contains);
+                        types = Collections.singletonList(DimensionManager.getProviderType(dimId));
+                        cachedItem.setDimensionPredicate(types::contains);
                     } catch (IllegalArgumentException e) {
                         SmartHUD.LOGGER.warn("Failed to find a registered dimension for ID {}!", dimId);
                     }
                 } else {
                     types = Stream.of(json.get("dimensions").getAsJsonArray())
-                            .map(e -> DimensionType.getById(e.getAsInt()))
+                            .map(e -> DimensionManager.getProviderType(e.getAsInt()))
                             .collect(Collectors.toList());
-                    cachedItem.setDimension(types::contains);
+                    cachedItem.setDimensionPredicate(types::contains);
                 }
             }
 
