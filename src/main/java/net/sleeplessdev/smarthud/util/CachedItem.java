@@ -1,8 +1,9 @@
 package net.sleeplessdev.smarthud.util;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.DimensionType;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.function.IntPredicate;
 
 public final class CachedItem {
 
@@ -15,7 +16,7 @@ public final class CachedItem {
     private boolean ignoreNBT = true;
     private boolean ignoreDmg = true;
 
-    private DimensionPredicate dimensionPredicate;
+    private IntPredicate dimensionPredicate;
 
     public CachedItem(ItemStack stack, int count) {
         this.stack = stack.copy();
@@ -23,7 +24,7 @@ public final class CachedItem {
         this.stack.setCount(1);
         this.count = count;
         this.timestamp = TickListener.getTicksElapsed();
-        this.dimensionPredicate = DimensionPredicate.ANY;
+        this.dimensionPredicate = i -> true;
     }
 
     public CachedItem(ItemStack stack) {
@@ -59,8 +60,8 @@ public final class CachedItem {
         this.ignoreDmg = ignoreDmg;
     }
 
-    public void setDimensionPredicate(DimensionPredicate dimension) {
-        this.dimensionPredicate = dimension;
+    public void setDimensionPredicate(IntPredicate predicate) {
+        this.dimensionPredicate = predicate;
     }
 
     public void renewTimestamp() {
@@ -76,8 +77,8 @@ public final class CachedItem {
         return (timestamp + cooldown / 50) - time;
     }
 
-    public boolean matchesDimension(DimensionType type) {
-        return dimensionPredicate.test(type);
+    public boolean matchesDimension(int dimension) {
+        return dimensionPredicate.test(dimension);
     }
 
     public boolean matchesStack(ItemStack stack, boolean fuzzy) {

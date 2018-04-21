@@ -6,11 +6,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -28,7 +28,6 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -126,22 +125,19 @@ public final class WhitelistParser {
             }
 
             if (json.has("dimensions")) {
-                JsonArray dimArray = json.get("dimensions").getAsJsonArray();
-                List<DimensionType> types;
-
-                if (dimArray.size() == 1) {
-                    int dimId = dimArray.get(0).getAsInt();
-                    try {
-                        types = Collections.singletonList(DimensionManager.getProviderType(dimId));
-                        cachedItem.setDimensionPredicate(types::contains);
-                    } catch (IllegalArgumentException e) {
-                        SmartHUD.LOGGER.warn("Failed to find a registered dimension for ID {}!", dimId);
-                    }
+                JsonArray array = json.get("dimensions").getAsJsonArray();
+                if (array.size() == 1) {
+                    int dim = array.get(0).getAsInt();
+                    if (testDimension(dim, i)) {
+                        cachedItem.setDimensionPredicate(d -> d == dim);
+                    } else cachedItem.setDimensionPredicate(d -> false);
                 } else {
-                    types = Stream.of(json.get("dimensions").getAsJsonArray())
-                            .map(e -> DimensionManager.getProviderType(e.getAsInt()))
-                            .collect(Collectors.toList());
-                    cachedItem.setDimensionPredicate(types::contains);
+                    final int index = i;
+                    IntOpenHashSet dimensions = Stream.of(array)
+                            .map(JsonArray::getAsInt)
+                            .filter(dim -> WhitelistParser.testDimension(dim, index))
+                            .collect(Collectors.toCollection(IntOpenHashSet::new));
+                    cachedItem.setDimensionPredicate(dimensions::contains);
                 }
             }
 
@@ -160,6 +156,12 @@ public final class WhitelistParser {
                 SmartHUD.LOGGER.warn("-> " + entry);
             }
         }
+    }
+
+    private static boolean testDimension(int dim, int index) {
+        if (DimensionManager.isDimensionRegistered(dim)) return true;
+        SmartHUD.LOGGER.warn("Unregistered or invalid dimension {} found in whitelist entry at index {}", dim, index);
+        return false;
     }
 
     private static File getOrGenerateJson() {

@@ -1,8 +1,6 @@
 package net.sleeplessdev.smarthud.util;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.DimensionType;
-import net.minecraftforge.common.DimensionManager;
 import net.sleeplessdev.smarthud.config.WhitelistParser;
 
 import java.util.List;
@@ -12,9 +10,8 @@ public final class StackHelper {
     private StackHelper() {}
 
     public static boolean isWhitelisted(ItemStack stack, int dimension) {
-        DimensionType type = DimensionManager.getProviderType(dimension);
         for (CachedItem item : WhitelistParser.getWhitelist()) {
-            if (item.matchesStack(stack, true) && item.matchesDimension(type)) {
+            if (item.matchesStack(stack, true) && item.matchesDimension(dimension)) {
                 return true;
             }
         }
