@@ -1,10 +1,19 @@
+import net.minecraftforge.gradle.tasks.SignJar
+import java.time.Instant
+
 plugins {
     id 'net.minecraftforge.gradle.forge' version '2.3.4'
+    id 'net.nemerosa.versioning' version '2.15.1'
+    id 'signing'
 }
 
-version = '2.0.2'
 group = 'net.sleeplessdev'
-sourceCompatibility = 1.8
+version = '2.0.2'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = sourceCompatibility
+}
 
 minecraft {
     version = '1.12.2-14.23.5.2847'
@@ -23,13 +32,81 @@ dependencies {
     compile 'curse.maven:baubles-227083:2518667' // 1.12-1.5.2
 }
 
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version
+tasks {
+    compileJava {
+        options.with {
+            it.fork = true
+            it.deprecation = true
+            it.encoding = 'UTF-8'
+            it.compilerArgs.addAll(['-Xlint:all', '-parameters'])
+        }
     }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    processResources {
+        filesMatching('/mcmod.info') {
+            expand version: project.version
+        }
+    }
+    
+    jar {
+        from 'LICENSE.md'
+
+        manifest.attributes(
+            'Build-Timestamp': Instant.now(),
+            'Build-Revision': versioning.info.commit,
+            'Build-Jvm': '' +
+                "${System.getProperty('java.version')} (" +
+                "${System.getProperty('java.vm.vendor')} " +
+                "${System.getProperty('java.vm.version')})",
+            'Built-By': GradleVersion.current(),
+
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.group,
+
+            'Specification-Title': 'ForgeMod',
+            'Specification-Version': '1.0.0',
+            'Specification-Vendor': 'dev.sapphic'
+        )
+    }
+
+    if (project.hasProperty('signing.mods.keyalias')) {
+        def keyalias = project.property 'signing.mods.keyalias'
+        def keystore = project.property 'signing.mods.keystore'
+        def password = project.property 'signing.mods.password'
+
+        tasks.create('signJar', SignJar) {
+            dependsOn reobfJar
+
+            alias = keyalias
+            keyStore = keystore
+            keyPass = password
+            storePass = password
+            inputFile = jar.archivePath
+            outputFile = inputFile
+
+            doLast {
+                signing.sign outputFile
+            }
+        }
+
+        tasks.create('signSourceJar', SignJar) {
+            dependsOn sourceJar
+
+            alias = keyalias
+            keyStore = keystore
+            keyPass = password
+            storePass = password
+            inputFile = sourceJar.archivePath
+            outputFile = inputFile
+
+            doLast {
+                signing.sign outputFile
+            }
+        }
+
+        assemble {
+            dependsOn signJar, signSourceJar
+        }
     }
 }
