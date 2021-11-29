@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url 'https://files.minecraftforge.net/maven' }
     }
     dependencies {
@@ -28,11 +27,11 @@ minecraft {
 }
 
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url 'https://cursemaven.com' }
 }
 
 dependencies {
-    deobfCompile 'com.github.Azanor:Baubles:master-SNAPSHOT'
+    compile 'curse.maven:baubles-227083:2518667' // 1.12-1.5.2
 }
 
 processResources {
