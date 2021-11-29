@@ -10,7 +10,6 @@ sourceCompatibility = 1.8
 minecraft {
     version = '1.12.2-14.23.5.2847'
     mappings = 'stable_39'
-    runDir = 'run'
     replaceIn 'SmartHUD.java'
     replace '%VERSION%', project.version
 }
