@@ -1,7 +1,10 @@
 buildscript {
     repositories {
-        maven { url 'https://files.minecraftforge.net/maven' }
+        maven {
+            url 'https://files.minecraftforge.net/maven'
+        }
     }
+
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
@@ -23,7 +26,9 @@ minecraft {
 }
 
 repositories {
-    maven { url 'https://cursemaven.com' }
+    maven {
+        url 'https://cursemaven.com'
+    }
 }
 
 dependencies {
@@ -35,6 +40,7 @@ processResources {
         include 'mcmod.info', 'pack.mcmeta'
         expand 'version': project.version
     }
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info', 'pack.mcmeta'
     }
