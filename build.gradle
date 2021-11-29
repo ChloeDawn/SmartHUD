@@ -9,21 +9,17 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def modVersion = '2.0.2'
-def mcfVersion = '1.12.2-14.23.2.2612'
-def mcpMappings = 'snapshot_20180206'
-
-version = modVersion
+version = '2.0.2'
 group = 'net.sleeplessdev.smarthud'
 archivesBaseName = 'smarthud'
 sourceCompatibility = 1.8
 
 minecraft {
-    version = mcfVersion
-    mappings = mcpMappings
+    version = '1.12.2-14.23.2.2612'
+    mappings = 'snapshot_20180206'
     runDir = 'run'
     replaceIn 'SmartHUD.java'
-    replace '%VERSION%', modVersion
+    replace '%VERSION%', project.version
 }
 
 repositories {
@@ -37,7 +33,7 @@ dependencies {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info', 'pack.mcmeta'
-        expand 'version': modVersion
+        expand 'version': project.version
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info', 'pack.mcmeta'
