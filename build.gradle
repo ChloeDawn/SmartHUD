@@ -25,11 +25,11 @@ dependencies {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info', 'pack.mcmeta'
+        include 'mcmod.info'
         expand 'version': project.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info', 'pack.mcmeta'
+        exclude 'mcmod.info'
     }
 }
