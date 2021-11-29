@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url 'https://files.minecraftforge.net/maven'
+        }
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (it.requested.id.id == 'net.minecraftforge.gradle.forge') {
+                useModule "net.minecraftforge.gradle:ForgeGradle:$requested.version"
+            }
+        }
+    }
+}
+
+rootProject.name = 'SmartHUD'

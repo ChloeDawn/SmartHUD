@@ -1,16 +1,6 @@
-buildscript {
-    repositories {
-        maven {
-            url 'https://files.minecraftforge.net/maven'
-        }
-    }
-
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+plugins {
+    id 'net.minecraftforge.gradle.forge' version '2.3.4'
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = '2.0.2'
 group = 'net.sleeplessdev.smarthud'
