@@ -95,10 +95,10 @@ public final class WhitelistParser {
             Item item = Item.REGISTRY.getObject(id);
 
             if (item == null) {
-                if (Loader.isModLoaded(id.getResourceDomain())) {
+                if (Loader.isModLoaded(id.getNamespace())) {
                     String msg = "Unable to find item for whitelist entry at index {} by name <{}>";
                     SmartHUD.LOGGER.warn(msg, i, id);
-                } else if (!missingEntries.contains(id.getResourceDomain())) {
+                } else if (!missingEntries.contains(id.getNamespace())) {
                     missingEntries.add(id.toString());
                 }
                 continue;
