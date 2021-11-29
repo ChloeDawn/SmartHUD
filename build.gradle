@@ -3,7 +3,7 @@ plugins {
 }
 
 version = '2.0.2'
-group = 'net.sleeplessdev.smarthud'
+group = 'net.sleeplessdev'
 sourceCompatibility = 1.8
 
 minecraft {
