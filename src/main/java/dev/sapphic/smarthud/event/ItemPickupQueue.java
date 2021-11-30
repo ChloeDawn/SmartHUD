@@ -3,7 +3,9 @@ package dev.sapphic.smarthud.event;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.ForwardingQueue;
+import dev.sapphic.smarthud.SmartHUD;
 import dev.sapphic.smarthud.config.ModulesConfig;
+import dev.sapphic.smarthud.util.CachedItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.Particle;
@@ -17,8 +19,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import dev.sapphic.smarthud.SmartHUD;
-import dev.sapphic.smarthud.util.CachedItem;
 
 import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
@@ -67,6 +67,7 @@ public final class ItemPickupQueue {
             MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a");
             MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax");
             ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
+            @SuppressWarnings("unchecked")
             Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
             field.set(particleManager, createForwardingParticleQueue(newQueue, itemGetter, targetGetter));
         } catch (IllegalAccessException e) {
