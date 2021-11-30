@@ -3,10 +3,13 @@
         "modid": "smarthud",
         "name": "Smart HUD",
         "description": "A dynamic HUD for displaying contextual information.",
-        "version": "${version}",
-        "mcversion": "[1.11,1.13)",
-        "authorList": [ "InsomniaKitten" ],
-        "dependencies": [ "baubles@[1.5.1,)" ],
-        "useDependencyInformation": true
+        "version": "$version",
+        "authorList": [
+            "Chloe Dawn"
+        ],
+        "useDependencyInformation": true,
+        "dependencies": [
+            "baubles@[1.5.2,)"
+        ]
     }
 ]

@@ -10,18 +10,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(modid = SmartHUD.ID,
-     name = SmartHUD.NAME,
-     version = SmartHUD.VERSION,
-     dependencies = "after:*",
-     clientSideOnly = true)
+@Mod(modid = SmartHUD.ID, useMetadata = true, clientSideOnly = true, acceptedMinecraftVersions = "[1.11,1.13)")
 public final class SmartHUD {
 
     public static final String ID = "smarthud";
-    public static final String NAME = "Smart HUD";
-    public static final String VERSION = "%VERSION%";
 
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final Logger LOGGER = LogManager.getLogger("SmartHUD");
 
     private static File configPath;
 
