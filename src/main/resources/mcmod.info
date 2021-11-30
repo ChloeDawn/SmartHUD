@@ -1,16 +1,16 @@
 [
-    {
-        "modid": "smarthud",
-        "name": "SmartHUD",
-        "description": "A dynamic HUD for displaying contextual information.",
-        "version": "$version",
-        "authorList": [
-            "Chloe Dawn"
-        ],
-        "credits": "tterrag, pau101",
-        "useDependencyInformation": true,
-        "dependencies": [
-            "baubles@[1.5.2,)"
-        ]
-    }
+  {
+    "modid": "smarthud",
+    "name": "SmartHUD",
+    "description": "A dynamic HUD for displaying contextual information.",
+    "version": "$version",
+    "authorList": [
+      "Chloe Dawn"
+    ],
+    "credits": "tterrag, pau101",
+    "useDependencyInformation": true,
+    "dependencies": [
+      "baubles@[1.5.2,)"
+    ]
+  }
 ]
