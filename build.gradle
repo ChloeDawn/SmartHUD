@@ -75,7 +75,7 @@ tasks {
         def keystore = project.property 'signing.mods.keystore'
         def password = project.property 'signing.mods.password'
 
-        tasks.create('signJar', SignJar) {
+        task signJar(type: SignJar) {
             dependsOn reobfJar
 
             alias = keyalias
@@ -90,7 +90,7 @@ tasks {
             }
         }
 
-        tasks.create('signSourceJar', SignJar) {
+        task signSourceJar(type: SignJar) {
             dependsOn sourceJar
 
             alias = keyalias
