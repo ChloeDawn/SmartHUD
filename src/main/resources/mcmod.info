@@ -1,7 +1,7 @@
 [
     {
         "modid": "smarthud",
-        "name": "Smart HUD",
+        "name": "SmartHUD",
         "description": "A dynamic HUD for displaying contextual information.",
         "version": "$version",
         "authorList": [
