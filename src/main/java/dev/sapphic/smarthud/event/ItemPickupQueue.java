@@ -14,8 +14,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import dev.sapphic.smarthud.SmartHUD;
 import dev.sapphic.smarthud.util.CachedItem;
@@ -62,10 +62,10 @@ public final class ItemPickupQueue {
 
     private static void initializeParticleQueue() {
         try {
-            Field field = ReflectionHelper.findField(ParticleManager.class, "field_187241_h", "queue");
+            Field field = ObfuscationReflectionHelper.findField(ParticleManager.class, "field_187241_h");
             MethodHandles.Lookup lookup = MethodHandles.lookup();
-            MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a", "item");
-            MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax", "target");
+            MethodHandle itemGetter = getParticleItemPickupGetter(lookup, "field_174840_a");
+            MethodHandle targetGetter = getParticleItemPickupGetter(lookup, "field_174843_ax");
             ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
             Queue<Particle> newQueue = (Queue<Particle>) field.get(particleManager);
             field.set(particleManager, createForwardingParticleQueue(newQueue, itemGetter, targetGetter));
@@ -74,8 +74,8 @@ public final class ItemPickupQueue {
         }
     }
 
-    private static MethodHandle getParticleItemPickupGetter(MethodHandles.Lookup lookup, String... fieldNames) throws IllegalAccessException {
-        return lookup.unreflectGetter(ReflectionHelper.findField(ParticleItemPickup.class, fieldNames));
+    private static MethodHandle getParticleItemPickupGetter(MethodHandles.Lookup lookup, String fieldName) throws IllegalAccessException {
+        return lookup.unreflectGetter(ObfuscationReflectionHelper.findField(ParticleItemPickup.class, fieldName));
     }
 
     private static Queue<Particle> createForwardingParticleQueue(Queue<Particle> delegate, MethodHandle itemGetter, MethodHandle targetGetter) {
