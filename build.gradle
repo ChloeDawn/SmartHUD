@@ -46,7 +46,7 @@ tasks {
             expand version: project.version
         }
     }
-    
+
     jar {
         from 'LICENSE'
 
