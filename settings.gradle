@@ -1,18 +1,21 @@
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven {
-            url = 'https://files.minecraftforge.net/maven'
-        }
+  repositories {
+    gradlePluginPortal()
+    maven {
+      url = 'https://maven.minecraftforge.net'
+      content {
+        includeGroupByRegex 'net\\.minecraftforge.*'
+      }
     }
+  }
 
-    resolutionStrategy {
-        eachPlugin {
-            if (it.requested.id.id == 'net.minecraftforge.gradle.forge') {
-                useModule "net.minecraftforge.gradle:ForgeGradle:$requested.version"
-            }
-        }
+  resolutionStrategy {
+    eachPlugin {
+      if (it.requested.id.id == 'net.minecraftforge.gradle') {
+        useModule "net.minecraftforge.gradle:ForgeGradle:$requested.version"
+      }
     }
+  }
 }
 
-rootProject.name = 'SmartHUD'
+rootProject.name = 'smarthud'
