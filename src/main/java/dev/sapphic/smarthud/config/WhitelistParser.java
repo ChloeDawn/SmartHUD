@@ -20,13 +20,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import dev.sapphic.smarthud.SmartHUD;
 import dev.sapphic.smarthud.util.CachedItem;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,8 @@ public final class WhitelistParser {
         List<String> missingEntries = new ArrayList<>();
         JsonElement file;
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(getOrGenerateJson()), StandardCharsets.UTF_8)) {
+        
+        try (BufferedReader reader = Files.newBufferedReader(getOrGenerateJson())) {
             file = new JsonParser().parse(reader);
         } catch (IOException e) {
             SmartHUD.LOGGER.warn("Failed to parse whitelist config! Please report this to the mod author.");
@@ -165,22 +164,22 @@ public final class WhitelistParser {
         return false;
     }
 
-    private static File getOrGenerateJson() {
+    private static Path getOrGenerateJson() {
         String path = "/assets/" + SmartHUD.ID + "/data/whitelist.json";
-        File defaultWhitelist = new File(SmartHUD.getConfigPath(), "defaults.json");
-        File userWhitelist = new File(SmartHUD.getConfigPath(), "whitelist.json");
+        Path defaultWhitelist = SmartHUD.getConfigPath().resolve("defaults.json");
+        Path userWhitelist = SmartHUD.getConfigPath().resolve("whitelist.json");
         writeToFile(path, defaultWhitelist, true);
-        if (!userWhitelist.exists()) {
+        if (Files.notExists(userWhitelist)) {
             writeToFile(path, userWhitelist, false);
         }
         return userWhitelist;
     }
 
-    private static void writeToFile(String path, File file, boolean overwrite) {
+    private static void writeToFile(String path, Path file, boolean overwrite) {
         try (InputStream stream = SmartHUD.class.getResourceAsStream(path)) {
             if (overwrite) {
-                Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } else Files.copy(stream, file.toPath());
+                Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
+            } else Files.copy(stream, file);
         } catch (IOException e) {
             e.printStackTrace();
         }

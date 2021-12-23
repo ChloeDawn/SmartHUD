@@ -8,7 +8,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Mod(modid = SmartHUD.ID, useMetadata = true, clientSideOnly = true, acceptedMinecraftVersions = "[1.11,1.13)")
 public final class SmartHUD {
@@ -17,12 +19,16 @@ public final class SmartHUD {
 
     public static final Logger LOGGER = LogManager.getLogger("SmartHUD");
 
-    private static File configPath;
+    private static Path configPath;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        configPath = new File(event.getModConfigurationDirectory(), ID);
-        if (!configPath.exists()) configPath.mkdirs();
+        configPath = event.getModConfigurationDirectory().toPath().resolve(ID);
+        try {
+            Files.createDirectories(configPath);
+        } catch (final IOException e) {
+            LOGGER.catching(e);
+        }
     }
 
     @Mod.EventHandler
@@ -31,7 +37,7 @@ public final class SmartHUD {
         ItemPickupQueue.initialize();
     }
 
-    public static File getConfigPath() {
+    public static Path getConfigPath() {
         return configPath;
     }
 
