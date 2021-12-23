@@ -154,7 +154,7 @@ public final class WhitelistParser {
         if (!missingEntries.isEmpty() && GeneralConfig.WHITELIST.logMissingEntries) {
             SmartHUD.LOGGER.warn("Entries were skipped as the following items could not be found:");
             for (String entry : missingEntries) {
-                SmartHUD.LOGGER.warn("-> " + entry);
+                SmartHUD.LOGGER.warn("-> {}", entry);
             }
         }
     }
