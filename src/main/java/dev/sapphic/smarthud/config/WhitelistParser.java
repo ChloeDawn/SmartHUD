@@ -89,8 +89,7 @@ public final class WhitelistParser {
             JsonObject json = entries.get(i).getAsJsonObject();
 
             if (json.isJsonNull() || !json.has("item")) {
-                String msg = "Whitelist entry at index {} is missing required value \"item\"";
-                LOGGER.warn(msg, i);
+                LOGGER.warn("Whitelist entry at index {} is missing required value \"item\"", i);
                 continue;
             }
 
@@ -99,8 +98,7 @@ public final class WhitelistParser {
 
             if (item == null) {
                 if (Loader.isModLoaded(id.getNamespace())) {
-                    String msg = "Unable to find item for whitelist entry at index {} by name <{}>";
-                    LOGGER.warn(msg, i, id);
+                    LOGGER.warn("Unable to find item for whitelist entry at index {} by name <{}>", i, id);
                 } else if (!missingEntries.contains(id.getNamespace())) {
                     missingEntries.add(id.toString());
                 }
@@ -112,8 +110,7 @@ public final class WhitelistParser {
             if (json.has("meta")) {
                 int meta = json.get("meta").getAsInt();
                 if (meta < 0 || meta > Short.MAX_VALUE) {
-                    String msg = "Invalid metadata <{}> found in whitelist entry at index {}";
-                    LOGGER.warn(msg, meta, i);
+                    LOGGER.warn("Invalid metadata <{}> found in whitelist entry at index {}", meta, i);
                 } else cachedItem.setMetadata(meta);
             }
 
@@ -149,9 +146,8 @@ public final class WhitelistParser {
             }
         }
 
-        String msg = "Finished processing whitelist config in {}ms";
-        long time = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
-        LOGGER.info(msg, time);
+        LOGGER.info("Finished processing whitelist config in {}ms",
+            stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
 
         if (!missingEntries.isEmpty() && GeneralConfig.WHITELIST.logMissingEntries) {
             LOGGER.warn("Entries were skipped as the following items could not be found:");
