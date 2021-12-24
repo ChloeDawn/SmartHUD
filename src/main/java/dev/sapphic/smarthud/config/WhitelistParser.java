@@ -29,10 +29,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class WhitelistParser {
@@ -133,9 +135,9 @@ public final class WhitelistParser {
                     } else cachedItem.setDimensionPredicate(d -> false);
                 } else {
                     final int index = i;
-                    IntOpenHashSet dimensions = Stream.of(array)
-                            .map(JsonArray::getAsInt)
-                            .filter(dim -> WhitelistParser.testDimension(dim, index))
+                    IntOpenHashSet dimensions = StreamSupport.stream(array.spliterator(), false)
+                            .map(JsonElement::getAsInt)
+                            .filter(dim -> testDimension(dim, index))
                             .collect(Collectors.toCollection(IntOpenHashSet::new));
                     cachedItem.setDimensionPredicate(dimensions::contains);
                 }
