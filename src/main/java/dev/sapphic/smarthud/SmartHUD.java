@@ -17,7 +17,7 @@ public final class SmartHUD {
 
     public static final String ID = "smarthud";
 
-    public static final Logger LOGGER = LogManager.getLogger("SmartHUD");
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static Path configPath;
 

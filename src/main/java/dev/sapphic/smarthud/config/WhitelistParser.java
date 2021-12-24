@@ -19,6 +19,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import dev.sapphic.smarthud.SmartHUD;
 import dev.sapphic.smarthud.util.CachedItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,6 +37,7 @@ import java.util.stream.Stream;
 @Mod.EventBusSubscriber(modid = SmartHUD.ID, value = Side.CLIENT)
 public final class WhitelistParser {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final List<CachedItem> WHITELIST = new ArrayList<>();
 
     private WhitelistParser() {}
@@ -66,7 +69,7 @@ public final class WhitelistParser {
         try (BufferedReader reader = Files.newBufferedReader(getOrGenerateJson())) {
             file = new JsonParser().parse(reader);
         } catch (IOException e) {
-            SmartHUD.LOGGER.warn("Failed to parse whitelist config! Please report this to the mod author.");
+            LOGGER.warn("Failed to parse whitelist config! Please report this to the mod author.");
             e.printStackTrace();
             return;
         }
@@ -78,7 +81,7 @@ public final class WhitelistParser {
         try {
             entries = file.getAsJsonArray();
         } catch (IllegalStateException e) {
-            SmartHUD.LOGGER.warn("Received invalid data from the whitelist, please check your formatting!");
+            LOGGER.warn("Received invalid data from the whitelist, please check your formatting!");
             entries = new JsonArray();
         }
 
@@ -87,7 +90,7 @@ public final class WhitelistParser {
 
             if (json.isJsonNull() || !json.has("item")) {
                 String msg = "Whitelist entry at index {} is missing required value \"item\"";
-                SmartHUD.LOGGER.warn(msg, i);
+                LOGGER.warn(msg, i);
                 continue;
             }
 
@@ -97,7 +100,7 @@ public final class WhitelistParser {
             if (item == null) {
                 if (Loader.isModLoaded(id.getNamespace())) {
                     String msg = "Unable to find item for whitelist entry at index {} by name <{}>";
-                    SmartHUD.LOGGER.warn(msg, i, id);
+                    LOGGER.warn(msg, i, id);
                 } else if (!missingEntries.contains(id.getNamespace())) {
                     missingEntries.add(id.toString());
                 }
@@ -110,7 +113,7 @@ public final class WhitelistParser {
                 int meta = json.get("meta").getAsInt();
                 if (meta < 0 || meta > Short.MAX_VALUE) {
                     String msg = "Invalid metadata <{}> found in whitelist entry at index {}";
-                    SmartHUD.LOGGER.warn(msg, meta, i);
+                    LOGGER.warn(msg, meta, i);
                 } else cachedItem.setMetadata(meta);
             }
 
@@ -148,19 +151,19 @@ public final class WhitelistParser {
 
         String msg = "Finished processing whitelist config in {}ms";
         long time = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
-        SmartHUD.LOGGER.info(msg, time);
+        LOGGER.info(msg, time);
 
         if (!missingEntries.isEmpty() && GeneralConfig.WHITELIST.logMissingEntries) {
-            SmartHUD.LOGGER.warn("Entries were skipped as the following items could not be found:");
+            LOGGER.warn("Entries were skipped as the following items could not be found:");
             for (String entry : missingEntries) {
-                SmartHUD.LOGGER.warn("-> {}", entry);
+                LOGGER.warn("-> {}", entry);
             }
         }
     }
 
     private static boolean testDimension(int dim, int index) {
         if (DimensionManager.isDimensionRegistered(dim)) return true;
-        SmartHUD.LOGGER.warn("Unregistered or invalid dimension {} found in whitelist entry at index {}", dim, index);
+        LOGGER.warn("Unregistered or invalid dimension {} found in whitelist entry at index {}", dim, index);
         return false;
     }
 
