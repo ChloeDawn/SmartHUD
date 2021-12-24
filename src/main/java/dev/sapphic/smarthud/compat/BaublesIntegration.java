@@ -4,7 +4,7 @@ import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.google.common.collect.ImmutableList;
 import dev.sapphic.smarthud.config.ModulesConfig;
-import dev.sapphic.smarthud.util.StackHelper;
+import dev.sapphic.smarthud.config.WhitelistParser;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
@@ -37,8 +37,8 @@ public final class BaublesIntegration {
         List<CachedItem> baubleCache = new ArrayList<>();
         for (int slot = 0; slot < handler.getSlots(); ++slot) {
             ItemStack bauble = handler.getStackInSlot(slot).copy();
-            if (!bauble.isEmpty() && StackHelper.isWhitelisted(bauble, dim)) {
-                StackHelper.processStack(baubleCache, bauble, merge);
+            if (!bauble.isEmpty() && WhitelistParser.isWhitelisted(bauble, dim)) {
+                CachedItem.tryCache(baubleCache, bauble, merge);
             }
         }
         baubles = baubleCache;

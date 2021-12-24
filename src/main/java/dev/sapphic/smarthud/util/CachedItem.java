@@ -3,6 +3,7 @@ package dev.sapphic.smarthud.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.List;
 import java.util.function.IntPredicate;
 
 public final class CachedItem {
@@ -62,6 +63,21 @@ public final class CachedItem {
 
     public void setDimensionPredicate(IntPredicate predicate) {
         this.dimensionPredicate = predicate;
+    }
+
+    public static void tryCache(List<CachedItem> cache, ItemStack stack, boolean mergeDuplicates) {
+        boolean shouldCache = true;
+        int count = stack.getCount();
+        for (CachedItem item : cache) {
+            if (item.matchesStack(stack, false) && mergeDuplicates) {
+                item.setCount(item.getCount() + count);
+                shouldCache = false;
+                break;
+            }
+        }
+        if (shouldCache) {
+            cache.add(new CachedItem(stack, count));
+        }
     }
 
     public void renewTimestamp() {

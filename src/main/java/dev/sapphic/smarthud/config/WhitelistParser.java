@@ -50,6 +50,15 @@ public final class WhitelistParser {
         return ImmutableList.copyOf(WHITELIST);
     }
 
+    public static boolean isWhitelisted(ItemStack stack, int dimension) {
+        for (CachedItem item : getWhitelist()) {
+            if (item.matchesStack(stack, true) && item.matchesDimension(dimension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @SubscribeEvent
     protected static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (SmartHUD.ID.equals(event.getModID())) {

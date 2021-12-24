@@ -2,7 +2,7 @@ package dev.sapphic.smarthud.event;
 
 import com.google.common.collect.ImmutableList;
 import dev.sapphic.smarthud.config.ModulesConfig;
-import dev.sapphic.smarthud.util.StackHelper;
+import dev.sapphic.smarthud.config.WhitelistParser;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,8 +30,8 @@ public final class InventoryCache {
         List<CachedItem> inventoryCache = new ArrayList<>();
         for (int slot = 9; slot < 36; ++slot) {
             ItemStack stack = inv.get(slot).copy();
-            if (!stack.isEmpty() && StackHelper.isWhitelisted(stack, dim)) {
-                StackHelper.processStack(inventoryCache, stack, merge);
+            if (!stack.isEmpty() && WhitelistParser.isWhitelisted(stack, dim)) {
+                CachedItem.tryCache(inventoryCache, stack, merge);
             }
         }
         List<CachedItem> baubles = BaublesIntegration.getBaubles();
