@@ -138,7 +138,7 @@ public final class WhitelistParser {
                 } else {
                     IntSet dimensions = new IntOpenHashSet(array.size());
                     for (JsonElement element : array) {
-                        Integer dim = element.getAsInt();
+                        int dim = element.getAsInt();
                         if (testDimension(dim, i)) {
                             dimensions.add(dim);
                         }
