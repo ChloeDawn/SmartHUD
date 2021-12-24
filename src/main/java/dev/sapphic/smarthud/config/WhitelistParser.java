@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.ints.IntSets;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -134,13 +136,14 @@ public final class WhitelistParser {
                         cachedItem.setDimensionPredicate(d -> d == dim);
                     } else cachedItem.setDimensionPredicate(d -> false);
                 } else {
-                    IntOpenHashSet dimensions = new IntOpenHashSet(array.size());
+                    IntSet dimensions = new IntOpenHashSet(array.size());
                     for (JsonElement element : array) {
                         Integer dim = element.getAsInt();
                         if (testDimension(dim, i)) {
                             dimensions.add(dim);
                         }
                     }
+                    dimensions = IntSets.unmodifiable(dimensions);
                     cachedItem.setDimensionPredicate(dimensions::contains);
                 }
             }
