@@ -134,11 +134,13 @@ public final class WhitelistParser {
                         cachedItem.setDimensionPredicate(d -> d == dim);
                     } else cachedItem.setDimensionPredicate(d -> false);
                 } else {
-                    final int index = i;
-                    IntOpenHashSet dimensions = StreamSupport.stream(array.spliterator(), false)
-                            .map(JsonElement::getAsInt)
-                            .filter(dim -> testDimension(dim, index))
-                            .collect(Collectors.toCollection(IntOpenHashSet::new));
+                    IntOpenHashSet dimensions = new IntOpenHashSet(array.size());
+                    for (JsonElement element : array) {
+                        Integer dim = element.getAsInt();
+                        if (testDimension(dim, i)) {
+                            dimensions.add(dim);
+                        }
+                    }
                     cachedItem.setDimensionPredicate(dimensions::contains);
                 }
             }
