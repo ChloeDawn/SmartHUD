@@ -1,11 +1,7 @@
-# Smart HUD
-#### **A dynamic HUD for displaying inventory items.**
+# SmartHUDReheated ![Build](https://github.com/DeflatedPickle/SmartHUDReheated/actions/workflows/gradle-build.yml/badge.svg)
+A Minecraft Fabric mod that adds an additional hotbar to show helpful items in your inventory
 
-This mod adds a configurable HUD next to the hotbar, mirroring the off-hand slot.
-It will display whitelisted items from your inventory for easy viewing.
-It's intended use is for items such as the vanilla clock and compass,
-however you can add whatever you wish to the whitelist.
-
-Documentation for the mod's configuration will be added in the near future.
-However, each configuration entry in the file has a description already,
-which should help to understand how it functions for the most part.
+## History:
+- 1.18 ([DeflatedPickle](https://github.com/DeflatedPickle/SmartHUDReheated), Fabric)
+- 1.15.2-1.16.5 ([Tfarcenim](https://github.com/Tfarcenim/SmartHUD), Forge)
+- 1.11-1.12.2 ([ChloeDawn](https://github.com/ChloeDawn/SmartHUD), Forge)

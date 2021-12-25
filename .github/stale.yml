@@ -1,0 +1,7 @@
+daysUntilStale: 60
+daysUntilClose: 7
+exemptLabels:
+  - "help wanted"
+exemptProjects: true
+exemptMilestone: true
+staleLabel: "stale"

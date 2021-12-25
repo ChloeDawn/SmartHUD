@@ -1,107 +1,148 @@
-import net.minecraftforge.gradle.tasks.SignJar
-import java.time.Instant
+//file:noinspection GrMethodMayBeStatic
 
 plugins {
-    id 'net.minecraftforge.gradle.forge' version '2.3.4'
-    id 'net.nemerosa.versioning' version '2.15.1'
-    id 'signing'
+	id 'maven-publish'
+
+	id 'org.jetbrains.kotlin.jvm'
+
+	id 'fabric-loom'
+
+	id 'com.diffplug.spotless'
+	id 'net.kyori.blossom'
 }
 
-group = 'dev.sapphic'
-version = '2.0.2'
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = sourceCompatibility
-}
-
-minecraft {
-    version = '1.12.2-14.23.5.2847'
-    mappings = 'stable_39'
-    runDir = 'run'
-}
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 repositories {
-    maven {
-        url = 'https://cursemaven.com'
-    }
+	maven { url 'https://jitpack.io' }
+	maven { url "https://maven.terraformersmc.com" }
+	mavenCentral()
 }
 
 dependencies {
-    compile 'curse.maven:baubles-227083:2518667' // 1.12-1.5.2
+	minecraft "com.mojang:minecraft:${minecraft_version()}"
+	mappings "net.fabricmc:yarn:${minecraft_version()}+${yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}+${minecraft_version_short()}"
+	modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}+kotlin.${kotlin_version}"
+
+	// https://fabricmc.net/wiki/documentation:libraries
+	modImplementation "com.terraformersmc:modmenu:${modmenu_version}"
 }
 
-tasks {
-    compileJava {
-        options.with {
-            it.fork = true
-            it.deprecation = true
-            it.encoding = 'UTF-8'
-            it.compilerArgs.addAll(['-Xlint:all', '-parameters'])
-        }
-    }
+compileJava {
+	options.encoding = "UTF-8"
+	sourceCompatibility = targetCompatibility = project.java_version
+}
 
-    processResources {
-        filesMatching('/mcmod.info') {
-            expand version: project.version
-        }
-    }
+compileKotlin {
+	kotlinOptions {
+		jvmTarget = project.java_version
+	}
+	sourceCompatibility = targetCompatibility = project.java_version
+}
 
-    jar {
-        from 'LICENSE'
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(project.java_version)
+	}
+	withSourcesJar()
+}
 
-        manifest.attributes(
-            'Build-Timestamp': Instant.now(),
-            'Build-Revision': versioning.info.commit,
-            'Build-Jvm': '' +
-                "${System.getProperty('java.version')} (" +
-                "${System.getProperty('java.vm.vendor')} " +
-                "${System.getProperty('java.vm.version')})",
-            'Built-By': GradleVersion.current(),
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
+}
 
-            'Implementation-Title': project.name,
-            'Implementation-Version': project.version,
-            'Implementation-Vendor': project.group,
+spotless {
+	ratchetFrom "origin/${branch}"
 
-            'Specification-Title': 'ForgeMod',
-            'Specification-Version': '1.0.0',
-            'Specification-Vendor': 'dev.sapphic'
-        )
-    }
+	java {
+		importOrder()
+		removeUnusedImports()
+		googleJavaFormat()
 
-    if (project.hasProperty('signing.mods.keyalias')) {
-        def keyalias = project.property 'signing.mods.keyalias'
-        def keystore = project.property 'signing.mods.keystore'
-        def password = project.property 'signing.mods.password'
+		licenseHeader "/* ${expand_license(license_header)} */\n\n"
+	}
 
-        task signJar(type: SignJar, dependsOn: reobfJar) {
-            alias = keyalias
-            keyStore = keystore
-            keyPass = password
-            storePass = password
-            inputFile = jar.archivePath
-            outputFile = inputFile
+	groovyGradle {
+		target '*.gradle'
+		greclipse()
+	}
 
-            doLast {
-                signing.sign outputFile
-            }
-        }
+	kotlin {
+		ktlint(ktlint_version)
 
-        task signSourceJar(type: SignJar, dependsOn: sourceJar) {
-            alias = keyalias
-            keyStore = keystore
-            keyPass = password
-            storePass = password
-            inputFile = sourceJar.archivePath
-            outputFile = inputFile
+		licenseHeader "/* ${expand_license(license_header)} */\n\n"
+	}
 
-            doLast {
-                signing.sign outputFile
-            }
-        }
+	format 'misc', {
+		target '*.md', '.gitignore'
 
-        assemble {
-            dependsOn signJar, signSourceJar
-        }
-    }
+		trimTrailingWhitespace()
+		indentWithTabs()
+		endWithNewline()
+	}
+}
+compileJava.dependsOn spotlessApply
+compileKotlin.dependsOn spotlessApply
+
+blossom {
+	replaceToken('$[name]', project.property('mod_name'))
+	replaceToken('$[author]', project.property('mod_author'))
+	replaceToken('$[version]', project.property('mod_version'))
+
+	replaceToken('$[id]', project.property('archives_base_name'))
+	replaceToken('$[group]', project.property('maven_group'))
+
+	replaceToken('$[java]', project.property('java_version'))
+	replaceToken('$[kotlin]', project.property('kotlin_version'))
+
+	replaceToken('$[minecraft]', minecraft_version())
+	replaceToken('$[yarn]', project.property('yarn_mappings'))
+	replaceToken('$[loader]', project.property('loader_version'))
+	replaceToken('$[loom]', project.property('loom_version'))
+	replaceToken('$[fabric_version]', project.property('fabric_version'))
+}
+
+processResources {
+	filesMatching("*.json") {
+		expand([
+			"id"       : project.archives_base_name,
+			"name"     : project.mod_name,
+			"version"  : project.version,
+			"author"   : project.mod_author,
+			"desc"     : project.mod_desc,
+			"site"     : project.mod_site,
+			"src"      : project.mod_src,
+			"minecraft": minecraft_version(),
+			"fabric"   : project.fabric_version,
+			"loader"   : project.loader_version,
+			"java"     : project.java_version,
+			"adapter"  : project.fabric_kotlin_version,
+			"group"    : project.maven_group,
+			"license"  : project.license_type,
+			"environment": project.mod_environment,
+			"entry"      : (project.mod_environment == "*") ? "main" : project.mod_environment,
+		])
+	}
+}
+
+String minecraft_version() {
+	return "$minecraft_major.$minecraft_minor.$minecraft_patch"
+}
+
+String minecraft_version_short() {
+	return "$minecraft_major.$minecraft_minor"
+}
+
+String expand_license(String old) {
+	old = old.replace('\$DEVELOPER', mod_author)
+	old = old.replace('\$LICENSE', license_type.toUpperCase())
+
+	return old
 }

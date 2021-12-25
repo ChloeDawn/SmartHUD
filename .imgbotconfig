@@ -1,0 +1,7 @@
+{
+    "ignoredFiles": [
+        "src/main/resources/*"
+    ],
+    "schedule": "monthly",
+    "compressWiki": "true"
+}
