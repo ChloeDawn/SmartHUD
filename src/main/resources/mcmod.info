@@ -10,7 +10,8 @@
     "credits": "tterrag, pau101",
     "useDependencyInformation": true,
     "dependencies": [
-      "baubles@[1.5.2,)"
+      "baubles@[1.5.2,)",
+      "quark@[r1.5-131,)"
     ]
   }
 ]

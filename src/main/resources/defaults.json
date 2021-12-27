@@ -15,6 +15,10 @@
     "item": "botania:manatablet"
   },
   {
+    "item": "charm:bound_compass",
+    "ignore_nbt": false
+  },
+  {
     "item": "endercompass:ender_compass"
   },
   {
@@ -34,7 +38,7 @@
   },
   {
     "item": "naturescompass:naturescompass"
-  },
+  }, 
   {
     "item": "quark:slime_bucket"
   },
