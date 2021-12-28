@@ -33,6 +33,6 @@ public final class TickerItem extends CountableItem {
   }
 
   public long remainingTime() {
-    return (this.timestamp + TickerConfig.lifespanTicks()) - gameTicks;
+    return (this.timestamp + TickerConfig.durationTicks()) - gameTicks;
   }
 }

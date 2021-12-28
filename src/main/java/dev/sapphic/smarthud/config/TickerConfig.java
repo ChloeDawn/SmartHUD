@@ -6,7 +6,7 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = SmartHud.MOD_ID, name = SmartHud.MOD_ID + "/modules", category = "item_pickup")
 public final class TickerConfig {
   @Config.Name("displayTime")
-  public static int lifespanMillis = 3000;
+  public static int durationMillis = 3000;
 
   @Config.Name("hudStyle")
   public static TickerStyle style = TickerStyle.BOTH;
@@ -28,7 +28,7 @@ public final class TickerConfig {
 
   private TickerConfig() {}
 
-  public static long lifespanTicks() {
-    return (lifespanMillis / 1000) * 20;
+  public static long durationTicks() {
+    return (durationMillis / 1000) * 20;
   }
 }
