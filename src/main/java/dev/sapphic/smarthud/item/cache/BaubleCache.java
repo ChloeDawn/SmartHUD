@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import dev.sapphic.smarthud.SmartHud;
 import dev.sapphic.smarthud.item.SlotItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -37,16 +38,22 @@ public final class BaubleCache {
   }
 
   @SubscribeEvent
-  public static void tick(final TickEvent.PlayerTickEvent event) {
-    if ((baublesCapability == null) || (event.side == Side.SERVER)) {
+  public static void tick(final TickEvent.ClientTickEvent event) {
+    if ((baublesCapability == null) || (event.phase != TickEvent.Phase.END)) {
       return;
     }
 
-    final IItemHandler baubles = getBaubles(event.player);
+    final @Nullable EntityPlayer player = Minecraft.getMinecraft().player;
+
+    if (player == null) {
+      return;
+    }
+
+    final IItemHandler baubles = getBaubles(player);
     final Collection<SlotItem> cache = new ArrayList<>(0);
 
     for (int slot = 0; slot < baubles.getSlots(); ++slot) {
-      SlotItem.account(cache, baubles.getStackInSlot(slot), event.player.dimension);
+      SlotItem.account(cache, baubles.getStackInSlot(slot), player.dimension);
     }
 
     BaubleCache.cache = ImmutableList.copyOf(cache);

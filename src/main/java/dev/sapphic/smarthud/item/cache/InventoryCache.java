@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import dev.sapphic.smarthud.SmartHud;
 import dev.sapphic.smarthud.item.SlotItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,16 +37,22 @@ public final class InventoryCache {
   }
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
-  public static void tick(final TickEvent.PlayerTickEvent event) {
-    if (event.side == Side.SERVER) {
+  public static void tick(final TickEvent.ClientTickEvent event) {
+    if (event.phase != TickEvent.Phase.END) {
       return;
     }
 
-    final IItemHandler handler = getInventory(event.player);
+    final @Nullable EntityPlayer player = Minecraft.getMinecraft().player;
+
+    if (player == null) {
+      return;
+    }
+
+    final IItemHandler handler = getInventory(player);
     final Collection<SlotItem> cache = new ArrayList<>(0);
 
     for (int slot = InventoryPlayer.getHotbarSize(); slot < handler.getSlots(); ++slot) {
-      SlotItem.account(cache, handler.getStackInSlot(slot), event.player.dimension);
+      SlotItem.account(cache, handler.getStackInSlot(slot), player.dimension);
     }
 
     if (BaubleCache.exists()) {

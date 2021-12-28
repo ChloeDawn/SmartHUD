@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import dev.sapphic.smarthud.SmartHud;
 import dev.sapphic.smarthud.item.SlotItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -44,12 +45,18 @@ public final class QuarkBackpackCache {
   }
 
   @SubscribeEvent
-  public static void tick(final TickEvent.PlayerTickEvent event) {
-    if ((backpack == null) || (event.side == Side.SERVER)) {
+  public static void tick(final TickEvent.ClientTickEvent event) {
+    if ((backpack == null) || (event.phase != TickEvent.Phase.END)) {
       return;
     }
 
-    final ItemStack backpack = getBackpack(event.player);
+    final @Nullable EntityPlayer player = Minecraft.getMinecraft().player;
+
+    if (player == null) {
+      return;
+    }
+
+    final ItemStack backpack = getBackpack(player);
 
     if (backpack.getItem() != QuarkBackpackCache.backpack) {
       cache = ImmutableList.of();
@@ -60,7 +67,7 @@ public final class QuarkBackpackCache {
     final Collection<SlotItem> cache = new ArrayList<>(0);
 
     for (int slot = 0; slot < handler.getSlots(); ++slot) {
-      SlotItem.account(cache, handler.getStackInSlot(slot), event.player.dimension);
+      SlotItem.account(cache, handler.getStackInSlot(slot), player.dimension);
     }
 
     QuarkBackpackCache.cache = ImmutableList.copyOf(cache);
