@@ -85,9 +85,8 @@ tasks {
       "Implementation-Version" to project.version,
       "Implementation-Vendor" to project.group,
       "Specification-Title" to "ForgeMod",
-      "Specification-Version" to "1.1.0",
-      "Specification-Vendor" to project.group,
-      "Sealed" to true
+      "Specification-Version" to "1.0.0",
+      "Specification-Vendor" to project.group
     )
   }
 
