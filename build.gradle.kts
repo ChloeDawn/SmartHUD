@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.sapphic"
-version = "2.1.0"
+version = "2.1.1"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
