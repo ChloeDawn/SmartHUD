@@ -1,5 +1,6 @@
 package dev.sapphic.smarthud;
 
+import dev.sapphic.smarthud.config.ConfigScreenFactory;
 import dev.sapphic.smarthud.config.SlotWhitelist;
 import dev.sapphic.smarthud.item.TickerQueue;
 import net.minecraftforge.common.config.Config;
@@ -21,7 +22,8 @@ import java.nio.file.Path;
     modid = SmartHud.MOD_ID,
     useMetadata = true,
     clientSideOnly = true,
-    acceptedMinecraftVersions = "[1.11,1.13)")
+    acceptedMinecraftVersions = "[1.11,1.13)",
+    guiFactory = ConfigScreenFactory.CLASS)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public final class SmartHud {
   public static final String MOD_ID = "smarthud";

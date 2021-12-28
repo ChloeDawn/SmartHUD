@@ -1,2 +1,38 @@
-label.smarthud.pickup.long=%s x %d
-label.smarthud.pickup.short=x %d
+smarthud.config=SmartHUD Configuration
+
+smarthud.slots=Item Slots
+smarthud.slots.tooltip=Configure the item slots
+smarthud.slots.empty=Include Empty
+smarthud.slots.empty.tooltip=Always draw a slot regardless of items present
+smarthud.slots.style=Style
+smarthud.slots.style.tooltip=The look and feel of the item slots
+smarthud.slots.enabled=Enabled
+smarthud.slots.enabled.tooltip=Enable the item slots
+smarthud.slots.cumulative=Cumulative
+smarthud.slots.cumulative.tooltip=Merge similar items into the same slot
+smarthud.slots.overlays=Overlays
+smarthud.slots.overlays.tooltip=Draw the item overlays, such as enchantment glints
+smarthud.slots.counts=Counts
+smarthud.slots.counts.tooltip=Draw the (cumulative) counts of items
+smarthud.slots.size=Size
+smarthud.slots.size.tooltip=The maximum number of item slots to draw
+smarthud.slots.whitelist=Whitelist
+smarthud.slots.whitelist.tooltip=Configure the item slot whitelist
+smarthud.slots.whitelist.enabled=Enabled
+smarthud.slots.whitelist.enabled.tooltip=Enable the whitelist\nIf disabled, item slots will only show clocks and compasses
+
+smarthud.ticker=Item Ticker
+smarthud.ticker.tooltip=Configure the item pickup ticker
+smarthud.ticker.duration=Duration
+smarthud.ticker.duration.tooltip=The duration in milliseconds that items should be shown for
+smarthud.ticker.style=Style
+smarthud.ticker.style.tooltip=The look and feel of the item ticker
+smarthud.ticker.enabled=Enabled
+smarthud.ticker.enabled.tooltip=Enable the item ticker
+smarthud.ticker.size=Size
+smarthud.ticker.size.tooltip=The maximum number of items to show at once
+smarthud.ticker.behavior=Behavior
+smarthud.ticker.behavior.tooltip=The behavior of the item ticker\n0: Sort by most recent pickup\n1: Sort by initial pickup
+
+smarthud.ticker.label.long=%s x %d
+smarthud.ticker.label.short=x %d

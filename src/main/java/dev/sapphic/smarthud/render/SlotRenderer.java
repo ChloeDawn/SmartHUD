@@ -46,7 +46,7 @@ public final class SlotRenderer {
     final int center = resolution.getScaledWidth() / 2;
     final int origin = 98;
 
-    if (SlotsConfig.style.isTextured() && (!cache.isEmpty() || SlotsConfig.drawEmpty)) {
+    if (SlotsConfig.style.isTextured() && (!cache.isEmpty() || SlotsConfig.includeEmpty)) {
       final int x = center + (left ? (-origin - ((44 + (20 * (slots - 2))) - 2)) : origin);
       final int v = SlotsConfig.style.getTextureV();
 
@@ -76,13 +76,13 @@ public final class SlotRenderer {
       RenderHelper.enableGUIStandardItemLighting();
       minecraft.getRenderItem().renderItemAndEffectIntoGUI(stack, stackX, stackY);
 
-      if (!stack.isStackable() && SlotsConfig.drawOverlays) {
+      if (!stack.isStackable() && SlotsConfig.overlays) {
         minecraft.getRenderItem().renderItemOverlays(minecraft.fontRenderer, stack, stackX, stackY);
       }
 
       RenderHelper.disableStandardItemLighting();
 
-      if ((item.count() > 1) && SlotsConfig.drawCounts) {
+      if ((item.count() > 1) && SlotsConfig.counts) {
         final String label = item.abbreviatedCount();
         final int width = minecraft.fontRenderer.getStringWidth(label);
         final int labelOrigin = origin + (20 - width) + (20 * slot);
@@ -117,7 +117,7 @@ public final class SlotRenderer {
           final ImmutableCollection<SlotItem> cache = InventoryCache.get();
           final int offset;
 
-          if (!cache.isEmpty() || SlotsConfig.drawEmpty) {
+          if (!cache.isEmpty() || SlotsConfig.includeEmpty) {
             offset = 91 + (20 * Math.max(1, Math.min(cache.size(), SlotsConfig.size))) + 9;
           } else {
             offset = 91;

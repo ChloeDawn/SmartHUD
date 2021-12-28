@@ -53,7 +53,7 @@ public final class TickerRenderer {
       final TickerItem item = iterator.next();
       final int oy = y + (fontHeight * index) + (2 * index);
       final boolean named = TickerConfig.style.hasLabels();
-      final String locale = "label." + SmartHud.MOD_ID + ".pickup." + (named ? "long" : "short");
+      final String locale = SmartHud.MOD_ID + ".ticker.label." + (named ? "long" : "short");
       final String itemCount = item.abbreviatedCount();
       final String label = I18n.format(locale, itemCount, item.stack().getDisplayName());
       final int labelWidth = minecraft.fontRenderer.getStringWidth(label);

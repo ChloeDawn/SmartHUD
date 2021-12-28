@@ -37,6 +37,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Set;
 
+@Config.LangKey(SmartHud.MOD_ID + ".slots.whitelist")
 @Config(modid = SmartHud.MOD_ID, name = SmartHud.MOD_ID + "/general", category = "whitelist")
 public final class SlotWhitelist {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -53,6 +54,11 @@ public final class SlotWhitelist {
       }.getType();
 
   @Config.Name("isEnabled")
+  @Config.LangKey(SmartHud.MOD_ID + ".slots.whitelist.enabled")
+  @Config.Comment({
+    "Enable the whitelist",
+    "If disabled, item slots will only show clocks and compasses"
+  })
   public static boolean enabled = true;
 
   private static ImmutableCollection<Entry> allEntries = ImmutableSet.of();
