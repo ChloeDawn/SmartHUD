@@ -1,26 +1,11 @@
 package dev.sapphic.smarthud.item;
 
-import com.google.common.base.MoreObjects;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-
-import java.lang.reflect.Type;
 
 public abstract class CountableItem {
-  @SerializedName("item")
-  @JsonAdapter(ItemStackDeserializer.class)
   private final ItemStack stack;
-
-  private transient int count;
+  private int count;
 
   protected CountableItem(final ItemStack stack) {
     this.stack = stack;
@@ -55,16 +40,5 @@ public abstract class CountableItem {
     }
 
     return abbr.toString();
-  }
-
-  private static final class ItemStackDeserializer implements JsonDeserializer<ItemStack> {
-    @Override
-    public ItemStack deserialize(
-        final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) {
-      final ResourceLocation name = new ResourceLocation(context.deserialize(json, String.class));
-      final Item item = MoreObjects.firstNonNull(ForgeRegistries.ITEMS.getValue(name), Items.AIR);
-
-      return (item == Items.AIR) ? ItemStack.EMPTY : new ItemStack(item);
-    }
   }
 }
