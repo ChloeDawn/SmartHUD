@@ -96,8 +96,7 @@ public final class SlotItem extends CountableItem {
     if ((this.stack().getItem() == stack.getItem())
         && (this.ignoresDmg || (this.stack().getItemDamage() == stack.getItemDamage()))) {
       return this.ignoresNbt
-          || (Objects.equals(this.stack().getTagCompound(), stack.getTagCompound())
-              && this.stack().areCapsCompatible(stack)); // TODO Is this necessary?
+          || Objects.equals(this.stack().getTagCompound(), stack.getTagCompound());
     }
 
     return false;
