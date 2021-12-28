@@ -24,7 +24,7 @@ public final class TickerConfig {
   })
   @Config.RangeInt(min = 0, max = 1)
   @Config.SlidingOption
-  public static int priority = 0;
+  public static int behavior = 0;
 
   private TickerConfig() {}
 

@@ -104,7 +104,7 @@ public final class TickerQueue {
           item.renewTimestamp();
           item.count(stack);
 
-          if (TickerConfig.priority == 0) {
+          if (TickerConfig.behavior == 0) {
             queue.remove(item);
             queue.add(item);
           }
