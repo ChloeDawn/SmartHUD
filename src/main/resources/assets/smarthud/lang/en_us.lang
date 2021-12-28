@@ -16,7 +16,8 @@ smarthud.slots.counts=Counts
 smarthud.slots.counts.tooltip=Draw the (cumulative) counts of items
 smarthud.slots.size=Size
 smarthud.slots.size.tooltip=The maximum number of item slots to draw
-smarthud.slots.whitelist=Whitelist
+
+smarthud.slots.whitelist=Item Slot Whitelist
 smarthud.slots.whitelist.tooltip=Configure the item slot whitelist
 smarthud.slots.whitelist.enabled=Enabled
 smarthud.slots.whitelist.enabled.tooltip=Enable the whitelist\nIf disabled, item slots will only show clocks and compasses
