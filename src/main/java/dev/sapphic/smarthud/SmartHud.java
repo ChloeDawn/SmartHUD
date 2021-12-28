@@ -21,7 +21,7 @@ import java.nio.file.Path;
     modid = SmartHud.MOD_ID,
     useMetadata = true,
     clientSideOnly = true,
-    acceptedMinecraftVersions = "[1.11,1.13)")
+    acceptedMinecraftVersions = "[1.12,1.13)")
 @Mod.EventBusSubscriber(Side.CLIENT)
 public final class SmartHud {
   public static final String MOD_ID = "smarthud";
