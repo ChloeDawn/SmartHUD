@@ -2,7 +2,7 @@
   {
     "modid": "smarthud",
     "name": "SmartHUD",
-    "description": "A dynamic HUD for displaying contextual information.",
+    "description": "Adds an inventory item slot hotbar and item pickup ticker.",
     "version": "$version",
     "authorList": [
       "Chloe Dawn"
